@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
     tableView = QTableView()
     tableView.setModel(model)
-    # print(dir(tableView))
+
     tableView.show()
     for row in range(0, rowCount - 1, 4):
         tableView.setSpan(row, 0, 4, 1)

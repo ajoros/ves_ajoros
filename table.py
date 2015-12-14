@@ -2,7 +2,7 @@ import sys
 
 from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PyQt5.QtGui import QColor, QIcon, QPixmap #QTableView
-from PyQt5.QtWidgets import (QApplication, QTableView, QListView)
+from PyQt5.QtWidgets import QApplication, QTableView
 
 from tempData import columnCount, colors, headers, rowCount, tableData
 
@@ -51,7 +51,7 @@ class PaletteTableModel(QAbstractTableModel):
 
         """
         row = index.row()
-        column = index.column() - 1
+        column = index.column()
 
         if role == Qt.EditRole:
 
@@ -63,6 +63,7 @@ class PaletteTableModel(QAbstractTableModel):
                 self.__table[row][column])
 
         if role == Qt.DisplayRole:
+
             row = index.row()
             column = index.column()
             value = self.__table[row][column]
@@ -80,11 +81,11 @@ class PaletteTableModel(QAbstractTableModel):
                 self.__table[row][column] = value
                 self.dataChanged.emit(index, index)
                 return True
+
         return False
 
 
     def headerData(self, section, orientation, role):
-
 
         if role == Qt.DisplayRole:
 

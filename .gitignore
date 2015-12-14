@@ -1,8 +1,8 @@
 # Word/Excel files
-.docx
-.doc
-.xlsx
-.xls
+*.docx
+*.doc
+*.xlsx
+*.xls
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

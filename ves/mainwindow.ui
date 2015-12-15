@@ -83,8 +83,13 @@
      <string>File</string>
     </property>
     <addaction name="actionNew"/>
-    <addaction name="actionSave"/>
-    <addaction name="actionExit"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_as_CSV"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_table_as_csv"/>
+    <addaction name="actionSave_plot_as_png"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit_2"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -142,6 +147,36 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionSave_as_CSV">
+   <property name="text">
+    <string>Save project</string>
+   </property>
+  </action>
+  <action name="actionSave_as_docx">
+   <property name="text">
+    <string>Save table as .csv</string>
+   </property>
+  </action>
+  <action name="actionSave_table_as_csv">
+   <property name="text">
+    <string>Save table as .csv</string>
+   </property>
+  </action>
+  <action name="actionSave_table_as_xlsx">
+   <property name="text">
+    <string>Save table as .xlsx</string>
+   </property>
+  </action>
+  <action name="actionSave_plot_as_png">
+   <property name="text">
+    <string>Save plot as .png</string>
+   </property>
+  </action>
+  <action name="actionExit_2">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>

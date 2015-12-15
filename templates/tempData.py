@@ -4,7 +4,9 @@ import csv
 
 # Read in the data from a template CSV
 tableData = []
-with open(os.path.join(os.getcwd(), 'template_table.csv'), 'r') as f:
+csv_filepath = os.path.join(
+    os.path.dirname(__file__), 'template_table_temp.csv')
+with open(csv_filepath, 'r') as f:
     reader = csv.reader(f, delimiter=',')
     for row in reader:
         tableData.append(row)
@@ -25,3 +27,7 @@ columnCount = len(tableData[0])
 colors = colors[:rowCount]
 headers = tableData[0]
 tableData = tableData[1:]
+
+columns = list(range(columnCount))
+for value in range(4, 7):
+    columns.remove(value)

@@ -4,7 +4,9 @@ import csv
 
 # Read in the data from a template CSV
 tableData = []
-with open(os.path.join(os.getcwd(), 'template_table_temp.csv'), 'r') as f:
+csv_filepath = os.path.join(
+    os.path.dirname(__file__), 'template_table.csv')
+with open(csv_filepath, 'r') as f:
     reader = csv.reader(f, delimiter=',')
     for row in reader:
         tableData.append(row)

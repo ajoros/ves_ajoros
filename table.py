@@ -4,7 +4,8 @@ from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PyQt5.QtGui import QColor, QIcon, QPixmap
 from PyQt5.QtWidgets import QApplication, QTableView
 
-from tempData import columnCount, columns, colors, headers, rowCount, tableData
+from templates.tempData import (
+    columnCount, columns, colors, headers, rowCount, tableData)
 
 
 class PaletteTableModel(QAbstractTableModel):

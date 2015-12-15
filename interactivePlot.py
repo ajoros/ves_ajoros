@@ -4,9 +4,16 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
 
-class Annotate(object):
+from DraggableRectangles import DraggableRectangle
+
+r = Rectangle((0, 0), 1, 1, alpha=0.5, color='red')
+class Annotate:
     def __init__(self):
         self.ax = plt.gca()
+        # self.rect = DraggableRectangle(
+        #     Rectangle((0,0), 1, 1, alpha=0.5, color='red'))
+        # print(dir(self.rect))
+        # self.rect = DraggableRectangle((0, 0), 1, 1, alpha=0.5, color='red')
         self.rect = Rectangle((0,0), 1, 1, alpha=0.5, color='red')
         self.x0 = None
         self.y0 = None
@@ -36,11 +43,11 @@ class Annotate(object):
         print('x1 {}'.format(self.x1))
         print('y1 {}'.format(self.y1))
 
-a = Annotate()
+# a = Annotate()
 x = range(0, 10)
 y = np.random.randn(10)
-plt.plot(x, y, '--')
-plt.show()
+# plt.plot(x, y, '--')
+# plt.show()
 # print(Annotate.x0)
 a_list = []
 for _ in range(2):
@@ -50,7 +57,7 @@ for _ in range(2):
     a_list.append(a)
     del a
 
-print(a_list)
-print(dir(a_list[0]))
+# print(a_list)
+# print(dir(a_list[0]))
 for a in a_list:
     print(a.x0)

@@ -1,10 +1,10 @@
 import sys
 
 from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt
-from PyQt5.QtGui import QColor, QIcon, QPixmap #QTableView
+from PyQt5.QtGui import QColor, QIcon, QPixmap
 from PyQt5.QtWidgets import QApplication, QTableView
 
-from tempData import columnCount, colors, headers, rowCount, tableData
+from tempData import columnCount, columns, colors, headers, rowCount, tableData
 
 
 class PaletteTableModel(QAbstractTableModel):
@@ -128,10 +128,9 @@ if __name__ == '__main__':
     tableView.setModel(model)
 
     tableView.show()
+
     for row in range(0, rowCount - 1, 4):
-        tableView.setSpan(row, 0, 4, 1)
-        tableView.setSpan(row, 1, 4, 1)
-        tableView.setSpan(row, 2, 4, 1)
-        tableView.setSpan(row, 3, 4, 1)
+        for col in columns:
+            tableView.setSpan(row, col, 4, 1)
 
     sys.exit(app.exec_())

@@ -25,3 +25,7 @@ columnCount = len(tableData[0])
 colors = colors[:rowCount]
 headers = tableData[0]
 tableData = tableData[1:]
+
+columns = list(range(columnCount))
+for value in range(4, 7):
+    columns.remove(value)

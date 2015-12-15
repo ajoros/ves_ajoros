@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 
+
 class DraggableRectangle:
     def __init__(self, xy, width, height, alpha, color):
         # print(rect)
@@ -13,8 +14,8 @@ class DraggableRectangle:
         self.x1 = None
         self.y1 = None
         self.ax.add_patch(self.rect)
-
         self.press = None
+        self.dblclick = False
 
     def connect(self):
         'connect to all the events we need'
@@ -27,17 +28,21 @@ class DraggableRectangle:
 
     def on_press(self, event):
         'on button press we will see if the mouse is over us and store some data'
-        if event.inaxes != self.rect.axes:
-            return
+        # if event.inaxes != self.rect.axes:
+        #     return
+        if event.dblclick:
+            self.dblclick = True
+            print('DOUBLE CLICK\n')
+            contains, attrd = self.rect.contains(event)
+            if not contains:
+                return
 
-        contains, attrd = self.rect.contains(event)
-        if not contains:
-            return
-
-        print('event contains', self.rect.xy)
-        # x0, y0 = self.rect.xy
-        self.x0, self.y0 = event.xdata, event.ydata
-        self.press = self.x0, self.y0, event.xdata, event.ydata
+            print('event contains', self.rect.xy)
+            # x0, y0 = self.rect.xy
+            x0, y0 = event.xdata, event.ydata
+            self.press = x0, y0, event.xdata, event.ydata
+        else:
+            print('NO DOUBLE CLICK\n')
 
     def on_motion(self, event):
         'on motion we will move the rect if the mouse is over us'
@@ -47,33 +52,39 @@ class DraggableRectangle:
         if event.inaxes != self.rect.axes:
             return
 
-        self.x0, self.y0, xpress, ypress = self.press
+        x0, y0, xpress, ypress = self.press
         dx = event.xdata - xpress
         dy = event.ydata - ypress
-        #print 'x0=%f, xpress=%f, event.xdata=%f, dx=%f, x0+dx=%f'%(x0, xpress, event.xdata, dx, x0+dx)
-        self.rect.set_x(self.x0 + dx)
-        self.rect.set_y(self.y0 + dy)
+        # print('x0=%f, xpress=%f, event.xdata=%f, dx=%f, x0+dx=%f' % (
+        #     x0, xpress, event.xdata, dx, x0+dx))
+        self.rect.set_x(x0 + dx)
+        self.rect.set_y(y0 + dy)
 
         self.rect.figure.canvas.draw()
 
 
     def on_release(self, event):
-        print('release event:')
-        print(event)
-        'on release we reset the press data'
-        self.press = None
-        # self.x0 = event.xdata
-        # self.y0 = event.ydata
-        # self.rect.figure.canvas.draw()
-        print('release')
-        self.x1 = event.xdata
-        self.y1 = event.ydata
-        self.rect.set_width(self.x1 - self.x0)
-        self.rect.set_height(self.y1 - self.y0)
-        self.rect.set_xy((self.x0, self.y0))
-        self.ax.figure.canvas.draw()
-        print('x1 {}'.format(self.x1))
-        print('y1 {}'.format(self.y1))
+        if self.dblclick:
+            print('Double on release')
+            self.dblclick = False
+        return
+        # print('DOUBLE CLICK\n\n')
+        # print('release event:')
+        # print(event)
+        # # 'on release we reset the press data'
+        # # self.press = None
+        # x0 = event.x0
+        # y0 = event.y0
+        # # self.rect.figure.canvas.draw()
+        # print('release')
+        # x1 = event.xdata
+        # y1 = event.ydata
+        # self.rect.set_width(x1 - x0)
+        # self.rect.set_height(y1 - y0)
+        # self.rect.set_xy((x0, y0))
+        # self.ax.figure.canvas.draw()
+        # print('x1 {}'.format(x1))
+        # print('y1 {}'.format(y1))
 
     def disconnect(self):
         'disconnect all the stored connection ids'

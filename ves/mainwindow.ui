@@ -14,12 +14,12 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="PlotButton">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>30</x>
       <y>300</y>
-      <width>331</width>
+      <width>281</width>
       <height>41</height>
      </rect>
     </property>
@@ -27,17 +27,7 @@
      <string>Plot</string>
     </property>
    </widget>
-   <widget class="QTreeView" name="treeView">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>331</width>
-      <height>291</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="FigureWidget" native="true">
     <property name="geometry">
      <rect>
       <x>350</x>
@@ -47,17 +37,27 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="NewRectangleButton">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>370</x>
       <y>300</y>
-      <width>291</width>
+      <width>251</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string>New Rectangle</string>
+    </property>
+   </widget>
+   <widget class="QTableView" name="TableViewWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>331</width>
+      <height>291</height>
+     </rect>
     </property>
    </widget>
   </widget>

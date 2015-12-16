@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>645</width>
-    <height>397</height>
+    <width>675</width>
+    <height>391</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
         <height>291</height>
        </size>
       </property>
-      <zorder>TableViewWidget</zorder>
+      <layout class="QVBoxLayout" name="verticalLayout"/>
      </widget>
     </item>
     <item row="1" column="0">
@@ -65,7 +65,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>645</width>
+     <width>675</width>
      <height>22</height>
     </rect>
    </property>

@@ -15,7 +15,7 @@ UI_MainWindow, QMainWindow = loadUiType('mainwindow.ui')
 
 class Main(QMainWindow, UI_MainWindow):
 
-    def __init__(self, ):
+    def __init__(self):
 
         super(Main, self).__init__()
         self.setupUi(self)

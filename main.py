@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.uic import loadUiType
 
 
-os.chdir(os.path.join(os.getcwd(), 'ves'))
+os.chdir(os.path.join(os.path.dirname(__file__), 'ves'))
 UI_MainWindow, QMainWindow = loadUiType('mainwindow.ui')
 
 class Main(QMainWindow, UI_MainWindow):

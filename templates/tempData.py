@@ -21,7 +21,7 @@ colors = [color for color in colors_temp for _ in range(4)]
 
 # Set up data for software, which includes some one-time subsetting to
 #  strip the headers from the input data
-rowCount = len(tableData)
+rowCount = len(tableData) - 1
 columnCount = len(tableData[0])
 
 colors = colors[:rowCount]

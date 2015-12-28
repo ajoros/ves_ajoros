@@ -1,10 +1,11 @@
 import numpy as np
 
-from tempData import columnCount, columns, colors, headers, rowCount, tableData
+from templates.tempData import (
+    columnCount, columns, colors, headers, rowCount, tableData)
 
-print(tableData[1])
-# tableData = [map(float, tableData[i]) for i in range(rowCount)]
-for i in range(rowCount - 1):
+
+# Convert values from Qt model strings to floats or np.nan
+for i in range(rowCount):
     row = tableData[i]
     for j in range(len(row)):
         value = row[j]
@@ -13,14 +14,31 @@ for i in range(rowCount - 1):
         except ValueError:
             value = np.nan
         row[j] = value
-        print(row)
         tableData[i] = row
 
-# print(tableData)
-input()
-for row in tableData:
-    print(row)
-input()
+# Extract the raw current and voltage values, pass on Index error
+voltage, current, voltage_spacing = [], [], []
+for row in tableData[:rowCount]:
+    try:
+        voltage_spacing.append(float(row.pop(1)))
+        voltage.append(float(row.pop(4)))
+        current.append(float(row.pop(4)))
+    except (IndexError, ValueError):
+        pass
 
-table = np.array(tableData).astype(np.float64)
-print(table)
+# Convert the lists of voltage and current to Numpy arrays
+voltage_spacing = np.array(voltage_spacing[::4], dtype=np.float64)
+voltage = np.array(voltage, dtype=np.float64).reshape(rowCount / 4, 4)
+current = np.array(current, dtype=np.float64).reshape(rowCount / 4, 4)
+
+mean_voltage = np.mean(voltage, axis=1)
+mean_current = np.mean(current, axis=1)
+
+
+if __name__ == '__main__':
+    import matplotlib.pyplot as plt
+    plt.style.use('bmh')
+
+    plt.plot(voltage_spacing, mean_voltage)
+    plt.plot(voltage_spacing, mean_current)
+    plt.show()

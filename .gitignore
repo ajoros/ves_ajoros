@@ -5,6 +5,9 @@
 *.xls
 *.pdf
 
+# Ignore docs directory
+docs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

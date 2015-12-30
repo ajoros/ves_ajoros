@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1138</width>
-    <height>627</height>
+    <width>1140</width>
+    <height>631</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -128,6 +128,9 @@
             <height>500</height>
            </size>
           </property>
+          <property name="mouseTracking">
+           <bool>true</bool>
+          </property>
           <layout class="QVBoxLayout" name="mplvl"/>
          </widget>
         </item>
@@ -168,7 +171,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1138</width>
+     <width>1140</width>
      <height>22</height>
     </rect>
    </property>

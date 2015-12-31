@@ -71,7 +71,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.mplvl.addWidget(self.canvas)
         self.canvas.draw()
         self.toolbar = NavigationToolbar(
-            self.canvas, self.FigureWidget, coordinates=True)
+            self.canvas, self.figureViewWidget, coordinates=True)
         self.mplvl.addWidget(self.toolbar)
 
 
@@ -94,33 +94,14 @@ if __name__ == '__main__':
     dpi = 300
 
     fig = plt.subplot(111)
-    # figure = Plot(
-    #     (0, 0), 1, 1, alpha=0.5, color='red')
-    # # ax = figure.add_subplot(111)
-    # figure.add_subplot(111)
-    # print(dir(figure))
-    # print(dir(Figure))
-
-    # a = Plot((0, 0.5), 0.25, 0.25)
-    plt.style.use('bmh')
-    # plt.plot(voltageSpacing, meanVoltage, '--')
-    # plt.plot(voltageSpacing, meanCurrent, '--')
-
-    # figure = Figure(figsize=(width, height), dpi=dpi)
-    # ax1fig1 = figure.add_subplot(111)
-    # ax1fig1.plot(voltageSpacing, meanVoltage, '--')
-    # ax1fig1.plot(voltageSpacing, meanCurrent, '--')
-    # figure.add_subplot(voltageSpacing, meanVoltage, '--')
-    # figure.add_subplot(voltageSpacing, meanCurrent, '--')
-    # plt.tight_layout()
+    plt.plot(voltageSpacing, meanVoltage)
+    plt.plot(voltageSpacing, meanCurrent)
+    fig = plt.gcf()
 
     app = QApplication(sys.argv)
-    main = Main(tableData, headers, colors, (0, 0.5), 0.25, 0.25)
-
-    # print(dir(self.tableViewWidget))
-    # model = PalettedTableModel(tableData, headers, colors)
-    # main.initTableView(model)
-    # main.addmpl(fig)
+    main = Main(tableData, headers, colors,
+               (0, 0.5), 0.25, 0.25)
+    main.addmpl(fig)
     main.show()
 
     sys.exit(app.exec_())

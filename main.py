@@ -33,20 +33,15 @@ class Main(QMainWindow, UI_MainWindow):
 
         self.setupUi(self)
 
-        print(tableData)
-
+        # Set up the model and tableView
         self.model = PalettedTableModel(tableData, headers, colors)
-        self.tableViewWidget.setModel(self.model)
 
+        self.tableViewWidget.setModel(self.model)
         for row in range(0, rowCount, 4):
             for col in columns:
                 self.tableViewWidget.setSpan(row, col, 4, 1)
 
-        for thing in sorted(dir(self.tableViewWidget)):
-            print(thing)
-
-        # self.tableViewWidget.resizeColumnsToContents()
-
+        self.tableViewWidget.resizeColumnsToContents()
         self.tableViewWidget.show()
 
 

@@ -32,4 +32,3 @@ columns = list(range(columnCount))
 
 for value in range(3, 5):
     columns.remove(value)
-

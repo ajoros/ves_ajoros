@@ -1,21 +1,23 @@
 import matplotlib
 matplotlib.use('Qt5Agg')
-from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as Canvas
+from matplotlib.figure import Figure, Axes
 import matplotlib.pyplot as plt
+plt.style.use('bmh')
 from matplotlib.patches import Rectangle
 import numpy as np
 
-from DraggableRectangles import DraggableRectangle
-from aggregate import voltage_spacing, mean_voltage, mean_current
+# from DraggableRectangles import DraggableRectangle
+from aggregate import voltageSpacing, meanVoltage, meanCurrent
 
 
-r = Rectangle((0, 0), 1, 1, alpha=0.5, color='red')
-# print(dir(Figure))
-fig = plt.subplot(111)
-# print(dir(fig))
+# r = Rectangle((0, 0), 1, 1, alpha=0.5, color='red')
+# # print(dir(Figure))
+# fig = plt.subplot(111)
+# # print(dir(fig))
 class Plot(Figure):
 
-    def __init__(self, fig, xy, width, height,
+    def __init__(self, xy, width, height,
                  angle=0., alpha=0.5, color=None):
 
         if color is None:
@@ -26,7 +28,13 @@ class Plot(Figure):
         self.x1 = None
         self.y1 = None
 
-        self.fig = plt.subplot(111)
+        self.fig = Figure()
+        self.ax = self.fig.add_subplot(111)
+
+        # Canvas.__init__(self, self.fig)
+        # Canvas.setSizePolicy(self, )
+
+        # self.fig = fig
         self.ax = plt.gca()
         self.rect = Rectangle((0, 0), 1, 1, alpha=alpha, color=color)
 
@@ -44,6 +52,7 @@ class Plot(Figure):
 
 
     def onRelease(self, event):
+
         try:
             self.x1 = event.xdata
             self.y1 = event.ydata
@@ -59,6 +68,7 @@ class Plot(Figure):
                 self.rect._height, self.rect._angle)
 
             return self.rectangle
+
         except TypeError:
             pass
 
@@ -71,12 +81,12 @@ if __name__ == '__main__':
     a_list = []
     for _ in range(1):
         a = Plot((0, 0.5), 0.25, 0.25)
-        plt.style.use('bmh')
-        plt.plot(voltage_spacing, mean_voltage, '--')
-        plt.plot(voltage_spacing, mean_current, '--')
+        # plt.style.use('bmh')
+        plt.plot(voltageSpacing, meanVoltage, '--')
+        plt.plot(voltageSpacing, meanCurrent, '--')
         plt.show()
         a_list.append(a)
-        print(a.rectangle)
+        # print(a.rectangle)
         del a
 
     for a in a_list:

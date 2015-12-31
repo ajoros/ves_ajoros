@@ -8,25 +8,25 @@ from templates.tempData import (
     columnCount, columns, colors, headers, rowCount, tableData)
 
 
-class PaletteTableModel(QAbstractTableModel):
+class PalettedTableModel(QAbstractTableModel):
 
     def __init__(self, table=[[]], headers=[], colors=[], parent=None):
 
         QAbstractTableModel.__init__(self, parent)
 
-        self.__table = table
-        self.__headers = headers
-        self.__colors = colors
+        self.table = table
+        self.headers = headers
+        self.colors = colors
 
 
     def rowCount(self, parent):
 
-        return len(self.__table)
+        return len(self.table)
 
 
     def columnCount(self, parent):
 
-        return len(self.__table[0])
+        return len(self.table[0])
 
 
     def flags(self, index):
@@ -36,14 +36,14 @@ class PaletteTableModel(QAbstractTableModel):
 
     def update(self, table):
 
-        self.__table = table
+        self.table = table
 
 
     def data(self, index, role):
         """Store and control data for the Table model
 
         Args:
-            self (class??): an instance of PaletteTableModel
+            self (class??): an instance of PalettedTableModel
             index (`::class::Qt.TableInex`??)
             role (qt class): role
 
@@ -56,18 +56,18 @@ class PaletteTableModel(QAbstractTableModel):
 
         if role == Qt.EditRole:
 
-            return self.__table[row][column]
+            return self.table[row][column]
 
         if role == Qt.ToolTipRole:
 
             return 'Cell contents: {}'.format(
-                self.__table[row][column])
+                self.table[row][column])
 
         if role == Qt.DisplayRole:
 
             row = index.row()
             column = index.column()
-            value = self.__table[row][column]
+            value = self.table[row][column]
 
             return value
 
@@ -79,7 +79,8 @@ class PaletteTableModel(QAbstractTableModel):
             column = index.column()
 
             if isinstance(value, str):
-                self.__table[row][column] = value
+                print('howdy ho yo')
+                self.table[row][column] = value
                 self.dataChanged.emit(index, index)
                 return True
 
@@ -91,16 +92,16 @@ class PaletteTableModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
 
             if orientation == Qt.Horizontal:
-                return self.__headers[section]
+                return self.headers[section]
 
         if role == Qt.DecorationRole:
 
             if orientation == Qt.Horizontal:
-                return self.__headers[section]
+                return self.headers[section]
 
             if orientation == Qt.Vertical:
 
-                value = self.__colors[section]
+                value = self.colors[section]
                 pixmap = QPixmap(25, 25)
                 pixmap.fill(QColor(value))
 
@@ -123,14 +124,14 @@ class PaletteTableModel(QAbstractTableModel):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
-    model = PaletteTableModel(tableData, headers, colors)
+    model = PalettedTableModel(tableData, headers, colors)
 
     tableView = QTableView()
     tableView.setModel(model)
 
     tableView.show()
 
-    for row in range(0, rowCount - 1, 4):
+    for row in range(0, rowCount, 4):
         for col in columns:
             tableView.setSpan(row, col, 4, 1)
 

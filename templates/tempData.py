@@ -29,5 +29,7 @@ headers = tableData[0]
 tableData = tableData[1:]
 
 columns = list(range(columnCount))
-for value in range(4, 7):
+
+for value in range(3, 5):
     columns.remove(value)
+

@@ -70,7 +70,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.toolbar = NavigationToolbar(
             self.canvas, self.figureViewWidget, coordinates=True)
 
-        self.mplvl.addWidget(figureViewWidget)
+        self.mplvl.addWidget(self.canvas)
         self.mplvl.addWidget(self.toolbar)
 
         self.canvas.mpl_connect(

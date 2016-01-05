@@ -64,8 +64,8 @@ class Main(QMainWindow, UI_MainWindow):
             xlabel='Spacing', ylabel='Other thing')
         self.canvas = figureViewWidget
 
-        self.rect = Rectangle((0, 0), 1, 1, alpha=alpha, color=color)
-        self.ax = plt.gca()
+        # self.rect = Rectangle((0, 0), 1, 1, alpha=alpha, color=color)
+        # self.ax = plt.gca()
 
         self.toolbar = NavigationToolbar(
             self.canvas, self.figureViewWidget, coordinates=True)
@@ -276,6 +276,7 @@ class MplCanvas(FigureCanvas):
             self.rect.set_xy((self.x0, self.y0))
             print('x1 {}'.format(self.x1))
             print('y1 {}'.format(self.y1))
+            self.rect.figure.canvas.draw()
 
             self.ax.figure.canvas.draw()
             self.draw()

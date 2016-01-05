@@ -1,5 +1,4 @@
 import os
-import sys
 
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -22,7 +21,8 @@ from templates.tempData import (
 
 import matplotlib
 matplotlib.use('Qt5Agg')
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import (
+    FigureCanvasQTAgg as FigureCanvas)
 from matplotlib.figure import Figure, Axes
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
@@ -59,10 +59,13 @@ class Main(QMainWindow, UI_MainWindow):
         self.tableViewWidget.show()
 
         # self.fig = Figure()
+        print(voltageSpacing)
+        print(meanVoltage)
         figureViewWidget = MplCanvas(
             voltageSpacing, meanVoltage, parent=None, title='hey',
             xlabel='Spacing', ylabel='Other thing')
         self.canvas = figureViewWidget
+        self.canvas.setParent(self)
 
         # self.rect = Rectangle((0, 0), 1, 1, alpha=alpha, color=color)
         # self.ax = plt.gca()
@@ -184,7 +187,7 @@ class Main(QMainWindow, UI_MainWindow):
 
 class MplCanvas(FigureCanvas):
 
-    def __init__(self, x, y, parent=None, title='',
+    def __init__(self, xdata, ydata, parent=None, title='',
                  xlabel='x label', ylabel='y label', linestyle='--',
                  dpi=150, hold=False, alpha=0.5, color=None):
         try:
@@ -193,8 +196,8 @@ class MplCanvas(FigureCanvas):
         except:
             pass
 
-        self.xdata = x
-        self.ydata = y
+        self.xdata = xdata
+        self.ydata = ydata
         self.parent = parent
         self.title = title
         self.xlabel = xlabel
@@ -205,16 +208,29 @@ class MplCanvas(FigureCanvas):
         self.alpha = alpha
         self.color = color
 
-        fig = Figure(dpi=self.dpi)
-        super(MplCanvas, self).__init__(fig)
+        self.fig = Figure(dpi=self.dpi)
 
-        self.axes = fig.add_subplot(111)
+        # super(MplCanvas, self).__init__(self.fig)
+
+        self.ax = plt.gca()
+        self.ax.set_xlabel(xlabel)
+        self.ax.set_ylabel(ylabel)
+        self.axes = self.fig.add_subplot(111)
         self.axes.hold(self.hold)
 
-        FigureCanvas.__init__(self, fig)
-        self.setParent(parent)
+        FigureCanvas.__init__(self, self.fig)
+        self.setParent(self.ax.figure.canvas)
 
         self.initFigure()
+        # self.rect = Rectangle(
+        #     (0, 0), 100, 100, alpha=self.alpha, color=self.color)
+        # self.axes.plot(
+        #     self.xdata, self.ydata, linestyle=self.linestyle, color=self.color)
+        # self.ax = plt.gca()
+        # self.ax.set_xlabel(self.xlabel)
+        # self.ax.set_ylabel(self.ylabel)
+        # self.ax.add_patch(self.rect)
+        # self.fig = plt.gcf()
 
         FigureCanvas.setSizePolicy(
             self, QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -225,20 +241,25 @@ class MplCanvas(FigureCanvas):
         self.ax.figure.canvas.mpl_connect(
             'button_release_event', self.onRelease)
 
-        self.draw()
+        # self.draw()
+        super(MplCanvas, self).__init__(self.fig)
+
 
 
     def initFigure(self):
 
         self.rect = Rectangle(
-            (0, 0), 100, 100, alpha=self.alpha, color=self.color)
-        self.axes.plot(
+            (0, 0), 0, 0, alpha=self.alpha, color=self.color)
+        plt.plot(
             self.xdata, self.ydata, linestyle=self.linestyle, color=self.color)
         self.ax = plt.gca()
         self.ax.set_xlabel(self.xlabel)
         self.ax.set_ylabel(self.ylabel)
         self.ax.add_patch(self.rect)
-        self.draw()
+        self.fig = plt.gcf()
+        self.ax.figure.canvas.draw()
+        # self.fig.draw()
+        # self.draw()
         # self.axes.set_tight_layout()
         # self.draw()
 
@@ -246,14 +267,16 @@ class MplCanvas(FigureCanvas):
     def updateFigure(self, rectangle):
 
         xy, width, height = rectangle
-        self.axes.plot(
-            self.xdata, self.ydata, linestyle=self.linestyle, color=self.color)
+        # self.axes.plot(
+        #     self.xdata, self.ydata, linestyle=self.linestyle, color=self.color)
         self.rect = Rectangle(
             xy, width, height, alpha=self.alpha, color=self.color)
         self.ax.add_patch(self.rect)
         self.ax.figure.canvas.draw()
-        self.draw()
-        Canvas.draw(self)
+        # self.canvas.draw()
+        # self.ax.figure.canvas.draw()
+        # self.draw()
+        # Canvas.draw(self)
 
 
     def onPress(self, event):
@@ -262,7 +285,6 @@ class MplCanvas(FigureCanvas):
         self.y0 = event.ydata
         print('x0: {}'.format(self.x0))
         print('y0: {}'.format(self.y0))
-
 
 
     def onRelease(self, event):
@@ -287,7 +309,7 @@ class MplCanvas(FigureCanvas):
             self.rectangle = (
                 self.rect.get_xy(), self.rect._width, self.rect._height)
 
-            self.updateFigure(self.rectangle)
+            # self.updateFigure(self.rectangle)
             print(self.rectangle)
             return self.rectangle
 
@@ -424,6 +446,7 @@ class MplCanvas(FigureCanvas):
 
 
 if __name__ == '__main__':
+    import sys
     # plt.plot(voltageSpacing, meanVoltage, '-.')
     # plt.plot(voltageSpacing, meanCurrent, '-.')
     # Plot((0, 0.5), 0.25, 0.25)

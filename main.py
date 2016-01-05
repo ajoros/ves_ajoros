@@ -68,7 +68,7 @@ class Main(QMainWindow, UI_MainWindow):
         # self.ax = plt.gca()
 
         self.toolbar = NavigationToolbar(
-            self.canvas, self.figureViewWidget, coordinates=True)
+            self.canvas, self.canvas, coordinates=True)
 
         self.mplvl.addWidget(self.canvas)
         self.mplvl.addWidget(self.toolbar)

@@ -20,7 +20,7 @@ def aggregateTable(tableData, rowCount):
             row[j] = value
             temporaryTableData[i] = row
 
-    # Extract the raw current and voltage values, pass on Index error
+    # Extract the raw current and voltage values, pass on Index/Value error
     voltage, current, voltageSpacing = [], [], []
     for row in temporaryTableData[:rowCount]:
         try:
@@ -35,6 +35,7 @@ def aggregateTable(tableData, rowCount):
     voltage = np.array(voltage, dtype=np.float64).reshape(rowCount / 4, 4)
     current = np.array(current, dtype=np.float64).reshape(rowCount / 4, 4)
 
+    # Take the mean of every four rows from the Qt Table
     meanVoltage = np.mean(voltage, axis=1)
     meanCurrent = np.mean(current, axis=1)
 

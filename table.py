@@ -116,7 +116,7 @@ class PalettedTableModel(QAbstractTableModel):
             defaultValues = [
                 '' for i in range(self.columnCount(None))]
 
-            self.__colors.insert(position, defaultValues)
+            self.colors.insert(position, defaultValues)
 
         self.endInsertRows()
 
@@ -134,5 +134,7 @@ if __name__ == '__main__':
     for row in range(0, rowCount, 4):
         for col in columns:
             tableView.setSpan(row, col, 4, 1)
+    input()
+    model.insertRows(1, 1, 1)
 
     sys.exit(app.exec_())

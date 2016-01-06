@@ -97,7 +97,6 @@ class MplCanvas(FigureCanvas):
             self.rect.set_width(self.x1 - self.x0)
             self.rect.set_height(self.y1 - self.y0)
             self.rect.set_xy((self.x0, self.y0))
-            self.rect.figure.canvas.draw()
 
             self.rectangle = (
                 self.rect.get_xy(), self.rect._width, self.rect._height)

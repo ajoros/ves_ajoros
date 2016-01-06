@@ -62,6 +62,19 @@ class Main(QMainWindow, UI_MainWindow):
         self.canvas.mpl_connect(
             'button_release_event', self.canvas.onRelease)
 
+        # Connect to table buttons
+        self.addRowButton.clicked.connect(self.addRow)
+        self.removeRowButton.clicked.connect(self.removeRow)
+        self.plotButton.clicked.connect(self.plot)
+
+        # Connect to spacing radio buttons
+        self.wennerRadioButton.toggled.connect(self.wenner)
+        self.schlumbergerRadioButton.toggled.connect(self.schlumberger)
+
+        # Connect to plot buttons
+        self.newRectangleButton.clicked.connect(self.newRectangle)
+        self.computeButton.clicked.connect(self.compute)
+
         # self.initUi()
 
 
@@ -97,6 +110,41 @@ class Main(QMainWindow, UI_MainWindow):
         self.tableViewWidget.resizeColumnsToContents()
 
         self.tableViewWidget.show()
+
+
+    def addRow(self):
+
+        print('add row')
+
+
+    def removeRow(self):
+
+        print('remove row')
+
+
+    def plot(self):
+
+        print('plot')
+
+
+    def newRectangle(self):
+
+        print('new rectangle')
+
+
+    def compute(self):
+
+        print('compute')
+
+
+    def wenner(self):
+
+        print('wenner')
+
+
+    def schlumberger(self):
+
+        print('schlumberger')
 
 
 

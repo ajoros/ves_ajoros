@@ -22,7 +22,7 @@ from templates.tempData import (
 import numpy as np
 
 
-os.chdir(os.path.join(os.path.dirname(__file__), 'ves'))
+os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))
 UI_MainWindow, QMainWindow = loadUiType('mainwindow.ui')
 
 

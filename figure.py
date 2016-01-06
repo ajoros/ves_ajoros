@@ -13,8 +13,6 @@ from PyQt5.QtWidgets import QSizePolicy
 import numpy as np
 
 
-
-
 class MplCanvas(FigureCanvas):
 
     def __init__(self, xdata, ydata, parent=None, title='',

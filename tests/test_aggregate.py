@@ -27,6 +27,7 @@ class TestAggregate(unittest.TestCase):
 
         voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
             self.tableData, self.rowCount)
+
         assert_array_equal(voltageSpacing, np.array([0.6,  1.]))
 
         assert_array_equal(meanVoltage, np.array([ 155.25,   96.75]))

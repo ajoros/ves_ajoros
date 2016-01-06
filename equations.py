@@ -6,4 +6,4 @@ def wenner(a, Vm, I):
 
 
 def schlumberger(Vm, L, s, I):
-    return (np.pi * Vm (L**2 - s**2)) / (2 * s * I)
+    return ((np.pi * Vm (L**2 - s**2)) / (2 * s * I))

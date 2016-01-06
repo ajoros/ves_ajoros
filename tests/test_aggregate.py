@@ -23,6 +23,15 @@ class TestAggregate(unittest.TestCase):
         self.rowCount = len(self.tableData)
 
 
+    def tearDown(self):
+
+        self.tableData = None
+        del self.tableData
+
+        self.rowCount = None
+        del self.rowCount
+
+
     def test_aggregateTable(self):
 
         voltageSpacing, meanVoltage, meanCurrent = aggregateTable(

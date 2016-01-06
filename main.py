@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import QAction, QApplication, QMessageBox, QSizePolicy
 from PyQt5.uic import loadUiType
 
 from aggregate import aggregateTable
+from equations import schlumbergerResistivity, wennerResistivity
 from figure import MplCanvas
 from table import PalettedTableModel
 from templates.tempData import (
@@ -132,6 +133,16 @@ class Main(QMainWindow, UI_MainWindow):
         self.voltageSpacing = voltageSpacing
         self.meanVoltage = meanVoltage
         self.meanCurrent = meanCurrent
+
+        if self.schlumbergerLayout == True:
+
+            self.apparentResistivity = schlumbergerResistivity(
+                1., 1., 1., 1.)
+
+        if self.wennerLayout == True:
+
+            self.apparentResistivity = wennerResistivity(
+                1., 1., 1.)
 
 
     def addRow(self):

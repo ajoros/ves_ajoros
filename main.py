@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 plt.style.use('bmh')
 from matplotlib.figure import Figure
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QApplication, QSizePolicy
+from PyQt5.QtWidgets import QAction, QApplication, QMessageBox, QSizePolicy
 from PyQt5.uic import loadUiType
 
 from aggregate import aggregateTable
@@ -34,6 +34,10 @@ class Main(QMainWindow, UI_MainWindow):
         super(Main, self).__init__()
 
         self.setupUi(self)
+
+        # Set up the propoerties dictating probe layout
+        self.schlumbergerLayout = False
+        self.wennerLayout = False
 
         # Set up the model and tableView
         self.model = PalettedTableModel(tableData, headers, colors)
@@ -161,17 +165,27 @@ class Main(QMainWindow, UI_MainWindow):
 
     def compute(self):
 
-        print('compute')
+        if self.schlumbergerLayout == False and self.wennerLayout == False:
+
+            message = (
+                'The probe spacing radio button has not been set. Please ' +
+                 'indicate whether a Schlumberger or Wenner layout has ' +
+                 'been used by selecting one of the radio buttons. The ' +
+                 'radio buttons are located at the botton left of the ' +
+                 'program, near the input table.')
+            msgBox = QMessageBox()
+            msgBox.about(self, 'Warning', message)
+
 
 
     def wenner(self):
 
-        print('wenner')
+        self.wennerLayout = True
 
 
     def schlumberger(self):
 
-        print('schlumberger')
+        self.schlumbergerLayout = True
 
 
 

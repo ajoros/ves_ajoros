@@ -71,6 +71,19 @@ class MplCanvas(FigureCanvas):
         self.fig = plt.gcf()
 
 
+    def addPoints(self, xdata, ydata, color=None):
+
+        if len(xdata) != len(ydata):
+            xdata = xdata[:len(ydata)]
+
+        if color is None:
+            color = 'black'
+
+        plt.loglog(xdata, ydata, color, linestyle='None', marker='o')
+
+        self.ax.figure.canvas.draw()
+
+
 
     def updateFigure(self, rectangle, color, freeze=False):
 

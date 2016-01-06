@@ -264,10 +264,11 @@ class Main(QMainWindow, UI_MainWindow):
             else:
                 pass
 
-            print('\n\nres {}'.format(self.apparentResistivity))
-            plt.plot(self.voltageSpacing, self.apparentResistivity)
             for x, y in zip(self.voltageSpacing, self.apparentResistivity):
                 print('spacing {}; resistivity {}'.format(x, y))
+
+            self.canvas.addPoints(
+                self.voltageSpacing, self.apparentResistivity)
             return self.apparentResistivity
 
 

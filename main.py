@@ -134,15 +134,15 @@ class Main(QMainWindow, UI_MainWindow):
         self.meanVoltage = meanVoltage
         self.meanCurrent = meanCurrent
 
-        if self.schlumbergerLayout == True:
+        # if self.schlumbergerLayout == True:
 
-            self.apparentResistivity = schlumbergerResistivity(
-                1., 1., 1., 1.)
+        #     self.apparentResistivity = schlumbergerResistivity(
+        #         1., 1., 1., 1.)
 
-        if self.wennerLayout == True:
+        # if self.wennerLayout == True:
 
-            self.apparentResistivity = wennerResistivity(
-                1., 1., 1.)
+        #     self.apparentResistivity = wennerResistivity(
+        #         1., 1., 1.)
 
 
     def addRow(self):
@@ -198,27 +198,93 @@ class Main(QMainWindow, UI_MainWindow):
 
     def compute(self):
 
+        self.apparentResistivity = None
+        self.aggregateTableForPlot()
+
+        # Provide a message box if neither Wenner nor Schlumberger are selected
         if self.schlumbergerLayout == False and self.wennerLayout == False:
+
             message = (
                 'The probe spacing radio button has not been set.\n\n' +
                 'Please indicate whether a Schlumberger or Wenner layout '
                 'has been used by selecting one of the radio buttons. The ' +
                 'radio buttons are located at the botton left of the ' +
                 'program, near the input table.')
-            msgBox = QMessageBox()
-            msgBox.about(self, 'Warning', message)
+            self.messageBox('Warning', message)
 
-        elif self.schlumbergerLayout == True:
-            self.apparentResistivity = schlumbergerResistivity(
-                1., 1., 1., 1.)
-
-        elif self.wennerLayout == True:
-            self.apparentResistivity = wennerResistivity(
-                1., 1., 1.)
-
-        else:
             pass
 
+        # Calculate apparent resistivity using the Wenner array
+        else:
+            if self.wennerLayout == True:
+
+                a = self.voltageSpacing[0] * 2 # Does voltage spacing refer to a or a/2 in clark2011? Change below, too, if not.
+                Vm = self.meanVoltage
+                I = self.meanCurrent
+
+                if a != self.voltageSpacing[-1]:
+
+                    message = (
+                        'The probe spacing radio button has been set to ' +
+                        'Wenner and the first and last Voltage sep. values ' +
+                        'are not equal. All Voltage sep. values should be ' +
+                        'equal to eachother.\n\n' +
+                        'Please ensure that the Wenner radio box is ' +
+                        'selected and that the electrodes are placed in ' +
+                        'the proper arrangement.')
+                    self.messageBox('Warning', message)
+                    pass
+
+
+                self.apparentResistivity = wennerResistivity(a, Vm, I)
+
+            elif self.schlumbergerLayout == True:
+                nRows = len(self.voltageSpacing)
+
+                s, L = np.empty(nRows), np.empty(nRows)
+                Vm = self.meanVoltage
+                I = self.meanCurrent
+
+                for i in range(nRows):
+
+                    if i == len(self.voltageSpacing) - 1:
+                        break
+
+                    s[i] = self.voltageSpacing[i]
+                    L[i] = self.voltageSpacing[i + 1]
+
+                # s = self.voltageSpacing[0]
+                # L = self.voltageSpacing[1]
+
+
+                self.voltageSpacing = self.voltageSpacing[:-1]
+                self.apparentResistivity = schlumbergerResistivity(
+                    Vm, L, s, I)[:-1] # Leave off last return values as it should be nan
+
+            else:
+                pass
+
+            print('\n\nres {}'.format(self.apparentResistivity))
+            plt.plot(self.voltageSpacing, self.apparentResistivity)
+            for x, y in zip(self.voltageSpacing, self.apparentResistivity):
+                print('spacing {}; resistivity {}'.format(x, y))
+            return self.apparentResistivity
+
+
+    def messageBox(self, title, message):
+        msgBox = QMessageBox()
+        msgBox.about(self, title, message)
+# import numpy as np
+
+
+# def wennerResistivity(a, Vm, I):
+
+#     return (2 * np.pi * a * (Vm / I))
+
+
+# def schlumbergerResistivity(Vm, L, s, I):
+
+#     return (np.pi * Vm * (L**2 - s**2)) / (2 * s * I)
 
     def wenner(self):
 
@@ -240,6 +306,7 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     main = Main(tableData, headers, colors, (0, 0.5), 50, 50, angle=0.)
+    print(main.model.table)
     main.show()
 
     sys.exit(app.exec_())

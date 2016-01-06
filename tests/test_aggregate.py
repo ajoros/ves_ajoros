@@ -20,6 +20,7 @@ class TestAggregate(unittest.TestCase):
             ['', '', '', '42', '83'],
             ['', '', '', '151', '80'],
             ['', '', '', '38', '81']]
+
         self.rowCount = len(self.tableData)
 
 

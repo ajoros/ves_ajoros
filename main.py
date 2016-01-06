@@ -226,12 +226,12 @@ class Main(QMainWindow, UI_MainWindow):
 
                     message = (
                         'The probe spacing radio button has been set to ' +
-                        'Wenner and the first and last Voltage sep. values ' +
-                        'are not equal. All Voltage sep. values should be ' +
-                        'equal to eachother.\n\n' +
-                        'Please ensure that the Wenner radio box is ' +
+                        'Wenner Spacing and the first and last Voltage Sep. ' +
+                        'values are NOT EQUAL. All Voltage Sep. values ' +
+                        'SHOULD BE EQUAL to eachother.\n\n' +
+                        'Please ensure that the proper radio box is ' +
                         'selected and that the electrodes are placed in ' +
-                        'the proper arrangement.')
+                        'the desired arrangement.')
                     self.messageBox('Warning', message)
                     pass
 
@@ -239,6 +239,22 @@ class Main(QMainWindow, UI_MainWindow):
                 self.apparentResistivity = wennerResistivity(a, Vm, I)
 
             elif self.schlumbergerLayout == True:
+
+                if self.voltageSpacing[0] == self.voltageSpacing[-1]:
+                    message = (
+                        'The probe spacing radio button has been set to ' +
+                        'Schlumberger Spacing and the first and last ' +
+                        'Voltage Sep. values are EQUAL. The voltage ' +
+                        'separation must follow a particular pattern, ' +
+                        'in which the first and last separation values ' +
+                        'should NOT BE EQUAL.\n\n' +
+                        'Please ensure that the proper radio box is ' +
+                        'selected and that the electrodes are placed in ' +
+                        'the desired arrangement.')
+                    self.messageBox('Warning', message)
+                    pass
+
+
                 nRows = len(self.voltageSpacing)
 
                 s, L = np.empty(nRows), np.empty(nRows)
@@ -266,6 +282,7 @@ class Main(QMainWindow, UI_MainWindow):
 
             for x, y in zip(self.voltageSpacing, self.apparentResistivity):
                 print('spacing {}; resistivity {}'.format(x, y))
+
 
             self.canvas.addPoints(
                 self.voltageSpacing, self.apparentResistivity)
@@ -307,7 +324,6 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     main = Main(tableData, headers, colors, (0, 0.5), 50, 50, angle=0.)
-    print(main.model.table)
     main.show()
 
     sys.exit(app.exec_())

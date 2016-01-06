@@ -15,7 +15,7 @@ class MplCanvas(FigureCanvas):
 
     def __init__(self, xdata, ydata, parent=None, title='',
                  xlabel='x label', ylabel='y label', linestyle='--',
-                 dpi=150, hold=False, alpha=0.5, color=None):
+                 dpi=150, hold=False, alpha=0.5, color=None, colors=None):
 
         self.xdata = xdata
         self.ydata = ydata
@@ -28,6 +28,7 @@ class MplCanvas(FigureCanvas):
         self.hold = hold
         self.alpha = alpha
         self.color = color
+        self.colors = colors
 
         self.fig = Figure(dpi=self.dpi)
         self.ax = plt.gca()
@@ -71,14 +72,19 @@ class MplCanvas(FigureCanvas):
 
 
 
-    def updateFigure(self, rectangle):
+    def updateFigure(self, rectangle, color, freeze=False):
 
         xy, width, height = rectangle
-
+        print('update figure rect: {}'.format(rectangle))
         self.rect = Rectangle(
-            xy, width, height, alpha=self.alpha, color=self.color)
+            xy, width, height, alpha=self.alpha, color=color)
 
-        self.ax.add_patch(self.rect)
+        if freeze:
+            self.freezeRect = self.rect
+            self.ax.add_patch(self.freezeRect)
+        else:
+            self.ax.add_path(self.rect)
+
         self.ax.figure.canvas.draw()
 
 

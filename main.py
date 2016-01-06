@@ -38,6 +38,7 @@ class Main(QMainWindow, UI_MainWindow):
         # Set up the propoerties dictating probe layout
         self.schlumbergerLayout = False
         self.wennerLayout = False
+        self.colors = colors
 
         # Set up the model and tableView
         self.model = PalettedTableModel(tableData, headers, colors)
@@ -50,10 +51,12 @@ class Main(QMainWindow, UI_MainWindow):
         self.aggregateTableForPlot()
 
         # Set up the QWidget with a MplCanvas and NavigationToolbar instance
+        self.rectangles = []
+        self.rects = []
         self.canvas = MplCanvas(
             self.voltageSpacing, self.meanVoltage, parent=None,
             title='hey', xlabel='Voltage Probe Spacing (m)',
-            ylabel='Resistivity (Ohm-m)')
+            ylabel='Resistivity (Ohm-m)', colors=self.colors)
         plt.plot(self.voltageSpacing, self.meanCurrent)
 
         self.canvas.setParent(self)
@@ -147,7 +150,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.initTableView(self.model)
 
 
-    def plot(self):
+    def initPlot(self):
 
         plt.clf()
         self.aggregateTableForPlot()
@@ -158,9 +161,28 @@ class Main(QMainWindow, UI_MainWindow):
         self.canvas.draw()
 
 
+
+    def plot(self):
+
+        self.initPlot()
+
+        self.rectangles = []
+
+
     def newRectangle(self):
 
-        print('new rectangle')
+        # print(self.canvas.rectangle)
+        try:
+            self.rectangles.append(self.canvas.rectangle)
+            self.initPlot()
+            print(self.rectangles)
+            for i, rectangle in enumerate(self.rectangles):
+                color = self.colors[i  * 4]
+                print('color {}; rectangle {}'.format(color, rectangle))
+                self.canvas.updateFigure(rectangle, color, freeze=True)
+                self.canvas.draw()
+        except AttributeError:
+            pass
 
 
     def compute(self):
@@ -180,12 +202,14 @@ class Main(QMainWindow, UI_MainWindow):
 
     def wenner(self):
 
+        self.schlumbergerLayout = False
         self.wennerLayout = True
 
 
     def schlumberger(self):
 
         self.schlumbergerLayout = True
+        self.wennerLayout = False
 
 
 

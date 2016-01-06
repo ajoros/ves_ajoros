@@ -190,7 +190,7 @@ class Main(QMainWindow, UI_MainWindow):
         if self.schlumbergerLayout == False and self.wennerLayout == False:
 
             message = (
-                'The probe spacing radio button has not been set. Please ' +
+                'The probe spacing radio button has not been set.\n\nPlease ' +
                  'indicate whether a Schlumberger or Wenner layout has ' +
                  'been used by selecting one of the radio buttons. The ' +
                  'radio buttons are located at the botton left of the ' +

@@ -78,6 +78,9 @@
          <layout class="QGridLayout" name="gridLayout">
           <item row="1" column="1">
            <widget class="QPushButton" name="removeRowButton">
+            <property name="toolTip">
+             <string>Remove a row from the input table</string>
+            </property>
             <property name="text">
              <string>Remove Row</string>
             </property>
@@ -85,6 +88,9 @@
           </item>
           <item row="1" column="0">
            <widget class="QPushButton" name="addRowButton">
+            <property name="toolTip">
+             <string>Add a row to the input table</string>
+            </property>
             <property name="text">
              <string>Add Row</string>
             </property>
@@ -92,6 +98,9 @@
           </item>
           <item row="1" column="2">
            <widget class="QPushButton" name="plotButton">
+            <property name="toolTip">
+             <string>Plot the data from the input table</string>
+            </property>
             <property name="text">
              <string>Plot</string>
             </property>
@@ -99,6 +108,9 @@
           </item>
           <item row="0" column="1" colspan="2">
            <widget class="QRadioButton" name="schlumbergerRadioButton">
+            <property name="toolTip">
+             <string>Use the Schlumberger Spacing in calculating depth to water</string>
+            </property>
             <property name="text">
              <string>Schlumberger Spacing</string>
             </property>
@@ -106,6 +118,9 @@
           </item>
           <item row="0" column="0">
            <widget class="QRadioButton" name="wennerRadioButton">
+            <property name="toolTip">
+             <string>Use the Wenner Spacing in calculating depth to water</string>
+            </property>
             <property name="text">
              <string>Wenner Spacing</string>
             </property>
@@ -141,6 +156,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <widget class="QPushButton" name="newRectangleButton">
+            <property name="toolTip">
+             <string>Add a new rectangle to the plot</string>
+            </property>
             <property name="text">
              <string>New Rectangle</string>
             </property>
@@ -148,6 +166,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="computeButton">
+            <property name="toolTip">
+             <string>Compute depth to water!</string>
+            </property>
             <property name="text">
              <string>Compute</string>
             </property>

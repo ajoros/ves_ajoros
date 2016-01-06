@@ -60,19 +60,24 @@ class MplCanvas(FigureCanvas):
 
         plt.loglog(
             xdata, ydata, linestyle=self.linestyle, color=self.color)
+
         self.ax = plt.gca()
         self.ax.set_xlabel(self.xlabel)
         self.ax.set_ylabel(self.ylabel)
         self.ax.add_patch(self.rect)
-        self.fig = plt.gcf()
         self.ax.figure.canvas.draw()
+
+        self.fig = plt.gcf()
+
 
 
     def updateFigure(self, rectangle):
 
         xy, width, height = rectangle
+
         self.rect = Rectangle(
             xy, width, height, alpha=self.alpha, color=self.color)
+
         self.ax.add_patch(self.rect)
         self.ax.figure.canvas.draw()
 

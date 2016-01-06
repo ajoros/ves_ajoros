@@ -63,9 +63,6 @@
           <property name="horizontalScrollBarPolicy">
            <enum>Qt::ScrollBarAlwaysOn</enum>
           </property>
-          <property name="sizeAdjustPolicy">
-           <enum>QAbstractScrollArea::AdjustToContents</enum>
-          </property>
           <property name="showGrid">
            <bool>true</bool>
           </property>
@@ -102,7 +99,7 @@
              <string>Plot the data from the input table</string>
             </property>
             <property name="text">
-             <string>Plot</string>
+             <string>Reset Plot</string>
             </property>
            </widget>
           </item>
@@ -152,7 +149,7 @@
           <property name="toolTip">
            <string>Draw a rectangle on the plot using the mouse or trackpad</string>
           </property>
-          <property name="toolTipDuration">
+          <property name="toolTipDuration" stdset="0">
            <number>-1</number>
           </property>
           <layout class="QVBoxLayout" name="mplvl"/>
@@ -202,7 +199,7 @@
      <x>0</x>
      <y>0</y>
      <width>1140</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -79,7 +79,6 @@ class PalettedTableModel(QAbstractTableModel):
             column = index.column()
 
             if isinstance(value, str):
-                print('howdy ho yo')
                 self.table[row][column] = value
                 self.dataChanged.emit(index, index)
                 return True

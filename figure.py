@@ -39,7 +39,7 @@ class MplCanvas(FigureCanvas):
         FigureCanvas.__init__(self, self.fig)
         self.setParent(self.ax.figure.canvas)
 
-        self.initFigure()
+        self.initFigure(self.xdata, self.ydata)
 
         FigureCanvas.setSizePolicy(
             self, QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -53,12 +53,13 @@ class MplCanvas(FigureCanvas):
         super(MplCanvas, self).__init__(self.fig)
 
 
-    def initFigure(self):
+    def initFigure(self, xdata, ydata):
 
         self.rect = Rectangle(
             (0, 0), 0, 0, alpha=self.alpha, color=self.color)
+
         plt.loglog(
-            self.xdata, self.ydata, linestyle=self.linestyle, color=self.color)
+            xdata, ydata, linestyle=self.linestyle, color=self.color)
         self.ax = plt.gca()
         self.ax.set_xlabel(self.xlabel)
         self.ax.set_ylabel(self.ylabel)

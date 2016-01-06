@@ -13,7 +13,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QApplication, QSizePolicy
 from PyQt5.uic import loadUiType
 
-from aggregate import voltageSpacing, meanVoltage, meanCurrent
+from aggregate import voltageSpacing, meanVoltage, meanCurrent, aggregateTable
 from figure import MplCanvas
 from table import PalettedTableModel
 from templates.tempData import (
@@ -30,7 +30,7 @@ class Main(QMainWindow, UI_MainWindow):
 
     def __init__(self, tableData, headers, colors,
                  xy, width, height, angle=0., alpha=0.5, color='red'):
-
+    # def __init__(self, tableData, voltageSpacing, meanVoltage, )
         super(Main, self).__init__()
 
         self.setupUi(self)
@@ -43,11 +43,14 @@ class Main(QMainWindow, UI_MainWindow):
         self.tableViewWidget.resizeColumnsToContents()
         self.tableViewWidget.show()
 
+        self.aggregateTableForPlot()
+
         # Set up the QWidget with a MplCanvas and NavigationToolbar instance
         self.canvas = MplCanvas(
-            voltageSpacing, meanVoltage, parent=None, title='hey',
-            xlabel='Voltage Probe Spacing (m)', ylabel='Resistivity (Ohm-m)')
-        plt.plot(voltageSpacing, meanCurrent)
+            self.voltageSpacing, self.meanVoltage, parent=None,
+            title='hey', xlabel='Voltage Probe Spacing (m)',
+            ylabel='Resistivity (Ohm-m)')
+        plt.plot(self.voltageSpacing, self.meanCurrent)
 
         self.canvas.setParent(self)
         self.toolbar = NavigationToolbar(
@@ -114,6 +117,16 @@ class Main(QMainWindow, UI_MainWindow):
         self.tableViewWidget.show()
 
 
+    def aggregateTableForPlot(self):
+
+        voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
+            self.model.table, len(self.model.table))
+
+        self.voltageSpacing = voltageSpacing
+        self.meanVoltage = meanVoltage
+        self.meanCurrent = meanCurrent
+
+
     def addRow(self):
 
         nRows = len(self.model.table)
@@ -132,7 +145,13 @@ class Main(QMainWindow, UI_MainWindow):
 
     def plot(self):
 
-        print('plot')
+        plt.clf()
+        self.aggregateTableForPlot()
+
+        self.canvas.initFigure(self.voltageSpacing, self.meanVoltage)
+        plt.plot(self.voltageSpacing, self.meanCurrent)
+
+        self.canvas.draw()
 
 
     def newRectangle(self):

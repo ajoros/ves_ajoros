@@ -2,8 +2,6 @@ import copy
 
 import numpy as np
 
-from templates.tempData import rowCount, tableData
-
 
 def aggregateTable(tableData, rowCount):
 
@@ -40,15 +38,3 @@ def aggregateTable(tableData, rowCount):
     meanCurrent = np.mean(current, axis=1)
 
     return (voltageSpacing, meanVoltage, meanCurrent)
-
-
-voltageSpacing, meanVoltage, meanCurrent = aggregateTable(tableData, rowCount)
-
-
-if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-    plt.style.use('bmh')
-
-    plt.plot(voltageSpacing, meanVoltage)
-    plt.plot(voltageSpacing, meanCurrent)
-    plt.show()

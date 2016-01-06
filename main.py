@@ -222,7 +222,7 @@ class Main(QMainWindow, UI_MainWindow):
                 Vm = self.meanVoltage
                 I = self.meanCurrent
 
-                if a != self.voltageSpacing[-1]:
+                if a != self.voltageSpacing[-1] * 2:
 
                     message = (
                         'The probe spacing radio button has been set to ' +

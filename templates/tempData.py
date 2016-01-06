@@ -24,7 +24,7 @@ colors = [color for color in colors_temp for _ in range(4)]
 rowCount = len(tableData) - 1
 columnCount = len(tableData[0])
 
-colors = colors[:rowCount]
+# colors = colors[:rowCount]
 headers = tableData[0]
 tableData = tableData[1:]
 

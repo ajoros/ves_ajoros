@@ -46,7 +46,7 @@ class Main(QMainWindow, UI_MainWindow):
         # Set up the QWidget with a MplCanvas and NavigationToolbar instance
         self.canvas = MplCanvas(
             voltageSpacing, meanVoltage, parent=None, title='hey',
-            xlabel='Spacing', ylabel='Other thing')
+            xlabel='Voltage Probe Spacing (m)', ylabel='Resistivity (Ohm-m)')
         plt.plot(voltageSpacing, meanCurrent)
 
         self.canvas.setParent(self)
@@ -101,9 +101,11 @@ class Main(QMainWindow, UI_MainWindow):
 
     def initTableView(self, model):
 
+        nRows = len(self.model.table)
+
         self.tableViewWidget.setModel(model)
 
-        for row in range(0, rowCount, 4):
+        for row in range(0, nRows, 4):
             for col in columns:
                 self.tableViewWidget.setSpan(row, col, 4, 1)
 
@@ -115,6 +117,10 @@ class Main(QMainWindow, UI_MainWindow):
     def addRow(self):
 
         print('add row')
+        nRows = len(self.model.table)
+        self.model.insertRows(nRows, 4)
+        self.initTableView(self.model)
+        # self.model.insertRows()
 
 
     def removeRow(self):

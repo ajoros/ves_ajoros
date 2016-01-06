@@ -11,6 +11,7 @@ class TestResistivityCalculations(unittest.TestCase):
 
     def setUp(self):
 
+        # Set up a mock set of tableData similar to the Qt table
         self.tableData = [
             ['0.6', '0.3', '0.9', '122', '82'],
             ['', '', '', '120', '82'],
@@ -24,7 +25,6 @@ class TestResistivityCalculations(unittest.TestCase):
             ['', '', '', '-10', '82'],
             ['', '', '', '91', '80'],
             ['', '', '', '-11', '82']]
-
         self.rowCount = len(self.tableData)
 
         # Set up test for both types of arrays to calculate apparentResistivity

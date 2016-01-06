@@ -7,7 +7,7 @@ from aggregate import aggregateTable
 from equations import schlumbergerResistivity, wennerResistivity
 
 
-class TestEquations(unittest.TestCase):
+class TestResistivityCalculations(unittest.TestCase):
 
     def setUp(self):
 

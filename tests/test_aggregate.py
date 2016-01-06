@@ -91,9 +91,3 @@ class TestEquations(unittest.TestCase):
         assert_array_almost_equal(
             apparentResistivity,
             np.array([14.2317011, 8.950648, 4.058130], dtype=np.float64))
-
-
-if __name__ == '__main__':
-    te = TestEquations()
-    te.setUp()
-    te.test_schlumbergerResistivity()

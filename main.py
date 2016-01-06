@@ -13,7 +13,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QApplication, QSizePolicy
 from PyQt5.uic import loadUiType
 
-from aggregate import voltageSpacing, meanVoltage, meanCurrent, aggregateTable
+from aggregate import aggregateTable
 from figure import MplCanvas
 from table import PalettedTableModel
 from templates.tempData import (

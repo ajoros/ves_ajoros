@@ -116,16 +116,18 @@ class Main(QMainWindow, UI_MainWindow):
 
     def addRow(self):
 
-        print('add row')
         nRows = len(self.model.table)
+
         self.model.insertRows(nRows, 4)
         self.initTableView(self.model)
-        # self.model.insertRows()
 
 
     def removeRow(self):
 
-        print('remove row')
+        startRow = len(self.model.table) - 4
+
+        self.model.removeRows(startRow, 4)
+        self.initTableView(self.model)
 
 
     def plot(self):

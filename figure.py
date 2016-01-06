@@ -57,7 +57,7 @@ class MplCanvas(FigureCanvas):
 
         self.rect = Rectangle(
             (0, 0), 0, 0, alpha=self.alpha, color=self.color)
-        plt.plot(
+        plt.loglog(
             self.xdata, self.ydata, linestyle=self.linestyle, color=self.color)
         self.ax = plt.gca()
         self.ax.set_xlabel(self.xlabel)

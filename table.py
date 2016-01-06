@@ -121,6 +121,19 @@ class PalettedTableModel(QAbstractTableModel):
         self.endInsertRows()
 
 
+    def removeRows(self, position, rows, parent=QModelIndex()):
+
+        nRows = len(self.table) - rows
+
+        self.beginRemoveRows(parent, position, position + rows - 1)
+
+        self.table = self.table[:nRows]
+
+        self.endRemoveRows()
+
+
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 

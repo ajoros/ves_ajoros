@@ -30,7 +30,7 @@ class Main(QMainWindow, UI_MainWindow):
 
     def __init__(self, tableData, headers, colors,
                  xy, width, height, angle=0., alpha=0.5, color='red'):
-    # def __init__(self, tableData, voltageSpacing, meanVoltage, )
+
         super(Main, self).__init__()
 
         self.setupUi(self)
@@ -129,9 +129,9 @@ class Main(QMainWindow, UI_MainWindow):
 
     def addRow(self):
 
-        nRows = len(self.model.table)
+        startRow = len(self.model.table)
 
-        self.model.insertRows(nRows, 4)
+        self.model.insertRows(startRow, 4)
         self.initTableView(self.model)
 
 

@@ -199,7 +199,6 @@ class Main(QMainWindow, UI_MainWindow):
     def compute(self):
 
         if self.schlumbergerLayout == False and self.wennerLayout == False:
-
             message = (
                 'The probe spacing radio button has not been set.\n\n' +
                 'Please indicate whether a Schlumberger or Wenner layout '
@@ -209,6 +208,16 @@ class Main(QMainWindow, UI_MainWindow):
             msgBox = QMessageBox()
             msgBox.about(self, 'Warning', message)
 
+        elif self.schlumbergerLayout == True:
+            self.apparentResistivity = schlumbergerResistivity(
+                1., 1., 1., 1.)
+
+        elif self.wennerLayout == True:
+            self.apparentResistivity = wennerResistivity(
+                1., 1., 1.)
+
+        else:
+            pass
 
 
     def wenner(self):

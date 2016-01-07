@@ -21,6 +21,7 @@ from templates.tempData import (
     columns, colors, headers, rowCount, tableData)
 
 import numpy as np
+np.seterr(over='ignore')
 
 
 os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))
@@ -290,8 +291,6 @@ class Main(QMainWindow, UI_MainWindow):
 
         self.schlumbergerLayout = True
         self.wennerLayout = False
-
-
 
 
 

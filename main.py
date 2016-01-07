@@ -201,8 +201,76 @@ class Main(QMainWindow, UI_MainWindow):
         self.apparentResistivity = None
         self.aggregateTableForPlot()
 
+        # Calculate apparent resistivity using the Wenner array
+        # else:
+        if self.wennerLayout == True:
+
+            a = self.voltageSpacing[0] * 2 # Does voltage spacing refer to a or a/2 in clark2011? Change below, too, if not.
+            Vm = self.meanVoltage
+            I = self.meanCurrent
+
+            if a != self.voltageSpacing[-1] * 2:
+
+                message = (
+                    'The probe spacing radio button has been set to ' +
+                    'Wenner Spacing and the first and last Voltage Sep. ' +
+                    'values are NOT EQUAL. All Voltage Sep. values ' +
+                    'SHOULD BE EQUAL to eachother.\n\n' +
+                    'Please ensure that the proper radio box is ' +
+                    'selected and that the electrodes are placed in ' +
+                    'the desired arrangement.')
+                self.messageBox('Warning', message)
+                pass
+
+
+            self.apparentResistivity = wennerResistivity(a, Vm, I)
+
+            self.canvas.addPoints(
+                self.voltageSpacing, self.apparentResistivity)
+
+        elif self.schlumbergerLayout == True:
+
+            if self.voltageSpacing[0] == self.voltageSpacing[-1]:
+                message = (
+                    'The probe spacing radio button has been set to ' +
+                    'Schlumberger Spacing and the first and last ' +
+                    'Voltage Sep. values are EQUAL. The voltage ' +
+                    'separation must follow a particular pattern, ' +
+                    'in which the first and last separation values ' +
+                    'should NOT BE EQUAL.\n\n' +
+                    'Please ensure that the proper radio box is ' +
+                    'selected and that the electrodes are placed in ' +
+                    'the desired arrangement.')
+                self.messageBox('Warning', message)
+                pass
+
+
+            nRows = len(self.voltageSpacing)
+
+            s, L = np.empty(nRows), np.empty(nRows)
+            Vm = self.meanVoltage
+            I = self.meanCurrent
+
+            for i in range(nRows):
+
+                if i == len(self.voltageSpacing) - 1:
+                    break
+
+                s[i] = self.voltageSpacing[i]
+                L[i] = self.voltageSpacing[i + 1]
+
+            # s = self.voltageSpacing[0]
+            # L = self.voltageSpacing[1]
+
+
+            self.voltageSpacing = self.voltageSpacing[:-1]
+            self.apparentResistivity = schlumbergerResistivity(
+                Vm, L, s, I)[:-1] # Leave off last return values as it should be nan
+
+            self.canvas.addPoints(
+                self.voltageSpacing, self.apparentResistivity)
         # Provide a message box if neither Wenner nor Schlumberger are selected
-        if self.schlumbergerLayout == False and self.wennerLayout == False:
+        else:
 
             message = (
                 'The probe spacing radio button has not been set.\n\n' +
@@ -214,79 +282,10 @@ class Main(QMainWindow, UI_MainWindow):
 
             pass
 
-        # Calculate apparent resistivity using the Wenner array
-        else:
-            if self.wennerLayout == True:
+        # for x, y in zip(self.voltageSpacing, self.apparentResistivity):
+        #     print('spacing {}; resistivity {}'.format(x, y))
 
-                a = self.voltageSpacing[0] * 2 # Does voltage spacing refer to a or a/2 in clark2011? Change below, too, if not.
-                Vm = self.meanVoltage
-                I = self.meanCurrent
-
-                if a != self.voltageSpacing[-1] * 2:
-
-                    message = (
-                        'The probe spacing radio button has been set to ' +
-                        'Wenner Spacing and the first and last Voltage Sep. ' +
-                        'values are NOT EQUAL. All Voltage Sep. values ' +
-                        'SHOULD BE EQUAL to eachother.\n\n' +
-                        'Please ensure that the proper radio box is ' +
-                        'selected and that the electrodes are placed in ' +
-                        'the desired arrangement.')
-                    self.messageBox('Warning', message)
-                    pass
-
-
-                self.apparentResistivity = wennerResistivity(a, Vm, I)
-
-            elif self.schlumbergerLayout == True:
-
-                if self.voltageSpacing[0] == self.voltageSpacing[-1]:
-                    message = (
-                        'The probe spacing radio button has been set to ' +
-                        'Schlumberger Spacing and the first and last ' +
-                        'Voltage Sep. values are EQUAL. The voltage ' +
-                        'separation must follow a particular pattern, ' +
-                        'in which the first and last separation values ' +
-                        'should NOT BE EQUAL.\n\n' +
-                        'Please ensure that the proper radio box is ' +
-                        'selected and that the electrodes are placed in ' +
-                        'the desired arrangement.')
-                    self.messageBox('Warning', message)
-                    pass
-
-
-                nRows = len(self.voltageSpacing)
-
-                s, L = np.empty(nRows), np.empty(nRows)
-                Vm = self.meanVoltage
-                I = self.meanCurrent
-
-                for i in range(nRows):
-
-                    if i == len(self.voltageSpacing) - 1:
-                        break
-
-                    s[i] = self.voltageSpacing[i]
-                    L[i] = self.voltageSpacing[i + 1]
-
-                # s = self.voltageSpacing[0]
-                # L = self.voltageSpacing[1]
-
-
-                self.voltageSpacing = self.voltageSpacing[:-1]
-                self.apparentResistivity = schlumbergerResistivity(
-                    Vm, L, s, I)[:-1] # Leave off last return values as it should be nan
-
-            else:
-                pass
-
-            for x, y in zip(self.voltageSpacing, self.apparentResistivity):
-                print('spacing {}; resistivity {}'.format(x, y))
-
-
-            self.canvas.addPoints(
-                self.voltageSpacing, self.apparentResistivity)
-            return self.apparentResistivity
+        return self.apparentResistivity
 
 
     def messageBox(self, title, message):

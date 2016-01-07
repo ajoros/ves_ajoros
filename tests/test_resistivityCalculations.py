@@ -53,8 +53,7 @@ class TestResistivityCalculations(unittest.TestCase):
 
         # Set up test for Wenner
         self.a = voltageSpacing[0] * 2
-        self.Vm = meanVoltage
-        self.I = meanCurrent
+
 
     def tearDown(self):
 

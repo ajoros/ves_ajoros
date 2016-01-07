@@ -210,11 +210,11 @@ class Main(QMainWindow, UI_MainWindow):
             Vm = self.meanVoltage
             I = self.meanCurrent
 
-            if a != self.voltageSpacing[-1] * 2:
+            if not np.all(self.voltageSpacing * 2 == a):
 
                 message = (
                     'The probe spacing radio button has been set to ' +
-                    'Wenner Spacing and the first and last Voltage Sep. ' +
+                    'Wenner Spacing all of the Voltage Sep. ' +
                     'values are NOT EQUAL. All Voltage Sep. values ' +
                     'SHOULD BE EQUAL to eachother.\n\n' +
                     'Please ensure that the proper radio box is ' +

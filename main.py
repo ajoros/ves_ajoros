@@ -9,6 +9,7 @@ from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
 from matplotlib.figure import Figure
+
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QApplication, QMessageBox, QSizePolicy
 from PyQt5.uic import loadUiType

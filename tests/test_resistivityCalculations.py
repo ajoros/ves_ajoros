@@ -36,11 +36,11 @@ class TestResistivityCalculations(unittest.TestCase):
         self.meanVoltage = meanVoltage
         self.meanCurrent = meanCurrent
 
-        # Set up test for Schlumberger
-        nRows = len(self.voltageSpacing)
-
         self.Vm = self.meanVoltage
         self.I = self.meanCurrent
+
+        # Set up test for Schlumberger
+        nRows = len(self.voltageSpacing)
 
         self.s, self.L = np.empty(nRows), np.empty(nRows)
         for i in range(nRows):

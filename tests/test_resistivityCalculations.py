@@ -1,6 +1,7 @@
 import unittest
 
 import numpy as np
+np.seterr(over='ignore')
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 
 from aggregate import aggregateTable

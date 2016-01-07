@@ -221,9 +221,7 @@ class Main(QMainWindow, UI_MainWindow):
                 self.messageBox('Warning', message)
                 pass
 
-
             self.apparentResistivity = wennerResistivity(a, Vm, I)
-
             self.canvas.addPoints(
                 self.voltageSpacing, self.apparentResistivity)
 
@@ -259,12 +257,11 @@ class Main(QMainWindow, UI_MainWindow):
                 s[i] = self.voltageSpacing[i]
                 L[i] = self.voltageSpacing[i + 1]
 
-            self.voltageSpacing = self.voltageSpacing[:-1]
+
             self.apparentResistivity = schlumbergerResistivity(
                 Vm, L, s, I)[:-1] # Leave off last return values as it should be nan
-
             self.canvas.addPoints(
-                self.voltageSpacing, self.apparentResistivity)
+                self.voltageSpacing[:-1], self.apparentResistivity)
 
         # Provide a message box if neither Wenner nor Schlumberger are selected
         else:

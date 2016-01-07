@@ -12,7 +12,7 @@ class TestResistivityCalculations(unittest.TestCase):
 
     def setUp(self):
 
-        # Set up a mock set of tableData similar to the Qt table
+        # Set up a mock set of tableData similar to the Qt table with 3 rows
         self.tableData = [
             ['0.6', '0.3', '0.9', '122', '82'],
             ['', '', '', '120', '82'],
@@ -39,10 +39,10 @@ class TestResistivityCalculations(unittest.TestCase):
         # Set up test for Schlumberger
         nRows = len(self.voltageSpacing)
 
-        self.s, self.L = np.empty(nRows), np.empty(nRows)
         self.Vm = self.meanVoltage
         self.I = self.meanCurrent
 
+        self.s, self.L = np.empty(nRows), np.empty(nRows)
         for i in range(nRows):
 
             if i == len(self.voltageSpacing) - 1:

@@ -242,7 +242,6 @@ class Main(QMainWindow, UI_MainWindow):
                 self.messageBox('Warning', message)
                 pass
 
-
             nRows = len(self.voltageSpacing)
 
             s, L = np.empty(nRows), np.empty(nRows)
@@ -256,7 +255,6 @@ class Main(QMainWindow, UI_MainWindow):
 
                 s[i] = self.voltageSpacing[i]
                 L[i] = self.voltageSpacing[i + 1]
-
 
             self.apparentResistivity = schlumbergerResistivity(
                 Vm, L, s, I)[:-1] # Leave off last return values as it should be nan

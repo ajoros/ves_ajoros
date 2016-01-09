@@ -14,9 +14,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QApplication, QMessageBox, QSizePolicy
 from PyQt5.uic import loadUiType
 
-print(os.getcwd())
-for item in os.listdir(os.getcwd()):
-    print(os.path.join(os.getcwd(), item))
+
 from aggregate import aggregateTable
 from equations import schlumbergerResistivity, wennerResistivity
 from figure import MplCanvas

@@ -40,7 +40,7 @@ class Main(QMainWindow, UI_MainWindow):
         super(Main, self).__init__()
         self.setupUi(self)
 
-        # Set up the propoerties dictating probe layout
+        # Set up the properties dictating probe layout
         self.schlumbergerLayout = False
         self.wennerLayout = False
 

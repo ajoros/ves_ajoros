@@ -4,8 +4,8 @@ import numpy as np
 np.seterr(over='ignore')
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 
-from aggregate import aggregateTable
-from equations import schlumbergerResistivity, wennerResistivity
+from ..aggregate import aggregateTable
+from ..equations import schlumbergerResistivity, wennerResistivity
 
 
 class TestResistivityCalculations(unittest.TestCase):
@@ -23,8 +23,8 @@ class TestResistivityCalculations(unittest.TestCase):
             ['', '', '', '3670', '30'],
             ['', '', '', '3710', '30'],
             ['1.6', '0.8', '2.4', '1462', '31'],
-            ['', '', '', '1820', '31'], 
-            ['', '', '', '1787', '31'], 
+            ['', '', '', '1820', '31'],
+            ['', '', '', '1787', '31'],
             ['', '', '', '1840', '31']]
         self.rowCount = len(self.tableData)
 

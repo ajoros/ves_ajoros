@@ -14,6 +14,9 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QApplication, QMessageBox, QSizePolicy
 from PyQt5.uic import loadUiType
 
+print(os.getcwd())
+for item in os.listdir(os.getcwd()):
+    print(os.path.join(os.getcwd(), item))
 from aggregate import aggregateTable
 from equations import schlumbergerResistivity, wennerResistivity
 from figure import MplCanvas
@@ -229,7 +232,7 @@ class Main(QMainWindow, UI_MainWindow):
 
         elif self.schlumbergerLayout == True:
 
-            if self.voltageSpacing[0] == self.voltageSpacing[-1]:
+            if np.any(self.voltageSpacing[1:] == self.voltageSpacing[0]):
 
                 message = (
                     'The probe spacing radio button has been set to ' +

@@ -5,8 +5,8 @@
 *.xls
 *.pdf
 
-# Ignore docs directory
-docs/
+# Ignore documents directory containing papers and such
+documents/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

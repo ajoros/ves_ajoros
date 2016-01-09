@@ -4,7 +4,9 @@ import unittest
 
 import numpy as numpy
 from numpy.testing import assert_array_almost_equal
+from PyQt5.QtWidgets import QApplication
 
+print(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from templates.tempData import tableData, headers, colors
 from main import Main
@@ -29,13 +31,14 @@ class TestMain(unittest.TestCase):
             ['', '', '', '91', '80'],
             ['', '', '', '-11', '82']]
         self.rowCount = len(self.tableData)
+        self.app = QApplication([])
         self.main = Main(
             tableData[:-2], headers, colors, (0, 0.5), 50, 50, angle=0.)
 
 
     def tearDown(self):
 
-        del self.main
+        del self.app, self.tableData, self.main, self.rowCount
 
 
     def test_Main_compute_schlumberger(self):
@@ -45,5 +48,8 @@ class TestMain(unittest.TestCase):
         assert_array_almost_equal(
             self.main.apparentResistivity,
             np.array([409.80330837, 300.5875851]))
+
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -14,7 +14,6 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QApplication, QMessageBox, QSizePolicy
 from PyQt5.uic import loadUiType
 
-
 from aggregate import aggregateTable
 from equations import schlumbergerResistivity, wennerResistivity
 from figure import MplCanvas

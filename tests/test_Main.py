@@ -4,11 +4,13 @@ import unittest
 
 import numpy as np
 from numpy.testing import assert_array_almost_equal
-# from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-# from templates.tempData import headers, colors
-# from main import Main
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', 'ves')))
+from templates.tempData import headers, colors
+from main import Main
+
 
 class TestMain(unittest.TestCase):
 
@@ -29,6 +31,7 @@ class TestMain(unittest.TestCase):
             ['', '', '', '1787', '31'],
             ['', '', '', '1840', '31']]
         self.rowCount = len(self.tableData)
+
         self.app = QApplication([])
         self.main = Main(
             self.tableData, headers, colors, (0, 0.5), 50, 50, angle=0.)
@@ -49,9 +52,6 @@ class TestMain(unittest.TestCase):
             np.array([409.80330837, 300.5875851]))
 
 
-
-
-
-
 if __name__ == '__main__':
     unittest.main()
+    

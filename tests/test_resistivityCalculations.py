@@ -1,11 +1,16 @@
+import os
+import sys
 import unittest
 
 import numpy as np
 np.seterr(over='ignore')
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 
-from ..aggregate import aggregateTable
-from ..equations import schlumbergerResistivity, wennerResistivity
+
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', 'ves')))
+from aggregate import aggregateTable
+from equations import schlumbergerResistivity, wennerResistivity
 
 
 class TestResistivityCalculations(unittest.TestCase):
@@ -68,10 +73,10 @@ class TestResistivityCalculations(unittest.TestCase):
             self.voltageSpacing, np.array([0.6, 1., 1.6]))
 
         assert_array_equal(
-            self.meanVoltage, np.array([155.25, 96.75, 44.]))
+            self.meanVoltage, np.array([5870.,  3680.,  1727.25]))
 
         assert_array_equal(
-            self.meanCurrent, np.array([82.25, 81.5, 81.75]))
+            self.meanCurrent, np.array([24.,  30.,  31.]))
 
 
     def test_schlumbergerResistivity(self):
@@ -81,7 +86,7 @@ class TestResistivityCalculations(unittest.TestCase):
 
         assert_array_almost_equal(
             apparentResistivity[:-1],
-            np.array([3.16260026, 2.90896061], dtype=np.float64))
+            np.array([409.803308, 300.587585], dtype=np.float64))
 
 
     def test_wennerResistivity(self):
@@ -90,4 +95,4 @@ class TestResistivityCalculations(unittest.TestCase):
 
         assert_array_almost_equal(
             apparentResistivity,
-            np.array([14.2317011, 8.950648, 4.058130], dtype=np.float64))
+            np.array([1844.114888, 924.884877, 420.101877], dtype=np.float64))

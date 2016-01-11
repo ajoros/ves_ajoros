@@ -6,11 +6,9 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal
 # from PyQt5.QtWidgets import QApplication
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-# from templates.tempData import headers, colors
-# from main import Main
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-print 'test'
+
 class TestMain(unittest.TestCase):
 
     def setUp(self):

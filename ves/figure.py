@@ -27,8 +27,9 @@ class MplCanvas(FigureCanvas):
         self.dpi = dpi
         self.hold = hold
         self.alpha = alpha
-        self.color = color
         self.colors = colors
+        self.color = colors[0]
+
 
         self.fig = Figure(dpi=self.dpi)
         self.ax = plt.gca()
@@ -56,6 +57,10 @@ class MplCanvas(FigureCanvas):
 
     def initFigure(self, xdata, ydata):
 
+        if self.color is None:
+            color = 'yellow'
+
+        print('this is the color: {}'.format(self.color))
         self.rect = Rectangle(
             (0, 0), 0, 0, alpha=self.alpha, color=self.color)
 
@@ -71,7 +76,7 @@ class MplCanvas(FigureCanvas):
         self.fig = plt.gcf()
 
 
-    def addPoints(self, xdata, ydata, color=None):
+    def addPointsAndLine(self, xdata, ydata, color=None):
 
         if len(xdata) != len(ydata):
             xdata = xdata[:len(ydata)]
@@ -79,16 +84,16 @@ class MplCanvas(FigureCanvas):
         if color is None:
             color = 'black'
 
-        plt.loglog(xdata, ydata, color, linestyle='None', marker='o')
+        plt.loglog(
+            xdata, ydata, color, linestyle='--', marker='o', color=color)
 
         self.ax.figure.canvas.draw()
 
 
 
-    def updateFigure(self, rectangle, color, freeze=False):
+    def updateFigure(self, rectangle, color, index=0, freeze=False):
 
         xy, width, height = rectangle
-        print('update figure rect: {}'.format(rectangle))
         self.rect = Rectangle(
             xy, width, height, alpha=self.alpha, color=color)
 
@@ -97,6 +102,10 @@ class MplCanvas(FigureCanvas):
             self.ax.add_patch(self.freezeRect)
         else:
             self.ax.add_path(self.rect)
+        print('result {}'.format(index * 4))
+        print(index)
+        self.color = self.colors[(index * 4) + 1]
+        print(self.color)
 
         self.ax.figure.canvas.draw()
 
@@ -126,3 +135,21 @@ class MplCanvas(FigureCanvas):
 
         except TypeError:
             pass
+
+
+if __name__ == '__main__':
+    from aggregate import aggregateTable
+    from templates.tempData import (
+        columns, colors, headers, rowCount, tableData)
+
+    voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
+        tableData, len(tableData))
+
+    canvas = MplCanvas(
+        voltageSpacing, meanVoltage, parent=None,
+        xlabel='Voltage Probe Spacing (m)',
+        ylabel='Resistivity (Ohm-m)',
+        colors=colors)
+    plt.loglog(voltageSpacing, meanCurrent)
+    plt.show()
+

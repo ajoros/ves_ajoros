@@ -42,6 +42,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.schlumbergerLayout = False
         self.wennerLayout = False
         self.colors = colors
+        self.color = colors[0]
 
         # Set up the model and tableView
         self.model = PalettedTableModel(tableData, headers, colors)
@@ -168,8 +169,16 @@ class Main(QMainWindow, UI_MainWindow):
         plt.clf()
         self.aggregateTableForPlot()
 
-        self.canvas.initFigure(self.voltageSpacing, self.meanVoltage)
+        self.canvas.initFigure(
+            self.voltageSpacing, self.meanVoltage)
         plt.plot(self.voltageSpacing, self.meanCurrent)
+
+        if self.rectangles:
+            for i, rectangle in enumerate(self.rectangles):
+                self.color = self.colors[i  * 4]
+                self.canvas.updateFigure(
+                    rectangle, self.color, index=i, freeze=True)
+            self.color = self.colors[(i *4) + 1]
 
         self.canvas.draw()
 
@@ -184,16 +193,24 @@ class Main(QMainWindow, UI_MainWindow):
 
     def newRectangle(self):
 
-        # print(self.canvas.rectangle)
         try:
             self.rectangles.append(self.canvas.rectangle)
             self.initPlot()
-            print(self.rectangles)
-            for i, rectangle in enumerate(self.rectangles):
-                color = self.colors[i  * 4]
-                print('color {}; rectangle {}'.format(color, rectangle))
-                self.canvas.updateFigure(rectangle, color, freeze=True)
-                self.canvas.draw()
+
+            if self.rectangles:
+                for i, rectangle in enumerate(self.rectangles):
+                    self.color = self.colors[i  * 4]
+                    self.canvas.updateFigure(
+                        rectangle, self.color, index=i, freeze=True)
+                    self.canvas.draw()
+                self.color = self.colors[(i * 4) + 1]
+
+            if (hasattr(self, 'apparentResistivity') and
+                hasattr(self, 'voltageSpacing')):
+                self.canvas.addPointsAndLine(
+                    self.voltageSpacing, self.apparentResistivity,
+                    color=self.color)
+
         except AttributeError:
             pass
 
@@ -224,7 +241,7 @@ class Main(QMainWindow, UI_MainWindow):
                 pass
 
             self.apparentResistivity = wennerResistivity(a, Vm, I)
-            self.canvas.addPoints(
+            self.canvas.addPointsAndLine(
                 self.voltageSpacing, self.apparentResistivity)
 
         elif self.schlumbergerLayout == True:
@@ -260,7 +277,7 @@ class Main(QMainWindow, UI_MainWindow):
 
             self.apparentResistivity = schlumbergerResistivity(
                 Vm, L, s, I)[:-1] # Leave off last return values as it should be nan
-            self.canvas.addPoints(
+            self.canvas.addPointsAndLine(
                 self.voltageSpacing[:-1], self.apparentResistivity)
 
         # Provide a message box if neither Wenner nor Schlumberger are selected

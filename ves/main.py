@@ -74,7 +74,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.canvas.mpl_connect(
             'button_press_event', self.canvas.onPress)
         self.canvas.mpl_connect(
-            'button_release_event', self.canvas.onRelease)
+            'button_release_event', self.onRelease)
 
         # Connect to table buttons
         self.addRowButton.clicked.connect(self.addRow)
@@ -175,11 +175,22 @@ class Main(QMainWindow, UI_MainWindow):
 
         if self.rectangles:
             for i, rectangle in enumerate(self.rectangles):
+                print('\n\nbefore {} {}'.format(colors[0], colors[4]))
                 self.color = self.colors[i  * 4]
+                # print('{} {}'.format(i, self.color))
                 self.canvas.updateFigure(
                     rectangle, self.color, index=i, freeze=True)
-            self.color = self.colors[(i *4) + 1]
+            print((i *4) + 1)
+            self.color = self.colors[(i + 1) *4]
+            print('after {}'.format(self.color))
 
+        self.canvas.draw()
+
+
+    def onRelease(self, event):
+
+        self.canvas.onRelease(event)
+        self.initPlot()
         self.canvas.draw()
 
 
@@ -194,22 +205,22 @@ class Main(QMainWindow, UI_MainWindow):
     def newRectangle(self):
 
         try:
-            self.rectangles.append(self.canvas.rectangle)
+            if self.canvas.rectangle:
+                self.rectangles.append(self.canvas.rectangle)
             self.initPlot()
 
-            if self.rectangles:
-                for i, rectangle in enumerate(self.rectangles):
-                    self.color = self.colors[i  * 4]
-                    self.canvas.updateFigure(
-                        rectangle, self.color, index=i, freeze=True)
-                    self.canvas.draw()
-                self.color = self.colors[(i * 4) + 1]
+            # if self.rectangles:
+            #     for i, rectangle in enumerate(self.rectangles):
+            #         self.color = self.colors[i  * 4]
+            #         self.canvas.updateFigure(
+            #             rectangle, self.color, index=i, freeze=True)
+            #         self.canvas.draw()
+            #     self.color = self.colors[(i * 4) + 1]
 
             if (hasattr(self, 'apparentResistivity') and
                 hasattr(self, 'voltageSpacing')):
                 self.canvas.addPointsAndLine(
-                    self.voltageSpacing, self.apparentResistivity,
-                    color=self.color)
+                    self.voltageSpacing, self.apparentResistivity)
 
         except AttributeError:
             pass

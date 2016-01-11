@@ -62,12 +62,11 @@ class MplCanvas(FigureCanvas):
 
     def initFigure(self, xdata, ydata):
 
-        if self.color is None:
-            color = 'yellow'
+        # if color is None:
 
         print('this is the color: {}'.format(self.color))
         self.rect = Rectangle(
-            (0, 0), 0, 0, alpha=self.alpha, color=self.color)
+            (0, 0), 0, 0, alpha=self.alpha, color='yellow')
 
         plt.loglog(
             xdata, ydata, linestyle=self.linestyle, color=self.color)
@@ -81,16 +80,17 @@ class MplCanvas(FigureCanvas):
         self.fig = plt.gcf()
 
 
-    def addPointsAndLine(self, xdata, ydata, color=None):
+    def addPointsAndLine(self, xdata, ydata, color='#003366'):
 
         if len(xdata) != len(ydata):
             xdata = xdata[:len(ydata)]
 
-        if color is None:
-            color = 'black'
+        # if color is None:
+        #     color = 'black'
+        # colorPoints = '#003366'
 
         plt.loglog(
-            xdata, ydata, color, linestyle='--', marker='o', color=color)
+            xdata, ydata, linestyle='--', marker='o', color=color)
 
         self.ax.figure.canvas.draw()
 
@@ -107,10 +107,8 @@ class MplCanvas(FigureCanvas):
             self.ax.add_patch(self.freezeRect)
         else:
             self.ax.add_path(self.rect)
-        print('result {}'.format(index * 4))
-        print(index)
+
         self.color = self.colors[(index * 4) + 1]
-        print(self.color)
 
         self.ax.figure.canvas.draw()
 
@@ -121,7 +119,7 @@ class MplCanvas(FigureCanvas):
         self.y0 = event.ydata
 
 
-    def onRelease(self, event):
+    def onRelease(self, event): # consider a decorator or something of the sort to drop in main.initPlot() as a function
 
         try:
             self.x1 = event.xdata

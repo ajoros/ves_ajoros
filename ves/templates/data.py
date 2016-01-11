@@ -5,7 +5,7 @@ import csv
 # Read in the data from a template CSV
 tableData = []
 csv_filepath = os.path.join(
-    os.path.dirname(__file__), 'template_table.csv')
+    os.path.dirname(__file__), '.template_table.csv')
 with open(csv_filepath, 'r') as f:
     reader = csv.reader(f, delimiter=',')
     for row in reader:

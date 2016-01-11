@@ -17,6 +17,7 @@ class MplCanvas(FigureCanvas):
                  xlabel='x label', ylabel='y label', linestyle='--',
                  dpi=150, hold=False, alpha=0.5, color=None, colors=None):
 
+        # Save figure input parameters as class properties
         self.xdata = xdata
         self.ydata = ydata
         self.parent = parent
@@ -30,6 +31,7 @@ class MplCanvas(FigureCanvas):
         self.colors = colors
         self.color = colors[0]
 
+        # Initialize a figure, axis, and axes
         self.fig = Figure(dpi=self.dpi)
         self.ax = plt.gca()
         self.ax.set_xlabel(xlabel)
@@ -37,20 +39,24 @@ class MplCanvas(FigureCanvas):
         self.axes = self.fig.add_subplot(111)
         self.axes.hold(self.hold)
 
+        # Initialize a FigureCanvas from the figure
         FigureCanvas.__init__(self, self.fig)
         self.setParent(self.ax.figure.canvas)
 
         self.initFigure(self.xdata, self.ydata)
 
+        # Allow the FigureCanvas to adjust with Main window using mpl Qt5 API
         FigureCanvas.setSizePolicy(
             self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
+        # Connect the mouse/trackpad to the FigureCanvas
         self.ax.figure.canvas.mpl_connect(
             'button_press_event', self.onPress)
         self.ax.figure.canvas.mpl_connect(
             'button_release_event', self.onRelease)
 
+        # Super from the class for Qt
         super(MplCanvas, self).__init__(self.fig)
 
 

@@ -6,8 +6,8 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal
 from PyQt5.QtWidgets import QApplication
 
-sys.path.append(os.path.abspath(os.path.join
-    (os.path.dirname(__file__), '..', 'ves')))
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', 'ves')))
 from templates.tempData import headers, colors
 from main import Main
 

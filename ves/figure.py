@@ -30,7 +30,6 @@ class MplCanvas(FigureCanvas):
         self.colors = colors
         self.color = colors[0]
 
-
         self.fig = Figure(dpi=self.dpi)
         self.ax = plt.gca()
         self.ax.set_xlabel(xlabel)

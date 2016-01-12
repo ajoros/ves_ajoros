@@ -13,24 +13,20 @@ import numpy as np
 
 class MplCanvas(FigureCanvas):
 
-    def __init__(self, xdata, ydata, parent=None, title='',
-                 xlabel='x label', ylabel='y label', linestyle='--',
-                 dpi=150, hold=False, alpha=0.5, color=None, colors=None):
+    def __init__(self, xdata, ydata,
+                 xlabel='x label', ylabel='y label',
+                 linestyle='--', marker='o',
+                 dpi=150, hold=False, alpha=0.5, colors=None):
 
         # Save figure input parameters as class properties
         self.xdata = xdata
         self.ydata = ydata
-        self.parent = parent
-        self.title = title
-        self.xlabel = xlabel
-        self.ylabel = ylabel
         self.linestyle = linestyle
-        self.dpi = dpi
-        self.hold = hold
+        self.marker = marker
         self.alpha = alpha
         self.colors = colors
-        self.color = colors[0]
 
+        # Initialize empty list to store mpl rectangles and their coordinates
         self.rectCoordinates = []
         self.mplRectangles = []
 
@@ -65,62 +61,41 @@ class MplCanvas(FigureCanvas):
 
     def initFigure(self, xdata, ydata):
 
-        # if color is None:
-        print('initFigure: color should be yellow')
+        # Set up an empty rectangle for drawing and plot the x/y data
         self.rect = Rectangle(
             (0, 0), 0, 0, alpha=self.alpha, color='yellow')
-
         plt.loglog(
-            xdata, ydata, linestyle=self.linestyle, color=self.color)
+            xdata, ydata, linestyle=self.linestyle, color='black')
 
+        # Create an mpl axis and set the labels, add the rectangle
         self.ax = plt.gca()
         self.ax.set_xlabel(self.xlabel)
         self.ax.set_ylabel(self.ylabel)
         self.ax.add_patch(self.rect)
         self.ax.figure.canvas.draw()
 
+        # Draw extant rectangles if applicable
         if self.mplRectangles:
             self.drawRectangles()
 
+        # Update the figure object/property
         self.fig = plt.gcf()
 
 
-    def addPointsAndLine(self, xdata, ydata, color='#003366'):
+    def addPointsAndLine(self, xdata, ydata, color='#003366', draw=True):
 
+        # Currently ydata is longer than xdata with schlumberger, so handle
+        #   that if it makes it this far into the program
         if len(xdata) != len(ydata):
             xdata = xdata[:len(ydata)]
 
+        # log/log plot of x and y data
         plt.loglog(
-            xdata, ydata, linestyle='--', marker='o', color=color)
+            xdata, ydata, linestyle=self.linestyle, marker=self.marker, color=color)
 
-        self.ax.figure.canvas.draw()
-
-
-
-    def updateFigure(self, rectangle, color='yellow', index=0, freeze=False):
-
-        xy, width, height = rectangle
-        self.rect = Rectangle(
-            xy, width, height, alpha=self.alpha, color=color)
-
-        if freeze:
-            self.freezeRect = self.rect
-            self.ax.add_patch(self.freezeRect)
-        else:
-            self.ax.add_path(self.rect)
-
-        # if self.rectangles:
-        #     # print(dir(self.ax))
-        #     self.ax.clear()
-        #     self.initFigure(self.xdata, self.ydata)
-        #     self.drawRectangles()
-
-        # if self.rectangles:
-        #     self.drawRectangles()
-
-        self.addPointsAndLine(self.xdata + 1, self.ydata + 1)
-
-        self.ax.figure.canvas.draw()
+        # Draw the updates
+        if draw:
+            self.ax.figure.canvas.draw()
 
 
     def onPress(self, event):
@@ -128,27 +103,23 @@ class MplCanvas(FigureCanvas):
         self.x0 = event.xdata
         self.y0 = event.ydata
 
-        # if self.mplRectangles:
-        #     self.drawRectangles()
 
-
-    def onRelease(self, event): # consider a decorator or something of the sort to drop in main.initPlot() as a function
+    def onRelease(self, event):
 
         try:
             self.x1 = event.xdata
             self.y1 = event.ydata
 
+            # Create a rectangle on the plot
             self.rect.set_width(self.x1 - self.x0)
             self.rect.set_height(self.y1 - self.y0)
             self.rect.set_xy((self.x0, self.y0))
 
+            self.ax.figure.canvas.draw()
+
+            # Store and return the rectangle attributes as a tuple
             self.rectxy = (
                 self.rect.get_xy(), self.rect._width, self.rect._height)
-
-            # if self.mplRectangles:
-            #     self.drawRectangles()
-
-            self.ax.figure.canvas.draw()
 
             return self.rectxy
 
@@ -157,12 +128,10 @@ class MplCanvas(FigureCanvas):
 
 
     def drawRectangles(self):
-        # for i, rectangle in enumerate(self.rectangles):
-        #     self.rectColor = self.colors[i * 4]
-        #     self.updateFigure(
-        #         rectangle, self.rectColor, index=i, freeze=True)
-        # self.rectColor = self.colors[(i + 1) * 4]
+
+        # Iterate through the mpl Rectangles to draw them with the proper color
         for i, rectangle in enumerate(self.rectCoordinates):
+
             color = self.colors[i * 4]
             xy, width, height = rectangle
 
@@ -170,23 +139,3 @@ class MplCanvas(FigureCanvas):
                 xy, width, height, alpha=self.alpha, color=color)
 
             self.ax.add_patch(rect)
-
-        # self.ax.figure.cavas.draw()
-
-
-if __name__ == '__main__':
-    from aggregate import aggregateTable
-    from templates.tempData import (
-        columns, colors, headers, rowCount, tableData)
-
-    voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
-        tableData, len(tableData))
-
-    canvas = MplCanvas(
-        voltageSpacing, meanVoltage, parent=None,
-        xlabel='Voltage Probe Spacing (m)',
-        ylabel='Resistivity (Ohm-m)',
-        colors=colors)
-    plt.loglog(voltageSpacing, meanCurrent)
-    plt.show()
-

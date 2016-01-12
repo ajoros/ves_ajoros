@@ -58,9 +58,11 @@ class Main(QMainWindow, UI_MainWindow):
         # self.rectangles = []
         self.rects = []
         self.canvas = MplCanvas(
-            self.voltageSpacing, self.meanVoltage, parent=None,
-            title='hey', xlabel='Voltage Probe Spacing (m)',
-            ylabel='Resistivity (Ohm-m)', colors=self.colors)
+            self.voltageSpacing, self.meanVoltage,
+            xlabel='Voltage Probe Spacing (m)',
+            ylabel='Resistivity (Ohm-m)',
+            linestyle='--', marker='o',
+            dpi=150, hold=False, alpha=0.4, colors=self.colors)
         plt.plot(self.voltageSpacing, self.meanCurrent)
 
         self.canvas.setParent(self)
@@ -164,7 +166,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.initTableView(self.model)
 
 
-    def initPlot(self):
+    def initPlot(self, draw=True):
 
         plt.clf()
         self.aggregateTableForPlot()
@@ -181,7 +183,8 @@ class Main(QMainWindow, UI_MainWindow):
         #             rectangle, self.color, index=i, freeze=True)
         #     self.color = self.colors[(i + 1) * 4]
 
-        self.canvas.draw()
+        if draw:
+            self.canvas.draw()
 
 
     # def onRelease(self, event):
@@ -206,15 +209,26 @@ class Main(QMainWindow, UI_MainWindow):
                 self.canvas.mplRectangles.append(self.rect)
                 self.canvas.rectCoordinates.append(self.canvas.rectxy)
 
-            self.initPlot()
+            self.initPlot(draw=False)
+
+            self.canvas.addPointsAndLine(
+                self.voltageSpacing, self.apparentResistivity, draw=False)
 
             if self.canvas.mplRectangles:
-                self.drawRectangles()
+                self.canvas.drawRectangles()
+            print('hello')
 
-            if (hasattr(self, 'apparentResistivity') and
-                hasattr(self, 'voltageSpacing')):
-                self.canvas.addPointsAndLine(
-                    self.voltageSpacing, self.apparentResistivity)
+            # if (hasattr(self, 'apparentResistivity') and
+            #     hasattr(self, 'voltageSpacing')):
+
+            # self.canvas.addPointsAndLine(
+            #     self.voltageSpacing, self.apparentResistivity, draw=False)
+            # print('alive')
+            # # self.cavnas.fig = plt.gcf()
+            # self.cavnas.ax = plt.gca()
+            # self.canvas.draw()
+            self.canvas.ax.figure.canvas.draw()
+            return
 
 
         except AttributeError:

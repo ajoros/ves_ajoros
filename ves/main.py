@@ -202,24 +202,20 @@ class Main(QMainWindow, UI_MainWindow):
     def newRectangle(self):
 
         try:
-            if self.canvas.rectangle:
-                self.canvas.rectangles.append(self.canvas.rectangle)
-            print('from newRectangle, self.canvas.rectangles: {}'.format(
-                self.canvas.rectangles))
+            if self.canvas.rectxy:
+                self.canvas.mplRectangles.append(self.rect)
+                self.canvas.rectCoordinates.append(self.canvas.rectxy)
+
             self.initPlot()
 
-            # if self.rectangles:
-            #     for i, rectangle in enumerate(self.rectangles):
-            #         self.color = self.colors[i  * 4]
-            #         self.canvas.updateFigure(
-            #             rectangle, self.color, index=i, freeze=True)
-            #         self.canvas.draw()
-            #     self.color = self.colors[(i * 4) + 1]
+            if self.canvas.mplRectangles:
+                self.drawRectangles()
 
             if (hasattr(self, 'apparentResistivity') and
                 hasattr(self, 'voltageSpacing')):
                 self.canvas.addPointsAndLine(
                     self.voltageSpacing, self.apparentResistivity)
+
 
         except AttributeError:
             pass

@@ -31,7 +31,8 @@ class MplCanvas(FigureCanvas):
         self.colors = colors
         self.color = colors[0]
 
-        self.rectangles = []
+        self.rectCoordinates = []
+        self.mplRectangles = []
 
         # Initialize a figure, axis, and axes
         self.fig = Figure(dpi=self.dpi)
@@ -78,6 +79,9 @@ class MplCanvas(FigureCanvas):
         self.ax.add_patch(self.rect)
         self.ax.figure.canvas.draw()
 
+        if self.mplRectangles:
+            self.drawRectangles()
+
         self.fig = plt.gcf()
 
 
@@ -95,12 +99,6 @@ class MplCanvas(FigureCanvas):
 
     def updateFigure(self, rectangle, color='yellow', index=0, freeze=False):
 
-        if self.rectangles:
-            # print(dir(self.ax))
-            self.ax.clear()
-            self.initFigure(self.xdata, self.ydata)
-            # [rectangle.remove() for rectangle in self.rectangles]
-
         xy, width, height = rectangle
         self.rect = Rectangle(
             xy, width, height, alpha=self.alpha, color=color)
@@ -111,7 +109,16 @@ class MplCanvas(FigureCanvas):
         else:
             self.ax.add_path(self.rect)
 
-        # self.color = self.colors[(index * 4) + 1]
+        # if self.rectangles:
+        #     # print(dir(self.ax))
+        #     self.ax.clear()
+        #     self.initFigure(self.xdata, self.ydata)
+        #     self.drawRectangles()
+
+        # if self.rectangles:
+        #     self.drawRectangles()
+
+        self.addPointsAndLine(self.xdata + 1, self.ydata + 1)
 
         self.ax.figure.canvas.draw()
 
@@ -121,8 +128,8 @@ class MplCanvas(FigureCanvas):
         self.x0 = event.xdata
         self.y0 = event.ydata
 
-        if self.rectangles:
-            self.drawRectangles()
+        # if self.mplRectangles:
+        #     self.drawRectangles()
 
 
     def onRelease(self, event): # consider a decorator or something of the sort to drop in main.initPlot() as a function
@@ -135,26 +142,36 @@ class MplCanvas(FigureCanvas):
             self.rect.set_height(self.y1 - self.y0)
             self.rect.set_xy((self.x0, self.y0))
 
-            self.rectangle = (
+            self.rectxy = (
                 self.rect.get_xy(), self.rect._width, self.rect._height)
 
-            if self.rectangles:
-                self.drawRectangles()
+            # if self.mplRectangles:
+            #     self.drawRectangles()
 
             self.ax.figure.canvas.draw()
 
-            return self.rectangle
+            return self.rectxy
 
         except TypeError:
             pass
 
 
     def drawRectangles(self):
-        for i, rectangle in enumerate(self.rectangles):
-            self.rectColor = self.colors[i * 4]
-            self.updateFigure(
-                rectangle, self.rectColor, index=i, freeze=True)
-        self.rectColor = self.colors[(i + 1) * 4]
+        # for i, rectangle in enumerate(self.rectangles):
+        #     self.rectColor = self.colors[i * 4]
+        #     self.updateFigure(
+        #         rectangle, self.rectColor, index=i, freeze=True)
+        # self.rectColor = self.colors[(i + 1) * 4]
+        for i, rectangle in enumerate(self.rectCoordinates):
+            color = self.colors[i * 4]
+            xy, width, height = rectangle
+
+            rect = Rectangle(
+                xy, width, height, alpha=self.alpha, color=color)
+
+            self.ax.add_patch(rect)
+
+        # self.ax.figure.cavas.draw()
 
 
 if __name__ == '__main__':

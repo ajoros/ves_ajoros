@@ -1,3 +1,6 @@
+# Mac OS X specific
+.DS_Store
+
 # Word/Excel/PDF files
 *.docx
 *.doc

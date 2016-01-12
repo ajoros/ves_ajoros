@@ -13,7 +13,7 @@ import numpy as np
 
 class MplCanvas(FigureCanvas):
 
-    def __init__(self, xdata, ydata,
+    def __init__(self, xdata, ydata, parent=None,
                  xlabel='x label', ylabel='y label',
                  linestyle='--', marker='o',
                  dpi=150, hold=False, alpha=0.5, colors=None):
@@ -21,8 +21,12 @@ class MplCanvas(FigureCanvas):
         # Save figure input parameters as class properties
         self.xdata = xdata
         self.ydata = ydata
+        self.xlabel = xlabel
+        self.ylabel = ylabel
         self.linestyle = linestyle
         self.marker = marker
+        self.dpi = dpi
+        self.hold = hold
         self.alpha = alpha
         self.colors = colors
 
@@ -61,11 +65,17 @@ class MplCanvas(FigureCanvas):
 
     def initFigure(self, xdata, ydata):
 
+        # Currently ydata is longer than xdata with schlumberger, so handle
+        #   that if it makes it this far into the program
+        if len(xdata) != len(ydata):
+            xdata = xdata[:len(ydata)]
+
         # Set up an empty rectangle for drawing and plot the x/y data
         self.rect = Rectangle(
             (0, 0), 0, 0, alpha=self.alpha, color='yellow')
-        plt.loglog(
-            xdata, ydata, linestyle=self.linestyle, color='black')
+        self.addPointsAndLine(xdata, ydata, draw=False)
+        # plt.loglog(
+        #     xdata, ydata, linestyle=self.linestyle, color='black')
 
         # Create an mpl axis and set the labels, add the rectangle
         self.ax = plt.gca()
@@ -76,6 +86,8 @@ class MplCanvas(FigureCanvas):
 
         # Draw extant rectangles if applicable
         if self.mplRectangles:
+            print('here we are in initFigure')
+            print(self.mplRectangles)
             self.drawRectangles()
 
         # Update the figure object/property

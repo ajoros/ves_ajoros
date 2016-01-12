@@ -58,12 +58,12 @@ class Main(QMainWindow, UI_MainWindow):
         # self.rectangles = []
         self.rects = []
         self.canvas = MplCanvas(
-            self.voltageSpacing, self.meanVoltage,
+            np.array([]), np.array([]),
             xlabel='Voltage Probe Spacing (m)',
             ylabel='Resistivity (Ohm-m)',
             linestyle='--', marker='o',
             dpi=150, hold=False, alpha=0.4, colors=self.colors)
-        plt.plot(self.voltageSpacing, self.meanCurrent)
+        # plt.plot(self.voltageSpacing, self.meanCurrent)
 
         self.canvas.setParent(self)
         self.toolbar = NavigationToolbar(
@@ -81,7 +81,7 @@ class Main(QMainWindow, UI_MainWindow):
         # Connect to table buttons
         self.addRowButton.clicked.connect(self.addRow)
         self.removeRowButton.clicked.connect(self.removeRow)
-        self.plotButton.clicked.connect(self.plot)
+        self.plotButton.clicked.connect(self.resetPlot)
 
         # Connect to spacing radio buttons
         self.wennerRadioButton.toggled.connect(self.wenner)
@@ -139,16 +139,6 @@ class Main(QMainWindow, UI_MainWindow):
         self.meanVoltage = meanVoltage
         self.meanCurrent = meanCurrent
 
-        # if self.schlumbergerLayout == True:
-
-        #     self.apparentResistivity = schlumbergerResistivity(
-        #         1., 1., 1., 1.)
-
-        # if self.wennerLayout == True:
-
-        #     self.apparentResistivity = wennerResistivity(
-        #         1., 1., 1.)
-
 
     def addRow(self):
 
@@ -171,35 +161,23 @@ class Main(QMainWindow, UI_MainWindow):
         plt.clf()
         self.aggregateTableForPlot()
 
-        print('from here?')
-        self.canvas.initFigure(
-            self.voltageSpacing, self.meanVoltage)
-        plt.plot(self.voltageSpacing, self.meanCurrent)
-
-        # if self.canvas.rectangles:
-        #     for i, rectangle in enumerate(self.canvas.rectangles):
-        #         self.color = self.colors[i  * 4]
-        #         self.canvas.updateFigure(
-        #             rectangle, self.color, index=i, freeze=True)
-        #     self.color = self.colors[(i + 1) * 4]
+        if hasattr(self, 'apparentResistivity'):
+            self.canvas.initFigure(self.voltageSpacing, self.apparentResistivity)
+        else:
+            self.canvas.initFigure(np.array([]), np.array([]))
 
         if draw:
             self.canvas.draw()
 
 
-    # def onRelease(self, event):
+    def resetPlot(self):
 
-    #     self.canvas.onRelease(event)
-    #     self.initPlot()
-    #     self.canvas.draw()
+        self.canvas.mplRectangles = []
+        self.canvas.rectCoordinates = []
 
-
-
-    def plot(self):
-
+        plt.clf()
+        self.aggregateTableForPlot()
         self.initPlot()
-
-        # self.rectangles = []
 
 
     def newRectangle(self):
@@ -216,17 +194,7 @@ class Main(QMainWindow, UI_MainWindow):
 
             if self.canvas.mplRectangles:
                 self.canvas.drawRectangles()
-            print('hello')
 
-            # if (hasattr(self, 'apparentResistivity') and
-            #     hasattr(self, 'voltageSpacing')):
-
-            # self.canvas.addPointsAndLine(
-            #     self.voltageSpacing, self.apparentResistivity, draw=False)
-            # print('alive')
-            # # self.cavnas.fig = plt.gcf()
-            # self.cavnas.ax = plt.gca()
-            # self.canvas.draw()
             self.canvas.ax.figure.canvas.draw()
             return
 

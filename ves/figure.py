@@ -65,14 +65,20 @@ class MplCanvas(FigureCanvas):
 
     def initFigure(self, xdata, ydata):
 
+        if xdata is None or ydata is None:
+            return
+
         # Currently ydata is longer than xdata with schlumberger, so handle
         #   that if it makes it this far into the program
         if len(xdata) != len(ydata):
-            xdata = xdata[:len(ydata)]
+            if len(ydata) > len(xdata):
+                xdata = xdata[:len(ydata)]
+            else:
+                ydata = ydata[:len(xdata)]
 
         # Set up an empty rectangle for drawing and plot the x/y data
         self.rect = Rectangle(
-            (0, 0), 0, 0, alpha=self.alpha, color='yellow')
+            (0, 0), 0, 0, alpha=self.alpha, color='grey')
         self.addPointsAndLine(xdata, ydata, draw=False)
         # plt.loglog(
         #     xdata, ydata, linestyle=self.linestyle, color='black')

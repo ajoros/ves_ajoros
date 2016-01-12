@@ -139,7 +139,6 @@ class Main(QMainWindow, UI_MainWindow):
         self.meanVoltage = meanVoltage
         self.meanCurrent = meanCurrent
 
-
     def addRow(self):
 
         startRow = len(self.model.table)
@@ -162,7 +161,12 @@ class Main(QMainWindow, UI_MainWindow):
         self.aggregateTableForPlot()
 
         if hasattr(self, 'apparentResistivity'):
-            self.canvas.initFigure(self.voltageSpacing, self.apparentResistivity)
+            voltageSpacing = self.voltageSpacing
+
+            if self.schlumberger:
+                voltageSpacing = self.voltageSpacing[:-1]
+
+            self.canvas.initFigure(voltageSpacing, self.apparentResistivity)
         else:
             self.canvas.initFigure(np.array([]), np.array([]))
 

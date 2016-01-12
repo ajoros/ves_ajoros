@@ -55,7 +55,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.aggregateTableForPlot()
 
         # Set up the QWidget with a MplCanvas and NavigationToolbar instance
-        self.rectangles = []
+        # self.rectangles = []
         self.rects = []
         self.canvas = MplCanvas(
             self.voltageSpacing, self.meanVoltage, parent=None,
@@ -74,7 +74,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.canvas.mpl_connect(
             'button_press_event', self.canvas.onPress)
         self.canvas.mpl_connect(
-            'button_release_event', self.onRelease)
+            'button_release_event', self.canvas.onRelease)
 
         # Connect to table buttons
         self.addRowButton.clicked.connect(self.addRow)
@@ -169,29 +169,26 @@ class Main(QMainWindow, UI_MainWindow):
         plt.clf()
         self.aggregateTableForPlot()
 
+        print('from here?')
         self.canvas.initFigure(
             self.voltageSpacing, self.meanVoltage)
         plt.plot(self.voltageSpacing, self.meanCurrent)
 
-        if self.rectangles:
-            for i, rectangle in enumerate(self.rectangles):
-                print('\n\nbefore {} {}'.format(colors[0], colors[4]))
-                self.color = self.colors[i  * 4]
-                # print('{} {}'.format(i, self.color))
-                self.canvas.updateFigure(
-                    rectangle, self.color, index=i, freeze=True)
-            print((i *4) + 1)
-            self.color = self.colors[(i + 1) *4]
-            print('after {}'.format(self.color))
+        # if self.canvas.rectangles:
+        #     for i, rectangle in enumerate(self.canvas.rectangles):
+        #         self.color = self.colors[i  * 4]
+        #         self.canvas.updateFigure(
+        #             rectangle, self.color, index=i, freeze=True)
+        #     self.color = self.colors[(i + 1) * 4]
 
         self.canvas.draw()
 
 
-    def onRelease(self, event):
+    # def onRelease(self, event):
 
-        self.canvas.onRelease(event)
-        self.initPlot()
-        self.canvas.draw()
+    #     self.canvas.onRelease(event)
+    #     self.initPlot()
+    #     self.canvas.draw()
 
 
 
@@ -199,14 +196,16 @@ class Main(QMainWindow, UI_MainWindow):
 
         self.initPlot()
 
-        self.rectangles = []
+        # self.rectangles = []
 
 
     def newRectangle(self):
 
         try:
             if self.canvas.rectangle:
-                self.rectangles.append(self.canvas.rectangle)
+                self.canvas.rectangles.append(self.canvas.rectangle)
+            print('from newRectangle, self.canvas.rectangles: {}'.format(
+                self.canvas.rectangles))
             self.initPlot()
 
             # if self.rectangles:

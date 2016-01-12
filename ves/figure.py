@@ -92,8 +92,6 @@ class MplCanvas(FigureCanvas):
 
         # Draw extant rectangles if applicable
         if self.mplRectangles:
-            print('here we are in initFigure')
-            print(self.mplRectangles)
             self.drawRectangles()
 
         # Update the figure object/property

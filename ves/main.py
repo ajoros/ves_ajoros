@@ -303,7 +303,6 @@ class Main(QMainWindow, UI_MainWindow):
         self.wennerLayout = False
 
 
-
 if __name__ == '__main__':
     import sys
 

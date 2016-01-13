@@ -44,21 +44,6 @@ class TestResistivityCalculations(unittest.TestCase):
         self.Vm = self.meanVoltage
         self.I = self.meanCurrent
 
-        # # Set up test for Schlumberger
-        # nRows = len(self.voltageSpacing)
-
-        # self.s, self.L = np.empty(nRows), np.empty(nRows)
-        # for i in range(nRows):
-
-        #     if i == len(self.voltageSpacing) - 1:
-        #         break
-
-        #     self.s[i] = self.voltageSpacing[i]
-        #     self.L[i] = self.voltageSpacing[i + 1]
-
-        # # Set up test for Wenner
-        # self.a = voltageSpacing[0] * 2
-
 
     def tearDown(self):
 

@@ -215,10 +215,6 @@ class Main(QMainWindow, UI_MainWindow):
         # Calculate apparent resistivity using the Wenner array
         if self.wennerLayout == True:
 
-            # a = self.voltageSpacing[0] * 2 # Does voltage spacing refer to a or a/2 in clark2011? Change below, too, if not.
-            # Vm = self.meanVoltage
-            # I = self.meanCurrent
-
             if not np.all(
                 self.voltageSpacing * 2 == self.voltageSpacing[0] * 2):
 
@@ -254,20 +250,6 @@ class Main(QMainWindow, UI_MainWindow):
                     'the desired arrangement.')
                 self.messageBox('Warning', message)
                 pass
-
-            # nRows = len(self.voltageSpacing)
-
-            # s, L = np.empty(nRows), np.empty(nRows)
-            # Vm = self.meanVoltage
-            # I = self.meanCurrent
-
-            # for i in range(nRows):
-
-            #     if i == len(self.voltageSpacing) - 1:
-            #         break
-
-            #     s[i] = self.voltageSpacing[i]
-            #     L[i] = self.voltageSpacing[i + 1]
 
             self.apparentResistivity = schlumbergerResistivity(
                 self.voltageSpacing, self.meanVoltage, self.meanCurrent)[:-1] # Leave off last return values as it should be nan

@@ -215,11 +215,12 @@ class Main(QMainWindow, UI_MainWindow):
         # Calculate apparent resistivity using the Wenner array
         if self.wennerLayout == True:
 
-            a = self.voltageSpacing[0] * 2 # Does voltage spacing refer to a or a/2 in clark2011? Change below, too, if not.
-            Vm = self.meanVoltage
-            I = self.meanCurrent
+            # a = self.voltageSpacing[0] * 2 # Does voltage spacing refer to a or a/2 in clark2011? Change below, too, if not.
+            # Vm = self.meanVoltage
+            # I = self.meanCurrent
 
-            if not np.all(self.voltageSpacing * 2 == a):
+            if not np.all(
+                self.voltageSpacing * 2 == self.voltageSpacing[0] * 2):
 
                 message = (
                     'The probe spacing radio button has been set to ' +
@@ -232,7 +233,8 @@ class Main(QMainWindow, UI_MainWindow):
                 self.messageBox('Warning', message)
                 pass
 
-            self.apparentResistivity = wennerResistivity(a, Vm, I)
+            self.apparentResistivity = wennerResistivity(
+                self.voltageSpacing, self.meanVoltage, self.meanCurrent)
             self.canvas.addPointsAndLine(
                 self.voltageSpacing, self.apparentResistivity)
 
@@ -253,22 +255,22 @@ class Main(QMainWindow, UI_MainWindow):
                 self.messageBox('Warning', message)
                 pass
 
-            nRows = len(self.voltageSpacing)
+            # nRows = len(self.voltageSpacing)
 
-            s, L = np.empty(nRows), np.empty(nRows)
-            Vm = self.meanVoltage
-            I = self.meanCurrent
+            # s, L = np.empty(nRows), np.empty(nRows)
+            # Vm = self.meanVoltage
+            # I = self.meanCurrent
 
-            for i in range(nRows):
+            # for i in range(nRows):
 
-                if i == len(self.voltageSpacing) - 1:
-                    break
+            #     if i == len(self.voltageSpacing) - 1:
+            #         break
 
-                s[i] = self.voltageSpacing[i]
-                L[i] = self.voltageSpacing[i + 1]
+            #     s[i] = self.voltageSpacing[i]
+            #     L[i] = self.voltageSpacing[i + 1]
 
             self.apparentResistivity = schlumbergerResistivity(
-                Vm, L, s, I)[:-1] # Leave off last return values as it should be nan
+                self.voltageSpacing, self.meanVoltage, self.meanCurrent)[:-1] # Leave off last return values as it should be nan
             self.canvas.addPointsAndLine(
                 self.voltageSpacing[:-1], self.apparentResistivity)
 

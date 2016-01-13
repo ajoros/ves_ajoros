@@ -1,12 +1,27 @@
 import numpy as np
 
 
-def wennerResistivity(a, Vm, I):
+def wennerResistivity(voltageSpacing, Vm, I):
+
+    a = voltageSpacing[0] * 2
 
     return 2 * np.pi * a * (Vm / I)
 
 
-def schlumbergerResistivity(Vm, L, s, I):
+def schlumbergerResistivity(voltageSpacing, Vm, I):
+
+    nRows = len(voltageSpacing)
+
+    s, L = np.empty(nRows), np.empty(nRows)
+    s[:], L[:] = np.nan, np.nan
+
+    for i in range(nRows):
+
+        if i == len(voltageSpacing) - 1:
+            break
+
+        s[i] = voltageSpacing[i]
+        L[i] = voltageSpacing[i + 1]
 
     return (np.pi * Vm * (L**2 - s**2)) / (2 * s * I)
 

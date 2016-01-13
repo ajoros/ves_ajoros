@@ -44,27 +44,26 @@ class TestResistivityCalculations(unittest.TestCase):
         self.Vm = self.meanVoltage
         self.I = self.meanCurrent
 
-        # Set up test for Schlumberger
-        nRows = len(self.voltageSpacing)
+        # # Set up test for Schlumberger
+        # nRows = len(self.voltageSpacing)
 
-        self.s, self.L = np.empty(nRows), np.empty(nRows)
-        for i in range(nRows):
+        # self.s, self.L = np.empty(nRows), np.empty(nRows)
+        # for i in range(nRows):
 
-            if i == len(self.voltageSpacing) - 1:
-                break
+        #     if i == len(self.voltageSpacing) - 1:
+        #         break
 
-            self.s[i] = self.voltageSpacing[i]
-            self.L[i] = self.voltageSpacing[i + 1]
+        #     self.s[i] = self.voltageSpacing[i]
+        #     self.L[i] = self.voltageSpacing[i + 1]
 
-        # Set up test for Wenner
-        self.a = voltageSpacing[0] * 2
+        # # Set up test for Wenner
+        # self.a = voltageSpacing[0] * 2
 
 
     def tearDown(self):
 
         del (self.tableData, self.rowCount, self.voltageSpacing,
-             self.meanVoltage, self.meanCurrent, self.s, self.L,
-             self.Vm, self.I, self.a)
+             self.meanVoltage, self.meanCurrent, self.Vm, self.I)
 
 
     def test_aggregateTable(self):
@@ -82,7 +81,7 @@ class TestResistivityCalculations(unittest.TestCase):
     def test_schlumbergerResistivity(self):
 
         apparentResistivity = schlumbergerResistivity(
-            self.Vm, self.L, self.s, self.I)
+            self.voltageSpacing, self.Vm, self.I)
 
         assert_array_almost_equal(
             apparentResistivity[:-1],
@@ -91,7 +90,8 @@ class TestResistivityCalculations(unittest.TestCase):
 
     def test_wennerResistivity(self):
 
-        apparentResistivity = wennerResistivity(self.a, self.Vm, self.I)
+        apparentResistivity = wennerResistivity(
+            self.voltageSpacing, self.Vm, self.I)
 
         assert_array_almost_equal(
             apparentResistivity,

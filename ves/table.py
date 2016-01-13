@@ -77,6 +77,10 @@ class PalettedTableModel(QAbstractTableModel):
 
             return value
 
+        if role == Qt.TextAlignmentRole:
+
+            return Qt.AlignHCenter | Qt.AlignVCenter
+
 
     def setData(self, index, value, role=Qt.EditRole):
 

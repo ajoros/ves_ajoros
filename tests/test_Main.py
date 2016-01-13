@@ -42,6 +42,20 @@ class TestMain(unittest.TestCase):
         del self.app, self.tableData, self.main, self.rowCount
 
 
+    def test_addRow(self):
+
+        self.main.addRow()
+
+        self.assertEqual(self.rowCount + 4, len(self.main.model.table))
+
+
+    def test_removeRow(self):
+
+        self.main.removeRow()
+
+        self.assertEqual(self.rowCount - 4, len(self.main.model.table))
+
+
     def test_Main_compute(self):
 
         self.main.schlumberger()
@@ -51,7 +65,29 @@ class TestMain(unittest.TestCase):
             self.main.apparentResistivity,
             np.array([409.80330837, 300.5875851]))
 
+        self.main.wenner()
+        self.main.compute()
 
-if __name__ == '__main__':
-    unittest.main()
-    
+        assert_array_almost_equal(
+            self.main.apparentResistivity,
+            np.array([1844.114888, 924.884877, 420.101877]))
+
+
+    def test_messageBox(self):
+
+        msgBox = self.main.messageBox('title', 'message')
+
+        self.assertFalse((msgBox.__class__ is None))
+
+
+    def test_arraySelectionButtonOutput(self):
+
+        self.main.wenner()
+
+        self.assertFalse(self.main.schlumbergerLayout)
+        self.assertTrue(self.main.wennerLayout)
+
+        self.main.schlumberger()
+
+        self.assertTrue(self.main.schlumbergerLayout)
+        self.assertFalse(self.main.wennerLayout)

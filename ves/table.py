@@ -12,11 +12,17 @@ class PalettedTableModel(QAbstractTableModel):
 
     def __init__(self, table=[[]], headers=[], colors=[], parent=None):
 
+        if parent is None:
+            parent = self
+
+        super(PalettedTableModel, self).__init__()
+
         QAbstractTableModel.__init__(self, parent)
 
         self.table = table
         self.headers = headers
         self.colors = colors
+
 
 
     def rowCount(self, parent):

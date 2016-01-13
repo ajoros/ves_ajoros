@@ -271,7 +271,8 @@ class Main(QMainWindow, UI_MainWindow):
 
 
     def messageBox(self, title, message):
-        msgBox = QMessageBox()
+
+        msgBox = QMessageBox(self)
         msgBox.about(self, title, message)
 
 

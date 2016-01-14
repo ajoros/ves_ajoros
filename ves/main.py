@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 plt.style.use('bmh')
 from matplotlib.figure import Figure
 
+import numpy as np
+np.seterr(over='ignore')
+
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QApplication, QMessageBox, QSizePolicy
 from PyQt5.uic import loadUiType
@@ -20,9 +23,6 @@ from figure import InteractiveCanvas
 from table import PalettedTableModel
 from templates.tempData import (
     columns, colors, headers, rowCount, tableData)
-
-import numpy as np
-np.seterr(over='ignore')
 
 
 os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))

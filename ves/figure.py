@@ -80,8 +80,6 @@ class InteractiveCanvas(FigureCanvas):
         self.rect = Rectangle(
             (0, 0), 0, 0, alpha=self.alpha, color='grey')
         self.addPointsAndLine(xdata, ydata, draw=False)
-        # plt.loglog(
-        #     xdata, ydata, linestyle=self.linestyle, color='black')
 
         # Create an mpl axis and set the labels, add the rectangle
         self.ax = plt.gca()
@@ -98,6 +96,20 @@ class InteractiveCanvas(FigureCanvas):
         self.fig = plt.gcf()
 
 
+    def drawRectangles(self):
+
+        # Iterate through the mpl Rectangles to draw them with the proper color
+        for i, rectangle in enumerate(self.rectCoordinates):
+
+            color = self.colors[i * 4]
+            xy, width, height = rectangle
+
+            rect = Rectangle(
+                xy, width, height, alpha=self.alpha, color=color)
+
+            self.ax.add_patch(rect)
+
+
     def addPointsAndLine(self, xdata, ydata, color='#003366', draw=True):
 
         # Currently ydata is longer than xdata with schlumberger, so handle
@@ -107,7 +119,8 @@ class InteractiveCanvas(FigureCanvas):
 
         # log/log plot of x and y data
         plt.loglog(
-            xdata, ydata, linestyle=self.linestyle, marker=self.marker, color=color)
+            xdata, ydata, linestyle=self.linestyle,
+            marker=self.marker, color=color)
 
         # Draw the updates
         if draw:
@@ -141,17 +154,3 @@ class InteractiveCanvas(FigureCanvas):
 
         except TypeError:
             pass
-
-
-    def drawRectangles(self):
-
-        # Iterate through the mpl Rectangles to draw them with the proper color
-        for i, rectangle in enumerate(self.rectCoordinates):
-
-            color = self.colors[i * 4]
-            xy, width, height = rectangle
-
-            rect = Rectangle(
-                xy, width, height, alpha=self.alpha, color=color)
-
-            self.ax.add_patch(rect)

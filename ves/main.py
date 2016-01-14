@@ -16,7 +16,7 @@ from PyQt5.uic import loadUiType
 
 from aggregate import aggregateTable
 from equations import schlumbergerResistivity, wennerResistivity
-from figure import MplCanvas
+from figure import InteractiveCanvas
 from table import PalettedTableModel
 from templates.tempData import (
     columns, colors, headers, rowCount, tableData)
@@ -54,16 +54,15 @@ class Main(QMainWindow, UI_MainWindow):
 
         self.aggregateTableForPlot()
 
-        # Set up the QWidget with a MplCanvas and NavigationToolbar instance
-        # self.rectangles = []
+        # Set up the QWidget with an InteractiveCanvas and
+        #  NavigationToolbar instance
         self.rects = []
-        self.canvas = MplCanvas(
+        self.canvas = InteractiveCanvas(
             np.array([]), np.array([]),
             xlabel='Voltage Probe Spacing (m)',
             ylabel='Resistivity (Ohm-m)',
             linestyle='--', marker='o',
             dpi=150, hold=False, alpha=0.4, colors=self.colors)
-        # plt.plot(self.voltageSpacing, self.meanCurrent)
 
         self.canvas.setParent(self)
         self.toolbar = NavigationToolbar(

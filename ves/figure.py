@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import QSizePolicy
 import numpy as np
 
 
-class MplCanvas(FigureCanvas):
+class InteractiveCanvas(FigureCanvas):
 
     def __init__(self, xdata, ydata, parent=None,
                  xlabel='x label', ylabel='y label',
@@ -60,7 +60,7 @@ class MplCanvas(FigureCanvas):
             'button_release_event', self.onRelease)
 
         # Super from the class for Qt
-        super(MplCanvas, self).__init__(self.fig)
+        super(InteractiveCanvas, self).__init__(self.fig)
 
 
     def initFigure(self, xdata, ydata):

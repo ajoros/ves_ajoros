@@ -95,6 +95,8 @@ class InteractiveCanvas(FigureCanvas):
         # Update the figure object/property
         self.fig = plt.gcf()
 
+        plt.tight_layout()
+
 
     def drawRectangles(self):
 
@@ -124,6 +126,7 @@ class InteractiveCanvas(FigureCanvas):
 
         # Draw the updates
         if draw:
+            plt.tight_layout()
             self.ax.figure.canvas.draw()
 
 

@@ -12,13 +12,16 @@ class PalettedTableModel(QAbstractTableModel):
 
     def __init__(self, table=[[]], headers=[], colors=[], parent=None):
 
+        # Default parent to self
         if parent is None:
             parent = self
 
+        # For Qt
         super(PalettedTableModel, self).__init__()
 
         QAbstractTableModel.__init__(self, parent)
 
+        # Set up the table, table headers, and colors properties
         self.table = table
         self.headers = headers
         self.colors = colors
@@ -57,25 +60,24 @@ class PalettedTableModel(QAbstractTableModel):
             str: QtName
 
         """
+        # Get the Qt rtable row and column
         row = index.row()
         column = index.column()
 
+        # For each cell, define an action for Qt roles
+        #  http://pyqt.sourceforge.net/Docs/PyQt4/qt.html#ItemDataRole-enum
         if role == Qt.EditRole:
 
             return self.table[row][column]
 
         if role == Qt.ToolTipRole:
 
-            return 'Cell contents: {}'.format(
+            return 'Cell value: {}'.format(
                 self.table[row][column])
 
         if role == Qt.DisplayRole:
 
-            row = index.row()
-            column = index.column()
-            value = self.table[row][column]
-
-            return value
+            return self.table[row][column]
 
         if role == Qt.TextAlignmentRole:
 
@@ -85,12 +87,15 @@ class PalettedTableModel(QAbstractTableModel):
     def setData(self, index, value, role=Qt.EditRole):
 
         if role == Qt.EditRole:
+
             row = index.row()
             column = index.column()
 
             if isinstance(value, str):
+
                 self.table[row][column] = value
                 self.dataChanged.emit(index, index)
+
                 return True
 
         return False
@@ -110,6 +115,7 @@ class PalettedTableModel(QAbstractTableModel):
 
             if orientation == Qt.Vertical:
 
+                # Use QPixmap objects to create colored boxes in row headers
                 value = self.colors[section]
                 pixmap = QPixmap(25, 25)
                 pixmap.fill(QColor(value))
@@ -121,7 +127,9 @@ class PalettedTableModel(QAbstractTableModel):
 
         self.beginInsertRows(parent, position, position + rows - 1)
 
+        # Default to empty cells
         for i in range(rows):
+
             defaultValues = [
                 '' for i in range(self.columnCount(None))]
 

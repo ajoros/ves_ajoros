@@ -218,15 +218,15 @@ class Main(QMainWindow, UI_MainWindow):
             if not np.all(
                 self.voltageSpacing * 2 == self.voltageSpacing[0] * 2):
 
-                message = (
+                self.messageBox(
+                    'Warning', (
                     'The probe spacing radio button has been set to ' +
                     'Wenner Spacing all of the Voltage Sep. ' +
                     'values are NOT EQUAL. All Voltage Sep. values ' +
                     'SHOULD BE EQUAL to eachother.\n\n' +
                     'Please ensure that the proper radio box is ' +
                     'selected and that the electrodes are placed in ' +
-                    'the desired arrangement.')
-                self.messageBox('Warning', message)
+                    'the desired arrangement.'))
                 pass
 
             self.apparentResistivity = wennerResistivity(
@@ -238,7 +238,7 @@ class Main(QMainWindow, UI_MainWindow):
 
             if np.any(self.voltageSpacing[1:] == self.voltageSpacing[0]):
 
-                message = (
+                self.messageBox('Warning', (
                     'The probe spacing radio button has been set to ' +
                     'Schlumberger Spacing and the first and last ' +
                     'Voltage Sep. values are EQUAL. The voltage ' +
@@ -247,8 +247,7 @@ class Main(QMainWindow, UI_MainWindow):
                     'should NOT BE EQUAL.\n\n' +
                     'Please ensure that the proper radio box is ' +
                     'selected and that the electrodes are placed in ' +
-                    'the desired arrangement.')
-                self.messageBox('Warning', message)
+                    'the desired arrangement.'))
                 pass
 
             self.apparentResistivity = schlumbergerResistivity(
@@ -258,13 +257,12 @@ class Main(QMainWindow, UI_MainWindow):
 
         # Provide a message box if neither Wenner nor Schlumberger are selected
         else:
-            message = (
+            self.messageBox('Warning', (
                 'The probe spacing radio button has not been set.\n\n' +
                 'Please indicate whether a Schlumberger or Wenner layout '
                 'has been used by selecting one of the radio buttons. The ' +
                 'radio buttons are located at the botton left of the ' +
-                'program, near the input table.')
-            self.messageBox('Warning', message)
+                'program, near the input table.'))
             pass
 
         return self.apparentResistivity

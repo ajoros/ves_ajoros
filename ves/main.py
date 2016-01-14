@@ -185,12 +185,17 @@ class Main(QMainWindow, UI_MainWindow):
 
     def resetPlot(self):
 
-        self.canvas.mplRectangles = []
-        self.canvas.rectCoordinates = []
+        # Catch ValueError that occurs if reset is clicked prior to plotting
+        try:
+            self.canvas.mplRectangles = []
+            self.canvas.rectCoordinates = []
 
-        plt.clf()
-        self.aggregateTableForPlot()
-        self.initPlot()
+            plt.clf()
+            self.aggregateTableForPlot()
+            self.initPlot()
+
+        except ValueError:
+            pass
 
 
     def newRectangle(self):

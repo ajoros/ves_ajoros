@@ -32,11 +32,11 @@
      <bold>true</bold>
     </font>
    </property>
-   <layout class="QGridLayout" name="gridLayout_3">
+   <layout class="QGridLayout" name="gridLayout_4">
     <item row="0" column="0">
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_4">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QTableView" name="tableViewWidget">
           <property name="enabled">
@@ -73,13 +73,23 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="1">
-           <widget class="QPushButton" name="removeRowButton">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="wennerRadioButton">
             <property name="toolTip">
-             <string>Remove a row from the input table</string>
+             <string>Use the Wenner Spacing in calculating depth to water</string>
             </property>
             <property name="text">
-             <string>Remove Row</string>
+             <string>Wenner Spacing</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="schlumbergerRadioButton">
+            <property name="toolTip">
+             <string>Use the Schlumberger Spacing in calculating depth to water</string>
+            </property>
+            <property name="text">
+             <string>Schlumberger Spacing</string>
             </property>
            </widget>
           </item>
@@ -93,33 +103,13 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="plotButton">
+          <item row="1" column="1">
+           <widget class="QPushButton" name="removeRowButton">
             <property name="toolTip">
-             <string>Plot the data from the input table</string>
+             <string>Remove a row from the input table</string>
             </property>
             <property name="text">
-             <string>Reset Plot</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" colspan="2">
-           <widget class="QRadioButton" name="schlumbergerRadioButton">
-            <property name="toolTip">
-             <string>Use the Schlumberger Spacing in calculating depth to water</string>
-            </property>
-            <property name="text">
-             <string>Schlumberger Spacing</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QRadioButton" name="wennerRadioButton">
-            <property name="toolTip">
-             <string>Use the Wenner Spacing in calculating depth to water</string>
-            </property>
-            <property name="text">
-             <string>Wenner Spacing</string>
+             <string>Remove Row</string>
             </property>
            </widget>
           </item>
@@ -128,8 +118,38 @@
        </layout>
       </item>
       <item row="0" column="1">
-       <layout class="QVBoxLayout" name="verticalLayout_5">
-        <item>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="2" column="2">
+         <widget class="QPushButton" name="plotButton">
+          <property name="toolTip">
+           <string>Plot the data from the input table</string>
+          </property>
+          <property name="text">
+           <string>Reset Plot</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="newRectangleButton">
+          <property name="toolTip">
+           <string>Freeze the current rectangle and add a new rectangle to the plot</string>
+          </property>
+          <property name="text">
+           <string>New Rectangle</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="computeButton">
+          <property name="toolTip">
+           <string>Plot the input table</string>
+          </property>
+          <property name="text">
+           <string>Plot Data</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="3">
          <widget class="QWidget" name="figureViewWidget" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -149,35 +169,21 @@
           <property name="toolTip">
            <string>Draw a rectangle on the plot using the mouse or trackpad</string>
           </property>
-          <property name="toolTipDuration" stdset="0">
+          <property name="toolTipDuration">
            <number>-1</number>
           </property>
           <layout class="QVBoxLayout" name="mplvl"/>
          </widget>
         </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QPushButton" name="newRectangleButton">
-            <property name="toolTip">
-             <string>Freeze the current rectangle and add a new rectangle to the plot</string>
-            </property>
-            <property name="text">
-             <string>New Rectangle</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="computeButton">
-            <property name="toolTip">
-             <string>Compute depth to water!</string>
-            </property>
-            <property name="text">
-             <string>Compute</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+        <item row="3" column="0" colspan="3">
+         <widget class="QPushButton" name="launchAnalysisButton">
+          <property name="toolTip">
+           <string>Launch the MonteCarlo VES inverse analysis once satisfied with current results</string>
+          </property>
+          <property name="text">
+           <string>Launch VES Inverse Analysis</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -199,7 +205,7 @@
      <x>0</x>
      <y>0</y>
      <width>1140</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

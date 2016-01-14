@@ -68,6 +68,15 @@ class Main(QMainWindow, UI_MainWindow):
         self.toolbar = NavigationToolbar(
             self.canvas, self.canvas, coordinates=True)
 
+        # self.toolbar.setMinimumHeight(0)
+        # self.toolbar.setMinimumWidth(self.tableViewWidget.minimumWidth())
+
+        # self.toolbar.setMaximumHeight(self.tableViewWidget.maximumHeight())
+        # self.toolbar.setMaximumWidth(self.tableViewWidget.maximumWidth())
+        # print(dir(self.toolbar.geometry))
+        # self.toolbar.resize(20, 300)
+        # self.toolbar.width(300)
+
         self.mplvl.addWidget(self.canvas)
         self.mplvl.addWidget(self.toolbar)
 

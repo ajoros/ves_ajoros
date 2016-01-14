@@ -17,6 +17,7 @@ def schlumbergerResistivity(voltageSpacing, Vm, I):
     s[:], L[:] = np.nan, np.nan
 
     # Create arrays of offset distances to define s and L for each data point
+    #  See Clark, 2011
     for i in range(nRows):
 
         if i == len(voltageSpacing) - 1:

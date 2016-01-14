@@ -179,7 +179,7 @@ class Main(QMainWindow, UI_MainWindow):
             self.canvas.initFigure(np.array([]), np.array([]))
 
         if draw:
-            plt.tight_layout()
+            self.canvas.fig.tight_layout()
             self.canvas.draw()
 
 

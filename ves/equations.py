@@ -10,11 +10,13 @@ def wennerResistivity(voltageSpacing, Vm, I):
 
 def schlumbergerResistivity(voltageSpacing, Vm, I):
 
+    # Initialize empty arrays that are the same length as voltage spacing
     nRows = len(voltageSpacing)
 
     s, L = np.empty(nRows), np.empty(nRows)
     s[:], L[:] = np.nan, np.nan
 
+    # Create arrays of offset distances to define s and L for each data point
     for i in range(nRows):
 
         if i == len(voltageSpacing) - 1:

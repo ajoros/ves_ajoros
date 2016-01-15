@@ -34,7 +34,7 @@ class TestMain(unittest.TestCase):
 
         self.app = QApplication([])
         self.main = Main(
-            self.tableData, headers, colors, (0, 0.5), 50, 50, angle=0.)
+            self.tableData, headers, colors)
 
 
     def tearDown(self):

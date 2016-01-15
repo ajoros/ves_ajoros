@@ -31,8 +31,7 @@ UI_MainWindow, QMainWindow = loadUiType('mainwindow.ui')
 
 class Main(QMainWindow, UI_MainWindow):
 
-    def __init__(self, tableData, headers, colors,
-                 xy, width, height, angle=0., alpha=0.5, color='red'):
+    def __init__(self, tableData, headers, colors):
 
         super(Main, self).__init__()
 
@@ -248,7 +247,7 @@ class Main(QMainWindow, UI_MainWindow):
                     'selected and that the electrodes are placed in ' +
                     'the desired arrangement.'))
                 pass
-                
+
             self.apparentResistivity = wennerResistivity(
                 self.voltageSpacing, self.meanVoltage, self.meanCurrent)
             self.canvas.addPointsAndLine(
@@ -310,7 +309,7 @@ if __name__ == '__main__':
     import sys
 
     app = QApplication(sys.argv)
-    main = Main(tableData, headers, colors, (0, 0.5), 50, 50, angle=0.)
+    main = Main(tableData, headers, colors)
     main.show()
 
     sys.exit(app.exec_())

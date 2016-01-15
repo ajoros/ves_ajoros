@@ -228,6 +228,10 @@ class Main(QMainWindow, UI_MainWindow):
 
     def compute(self, suppress=False):
 
+        # Suppress msgBox if this module is not called directly for testing
+        if __name__ != '__main__':
+            suppress = True
+
         self.apparentResistivity = None
         self.aggregateTableForPlot()
 

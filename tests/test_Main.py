@@ -4,7 +4,7 @@ import unittest
 
 import numpy as np
 from numpy.testing import assert_array_almost_equal
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QTimer
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication
 
@@ -37,6 +37,7 @@ class TestMain(unittest.TestCase):
         self.app = QApplication([])
         self.main = Main(
             self.tableData, headers, colors)
+        # print()
 
 
     def tearDown(self):
@@ -45,18 +46,20 @@ class TestMain(unittest.TestCase):
 
 
     def test_addRow(self):
-        print('before addRow call')
+
         self.main.addRow()
-        print('after addRow call')
+
         self.assertEqual(self.rowCount + 4, len(self.main.model.table))
-        print('after assertion')
-        self.tearDown()
-        self.setUp()
-        print('after del')
 
 
     def test_removeRow(self):
-        print('into removeRow')
+
+        timer = QTimer()
+        timer.setSingleShot(True)
+        timer.setInterval(2)
+        timer.timeout.connect(self.main.removeRow)
+        timer.start()
+
         self.main.removeRow()
 
         self.assertEqual(self.rowCount - 4, len(self.main.model.table))
@@ -65,6 +68,12 @@ class TestMain(unittest.TestCase):
     def test_Main_compute(self):
 
         self.main.schlumberger()
+        timer = QTimer()
+        timer.setSingleShot(True)
+        timer.setInterval(2)
+        timer.timeout.connect(self.main.compute)
+        timer.start()
+
         self.main.compute()
 
         assert_array_almost_equal(

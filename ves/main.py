@@ -237,7 +237,7 @@ class Main(QMainWindow, UI_MainWindow):
             if not np.all(
                 self.voltageSpacing * 2 == self.voltageSpacing[0] * 2):
 
-                self.messageBox(
+                self.wennerMessageBox = self.messageBox(
                     'Warning', (
                     'The probe spacing radio button has been set to ' +
                     'Wenner Spacing all of the Voltage Sep. ' +
@@ -257,7 +257,7 @@ class Main(QMainWindow, UI_MainWindow):
 
             if np.any(self.voltageSpacing[1:] == self.voltageSpacing[0]):
 
-                self.messageBox('Warning', (
+                self.schlumbergerMessageBox = self.messageBox('Warning', (
                     'The probe spacing radio button has been set to ' +
                     'Schlumberger Spacing and the first and last ' +
                     'Voltage Sep. values are EQUAL. The voltage ' +
@@ -276,7 +276,7 @@ class Main(QMainWindow, UI_MainWindow):
 
         # Provide a message box if neither Wenner nor Schlumberger are selected
         else:
-            self.messageBox('Warning', (
+            self.noSpacingMessageBox = self.messageBox('Warning', (
                 'The probe spacing radio button has not been set.\n\n' +
                 'Please indicate whether a Schlumberger or Wenner layout '
                 'has been used by selecting one of the radio buttons. The ' +

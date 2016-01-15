@@ -4,6 +4,7 @@ import unittest
 
 import numpy as np
 from numpy.testing import assert_array_almost_equal
+from PyQt5.QtCore import Qt
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication
 
@@ -61,8 +62,6 @@ class TestMain(unittest.TestCase):
 
         self.main.schlumberger()
         self.main.compute()
-        #### BEEFSTEAK - try to add OK button press here for Ubuntu
-        # okButton = self.main.
 
         assert_array_almost_equal(
             self.main.apparentResistivity,
@@ -70,6 +69,8 @@ class TestMain(unittest.TestCase):
 
         self.main.wenner()
         self.main.compute()
+        okButton = self.main.wennerMessageBox(self.main.wennerMessageBox)
+        QTest.mouseClick(okButton, Qt.LeftButton)
 
         assert_array_almost_equal(
             self.main.apparentResistivity,

@@ -45,14 +45,18 @@ class TestMain(unittest.TestCase):
 
 
     def test_addRow(self):
-
+        print('before addRow call')
         self.main.addRow()
-
+        print('after addRow call')
         self.assertEqual(self.rowCount + 4, len(self.main.model.table))
+        print('after assertion')
+        self.tearDown()
+        self.setUp()
+        print('after del')
 
 
     def test_removeRow(self):
-
+        print('into removeRow')
         self.main.removeRow()
 
         self.assertEqual(self.rowCount - 4, len(self.main.model.table))

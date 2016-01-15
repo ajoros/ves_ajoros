@@ -173,27 +173,17 @@
         <property name="toolTip">
          <string>Draw a rectangle on the plot using the mouse or trackpad</string>
         </property>
-        <property name="toolTipDuration">
+        <property name="toolTipDuration" stdset="0">
          <number>-1</number>
         </property>
         <layout class="QVBoxLayout" name="mplvl">
          <property name="sizeConstraint">
           <enum>QLayout::SetNoConstraint</enum>
          </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>0</number>
          </property>
         </layout>
-        <zorder>verticalLayoutWidget</zorder>
        </widget>
       </item>
       <item>
@@ -201,7 +191,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QPushButton" name="computeButton">
+           <widget class="QPushButton" name="plotDataButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -233,7 +223,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="plotButton">
+           <widget class="QPushButton" name="resetPlotButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -278,10 +268,6 @@
     </item>
    </layout>
    <zorder></zorder>
-   <zorder>checkBox</zorder>
-   <zorder>pushButton</zorder>
-   <zorder>figureViewWidget</zorder>
-   <zorder>figureViewWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -289,7 +275,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="sizePolicy">

@@ -89,15 +89,16 @@ class Main(QMainWindow, UI_MainWindow):
         # Connect to table buttons
         self.addRowButton.clicked.connect(self.addRow)
         self.removeRowButton.clicked.connect(self.removeRow)
-        self.plotButton.clicked.connect(self.resetPlot)
 
         # Connect to spacing radio buttons
         self.wennerRadioButton.toggled.connect(self.wenner)
         self.schlumbergerRadioButton.toggled.connect(self.schlumberger)
 
         # Connect to plot buttons
+        self.plotDataButton.clicked.connect(self.compute)
         self.newRectangleButton.clicked.connect(self.newRectangle)
-        self.computeButton.clicked.connect(self.compute)
+        self.resetPlotButton.clicked.connect(self.resetPlot)
+
 
         # self.initUi()
 
@@ -175,6 +176,8 @@ class Main(QMainWindow, UI_MainWindow):
                 voltageSpacing = self.voltageSpacing[:-1]
 
             self.canvas.initFigure(voltageSpacing, self.apparentResistivity)
+            # plt.clf()
+            # self.compute()
         else:
             self.canvas.initFigure(np.array([]), np.array([]))
 
@@ -245,7 +248,7 @@ class Main(QMainWindow, UI_MainWindow):
                     'selected and that the electrodes are placed in ' +
                     'the desired arrangement.'))
                 pass
-
+                
             self.apparentResistivity = wennerResistivity(
                 self.voltageSpacing, self.meanVoltage, self.meanCurrent)
             self.canvas.addPointsAndLine(

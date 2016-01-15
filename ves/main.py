@@ -226,7 +226,7 @@ class Main(QMainWindow, UI_MainWindow):
             pass
 
 
-    def compute(self):
+    def compute(self, suppress=False):
 
         self.apparentResistivity = None
         self.aggregateTableForPlot()
@@ -234,19 +234,10 @@ class Main(QMainWindow, UI_MainWindow):
         # Calculate apparent resistivity using the Wenner array
         if self.wennerLayout == True:
 
+            # Test and let user know spacing does not indicate Wenner Array
             if not np.all(
                 self.voltageSpacing * 2 == self.voltageSpacing[0] * 2):
-
-                self.wennerMessageBox = self.messageBox(
-                    'Warning', (
-                    'The probe spacing radio button has been set to ' +
-                    'Wenner Spacing all of the Voltage Sep. ' +
-                    'values are NOT EQUAL. All Voltage Sep. values ' +
-                    'SHOULD BE EQUAL to eachother.\n\n' +
-                    'Please ensure that the proper radio box is ' +
-                    'selected and that the electrodes are placed in ' +
-                    'the desired arrangement.'))
-                pass
+                self.wennerMessageBox(suppress)
 
             self.apparentResistivity = wennerResistivity(
                 self.voltageSpacing, self.meanVoltage, self.meanCurrent)
@@ -255,19 +246,9 @@ class Main(QMainWindow, UI_MainWindow):
 
         elif self.schlumbergerLayout == True:
 
+            # Test and let user know spacing does not indicate Schlum. array
             if np.any(self.voltageSpacing[1:] == self.voltageSpacing[0]):
-
-                self.schlumbergerMessageBox = self.messageBox('Warning', (
-                    'The probe spacing radio button has been set to ' +
-                    'Schlumberger Spacing and the first and last ' +
-                    'Voltage Sep. values are EQUAL. The voltage ' +
-                    'separation must follow a particular pattern, ' +
-                    'in which the first and last separation values ' +
-                    'should NOT BE EQUAL.\n\n' +
-                    'Please ensure that the proper radio box is ' +
-                    'selected and that the electrodes are placed in ' +
-                    'the desired arrangement.'))
-                pass
+                self.schlumbergerMessageBox(suppress)
 
             self.apparentResistivity = schlumbergerResistivity(
                 self.voltageSpacing, self.meanVoltage, self.meanCurrent)[:-1] # Leave off last return values as it should be nan
@@ -276,21 +257,70 @@ class Main(QMainWindow, UI_MainWindow):
 
         # Provide a message box if neither Wenner nor Schlumberger are selected
         else:
-            self.noSpacingMessageBox = self.messageBox('Warning', (
-                'The probe spacing radio button has not been set.\n\n' +
-                'Please indicate whether a Schlumberger or Wenner layout '
-                'has been used by selecting one of the radio buttons. The ' +
-                'radio buttons are located at the botton left of the ' +
-                'program, near the input table.'))
-            pass
+            self.noSpacingMessageBox(suppress)
 
         return self.apparentResistivity
 
 
-    def messageBox(self, title, message):
+    def wennerMessageBox(self, suppress=False):
 
-        msgBox = QMessageBox(self)
-        msgBox.about(self, title, message)
+        print('SUPPRESS={}'.format(suppress))
+        # Suppress argument is to simplify testing
+        if suppress:
+            return
+
+        self.msgBox = None
+
+        self.msgBox = QMessageBox(self)
+        self.msgBox.about(
+            self,   'Warning',
+            ('The probe spacing radio button has been set to ' +
+             'Wenner Spacing all of the Voltage Sep. ' +
+             'values are NOT EQUAL. All Voltage Sep. values ' +
+             'SHOULD BE EQUAL to eachother.\n\n' +
+             'Please ensure that the proper radio box is ' +
+             'selected and that the electrodes are placed in ' +
+             'the desired arrangement.'))
+
+
+    def schlumbergerMessageBox(self, suppress=False):
+
+        # Suppress argument is to simplify testing
+        if suppress:
+            return
+
+        self.msgBox = None
+
+        self.msgBox = QMessageBox(self)
+        self.msgBox.about(
+            self, 'Warning',
+            ('The probe spacing radio button has been set to ' +
+             'Schlumberger Spacing and the first and last ' +
+             'Voltage Sep. values are EQUAL. The voltage ' +
+             'separation must follow a particular pattern, ' +
+             'in which the first and last separation values ' +
+             'should NOT BE EQUAL.\n\n' +
+             'Please ensure that the proper radio box is ' +
+             'selected and that the electrodes are placed in ' +
+             'the desired arrangement.'))
+
+
+    def noSpacingMessageBox(self, suppress=False):
+
+        # Suppress argument is to simplify testing
+        if suppress:
+            return
+
+        self.msgBox = None
+
+        self.msgBox = QMessageBox(self)
+        self.msgBox(
+            self, 'Warning',
+            ('The probe spacing radio button has not been set.\n\n' +
+             'Please indicate whether a Schlumberger or Wenner layout '
+             'has been used by selecting one of the radio buttons. The ' +
+             'radio buttons are located at the botton left of the ' +
+             'program, near the input table.'))
 
 
     def wenner(self):

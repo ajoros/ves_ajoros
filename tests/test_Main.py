@@ -68,20 +68,11 @@ class TestMain(unittest.TestCase):
             np.array([409.80330837, 300.5875851]))
 
         self.main.wenner()
-        self.main.compute()
-        okButton = self.main.wennerMessageBox(self.main.wennerMessageBox)
-        QTest.mouseClick(okButton, Qt.LeftButton)
+        self.main.compute(True)
 
         assert_array_almost_equal(
             self.main.apparentResistivity,
             np.array([1844.114888, 924.884877, 420.101877]))
-
-
-    def test_messageBox(self):
-
-        msgBox = self.main.messageBox('title', 'message')
-
-        self.assertFalse((msgBox.__class__ is None))
 
 
     def test_arraySelectionButtonOutput(self):
@@ -95,3 +86,7 @@ class TestMain(unittest.TestCase):
 
         self.assertTrue(self.main.schlumbergerLayout)
         self.assertFalse(self.main.wennerLayout)
+
+
+if __name__ == '__main__':
+    unittest.main()

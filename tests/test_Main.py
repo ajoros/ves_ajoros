@@ -4,6 +4,7 @@ import unittest
 
 import numpy as np
 from numpy.testing import assert_array_almost_equal
+from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication
 
 sys.path.append(os.path.abspath(os.path.join(
@@ -60,6 +61,8 @@ class TestMain(unittest.TestCase):
 
         self.main.schlumberger()
         self.main.compute()
+        #### BEEFSTEAK - try to add OK button press here for Ubuntu
+        # okButton = self.main.
 
         assert_array_almost_equal(
             self.main.apparentResistivity,

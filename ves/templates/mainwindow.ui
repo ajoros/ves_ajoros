@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>600</height>
+    <width>725</width>
+    <height>475</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -173,14 +173,23 @@
         <property name="toolTip">
          <string>Draw a rectangle on the plot using the mouse or trackpad</string>
         </property>
-        <property name="toolTipDuration" stdset="0">
+        <property name="toolTipDuration">
          <number>-1</number>
         </property>
         <layout class="QVBoxLayout" name="mplvl">
          <property name="sizeConstraint">
           <enum>QLayout::SetNoConstraint</enum>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
         </layout>
@@ -274,8 +283,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
-     <height>25</height>
+     <width>725</width>
+     <height>22</height>
     </rect>
    </property>
    <property name="sizePolicy">

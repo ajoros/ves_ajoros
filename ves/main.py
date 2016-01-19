@@ -5,6 +5,7 @@ matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar)
+import matplotlib.image as mpimg
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
@@ -98,6 +99,8 @@ class Main(QMainWindow, UI_MainWindow):
         self.newRectangleButton.clicked.connect(self.newRectangle)
         self.resetPlotButton.clicked.connect(self.resetPlot)
 
+        # self.initPlot(True)
+
 
         # self.initUi()
 
@@ -178,7 +181,11 @@ class Main(QMainWindow, UI_MainWindow):
             # plt.clf()
             # self.compute()
         else:
-            self.canvas.initFigure(np.array([]), np.array([]))
+
+            image = mpimg.imread('startup.png')
+            plot = plt.imshow(image)
+            plt.show()
+            # self.canvas.initFigure(np.array([]), np.array([]))
 
         if draw:
             self.canvas.fig.tight_layout()
@@ -262,6 +269,7 @@ class Main(QMainWindow, UI_MainWindow):
         # Provide a message box if neither Wenner nor Schlumberger are selected
         else:
             self.noSpacingMessageBox(suppress)
+            return
 
         return self.apparentResistivity
 
@@ -318,7 +326,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.msgBox = None
 
         self.msgBox = QMessageBox(self)
-        self.msgBox(
+        self.msgBox.about(
             self, 'Warning',
             ('The probe spacing radio button has not been set.\n\n' +
              'Please indicate whether a Schlumberger or Wenner layout '

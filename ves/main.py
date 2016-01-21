@@ -14,8 +14,10 @@ from matplotlib.figure import Figure
 import numpy as np
 np.seterr(over='ignore')
 
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QApplication, QMessageBox, QSizePolicy
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import (
+    QAction, QApplication, QMessageBox, QSizePolicy, QSplashScreen)
 from PyQt5.uic import loadUiType
 
 from aggregate import aggregateTable
@@ -348,10 +350,23 @@ class Main(QMainWindow, UI_MainWindow):
 
 
 if __name__ == '__main__':
-    import sys
+    import sys, time
 
     app = QApplication(sys.argv)
+
+    splashPix = QPixmap('splash.png')
+    splashScreen = QSplashScreen(splashPix, Qt.WindowStaysOnTopHint)
+
+    splashScreen.setMask(splashPix.mask())
+    splashScreen.show()
+
+    app.processEvents()
+
+    time.sleep(1)
+
     main = Main(tableData, headers, colors)
     main.show()
+
+    splashScreen.finish(main)
 
     sys.exit(app.exec_())

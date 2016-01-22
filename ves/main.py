@@ -359,7 +359,6 @@ if __name__ == '__main__':
 
     splashScreen.setMask(splashPix.mask())
     splashScreen.show()
-
     app.processEvents()
 
     time.sleep(1)

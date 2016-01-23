@@ -1,4 +1,6 @@
 import os
+import sys
+import time
 
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -288,10 +290,9 @@ class Main(QMainWindow, UI_MainWindow):
         self.msgBox = QMessageBox(self)
         self.msgBox.about(
             self,   'Warning',
-            ('The probe spacing radio button has been set to ' +
-             'Wenner Spacing all of the Voltage Sep. ' +
-             'values are NOT EQUAL. All Voltage Sep. values ' +
-             'SHOULD BE EQUAL to eachother.\n\n' +
+            ('The probe spacing radio button has been set to Wenner Spacing ' +
+             'all of the Voltage Sep. values are NOT EQUAL. All Voltage ' +
+             'Sep. values SHOULD BE EQUAL to eachother.\n\n' +
              'Please ensure that the proper radio box is ' +
              'selected and that the electrodes are placed in ' +
              'the desired arrangement.'))
@@ -350,7 +351,6 @@ class Main(QMainWindow, UI_MainWindow):
 
 
 if __name__ == '__main__':
-    import sys, time
 
     app = QApplication(sys.argv)
 

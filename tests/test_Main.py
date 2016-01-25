@@ -20,24 +20,29 @@ class TestMain(unittest.TestCase):
 
         # Set up a mock set of tableData similar to the Qt table with 3 rows
         self.tableData = [
+
             ['0.6', '0.3', '0.9', '5750', '23'],
             ['', '', '', '5930', '24'],
             ['', '', '', '5850', '24'],
             ['', '', '', '5950', '25'],
+
             ['1', '0.5', '1.5', '3650', '30'],
             ['', '', '', '3690', '30'],
             ['', '', '', '3670', '30'],
             ['', '', '', '3710', '30'],
+
             ['1.6', '0.8', '2.4', '1462', '31'],
             ['', '', '', '1820', '31'],
             ['', '', '', '1787', '31'],
-            ['', '', '', '1840', '31']]
+            ['', '', '', '1840', '31']
+
+            ]
+
         self.rowCount = len(self.tableData)
 
         self.app = QApplication([])
         self.main = Main(
             self.tableData, headers, colors)
-        # print()
 
 
     def tearDown(self):

@@ -361,7 +361,7 @@ if __name__ == '__main__':
     splashScreen.show()
     app.processEvents()
 
-    time.sleep(1)
+    time.sleep(0.1)
 
     main = Main(tableData, headers, colors)
     main.show()

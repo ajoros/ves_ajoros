@@ -9,9 +9,36 @@ from templates.tempData import (
 
 
 class PalettedTableModel(QAbstractTableModel):
+    """Class object representing the QtTable model upon which
+    the GUI is built. Must intereact with a QtTableView object
+
+    """
 
     def __init__(self, table=[[]], headers=[], colors=[], parent=None):
+        """Initialization method for the PalettedTableModel. This portion
+        of the code will execute every time a PalettedTableModel object
+        is instantiated
 
+        Parameters
+        ----------
+        Args:
+            table: list
+                A nested table containing the data abstracted in the
+                QAbstractTableModel. Indexed as [row][column]
+            headers: list
+                A list containing hex color codes (or some other matplotlib
+                accepted value) to define the row colors
+            parent: None
+                The object from which the instantiated object inherits
+
+        Notes
+        -----
+        All attributes on this model were required to be set as public
+        attributes (in the Python world, i.e. no leading _ to the name).
+        This allows for access to the table data and color values regardless
+        of whether or not the object is instantiated in __main__.
+
+        """
         # Default parent to self
         if parent is None:
             parent = self
@@ -29,35 +56,96 @@ class PalettedTableModel(QAbstractTableModel):
 
 
     def rowCount(self, parent):
+        """Define the row count of the table
 
+        Parameters
+        ----------
+        Args:
+            parent: None
+            The object from which this method considers the parent (I think you
+            inherit from your parents)
+
+        Returns
+        -------
+        rowCount: int
+            An integer representing the number of rows currently in the table
+
+        """
         return len(self.table)
 
 
     def columnCount(self, parent):
+        """Define the row count of the table
 
+        Parameters
+        ----------
+        Args:
+            parent: None
+            The object from which this method considers the parent (I think you
+            inherit from your parents)
+
+        Returns
+        -------
+        columnCount: int
+            An integer representing the number of columns currently
+            in the table
+
+        """
         return len(self.table[0])
 
 
     def flags(self, index):
+        """Sets the Qt flags
 
+        Parameters
+        ----------
+            index: `Qt:::QModelIndex`
+                http://doc.qt.io/qt-5/qmodelindex.html
+                A Qt object describing where in the table the current cell is
+
+        Returns
+        -------
+        Qt objects
+
+        """
         return Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable
 
 
     def update(self, table):
+        """Define the method which updates the table with new data
 
+        Parameters
+        ----------
+            table: list
+                A nested table containing the data abstracted in the
+                QAbstractTableModel. Indexed as [row][column]
+
+        Returns
+        -------
+            None
+                Simply updates a table
+
+        """
         self.table = table
 
 
     def data(self, index, role):
-        """Store and control data for the Table model
+        """Define the alignment and actions of the table on edit,
+        hover, display
 
-        Args:
-            self (class??): an instance of PalettedTableModel
-            index (`::class::Qt.TableInex`??)
-            role (qt class): role
+        Parameters
+        ----------
+            index: `Qt:::QModelIndex`
+                http://doc.qt.io/qt-5/qmodelindex.html
+                A Qt object describing where in the table the current cell is
+            role: `Qt::ItemDataRole`
+                http://doc.qt.io/qt-5/qt.html#ItemDataRole-enum
+                Tells the view what type of data to get from the table model
 
-        Returns:
-            str: QtName
+        Returns
+        -------
+            variable:
+                The returns are definied by the role. Most values are integers
 
         """
         # Get the Qt rtable row and column
@@ -85,7 +173,23 @@ class PalettedTableModel(QAbstractTableModel):
 
 
     def setData(self, index, value, role=Qt.EditRole):
+        """This method sets the data to the appropriate value when appprops
 
+        Parameters
+        ----------
+        index: `Qt:::QModelIndex`
+            http://doc.qt.io/qt-5/qmodelindex.html
+            A Qt object describing where in the table the current cell is
+        value: str
+            The update or new value for the cell in question, mark?
+        role: `Qt::EditRole`
+            The role for which Qt is to use in updating or setting the data
+
+        Returns
+        -------
+        bool: True or False, depending on needs
+
+        """
         if role == Qt.EditRole:
 
             row = index.row()
@@ -102,7 +206,26 @@ class PalettedTableModel(QAbstractTableModel):
 
 
     def headerData(self, section, orientation, role):
+        """Sets the headers for both the rows and columns of the tableView
 
+        Parameters
+        ----------
+        section: int
+            The section number which the header should belong to. Sections
+            refer to every 4th row in this particular case
+        orientation: `Qt::Orientation`
+            Refers to the Horizontal or Vertical orientation of the table.
+            Vertical is a row header, horizontal is a column header
+        role: `Qt::EditRole`
+            The role for which Qt is to use in updating or setting the data
+
+        Returns
+        -------
+        pixmap: `Qt::QPixmap`
+            The DisplayRole or DecorationRole for Qt. Will also return a
+            QPixmap if it's the money$ shot.
+
+        """
         if role == Qt.DisplayRole:
 
             if orientation == Qt.Horizontal:
@@ -124,7 +247,23 @@ class PalettedTableModel(QAbstractTableModel):
 
 
     def insertRows(self, position, rows, parent=QModelIndex()):
+        """Insert a new row in the table
 
+        Parameters
+        ----------
+        position: int
+            The row number of the table
+        rows: int
+            The number of rows to add to the table (4 in this particular case,
+            as we're only requiring four measurements)
+        parent: QModelIndex
+            The parent object of the method
+
+        Returns
+        ------
+        None
+
+        """
         self.beginInsertRows(parent, position, position + rows - 1)
 
         # Default to empty cells
@@ -139,7 +278,23 @@ class PalettedTableModel(QAbstractTableModel):
 
 
     def removeRows(self, position, rows, parent=QModelIndex()):
+        """Remove rows from the table
 
+        Parameters
+        ----------
+        position: int
+            The starting row from which the table deletion is to initialize
+        rows: int
+            The number of rows to be deleted from the mesa. Once again, four
+            rows at a time
+        parent: QModelIndex
+            The QModelIndex parent that defines the parent of this fine method
+
+        Returns
+        ------
+        None
+
+        """
         nRows = len(self.table) - rows
 
         self.beginRemoveRows(parent, position, position + rows - 1)

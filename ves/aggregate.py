@@ -4,7 +4,30 @@ import numpy as np
 
 
 def aggregateTable(tableData, rowCount):
+    """Aggreate the PalletedTableModel class input data for analysis
 
+    Parameters
+    ----------
+    tableData: list
+        A nested list of [row][column] defining the data that was input to the
+        Qt table
+    rowCount: int
+        The number of rows in the table
+
+    Notes
+    -----
+    This function makes strong assumptions about the data format. The str.pop()
+    calls in the second for loop are hard coded based on the column names in
+    the template file, which is sourced from main.py
+
+    Returns
+    -------
+    aggregatedData: tuple
+        A tuple of `np.array` class items. The tuple contains voltage spacing,
+        mean voltage, and mean current from the input table as the output in
+        the 0, 1, 2 indices
+
+    """
     temporaryTableData = copy.deepcopy(tableData)
     # Convert values from Qt model strings to floats or np.nan
     for i in range(rowCount):

@@ -12,12 +12,20 @@ import numpy as np
 
 
 class InteractiveCanvas(FigureCanvas):
+    """An interactive matplotlib figure that allows for the plotting of data
+    on a log-log axis with interactive matplotlib.patches.Rectangle drawing
 
+    """
     def __init__(self, xdata, ydata, parent=None,
                  xlabel='x label', ylabel='y label',
                  linestyle='--', marker='o',
                  dpi=150, hold=False, alpha=0.5, colors=None):
+        """Initialization method. Executes every time initialization occurs
 
+        Parameters
+        ----------
+        xdata: `np.array.float64`
+        """
         # Save figure input parameters as class properties
         self.xdata = xdata
         self.ydata = ydata

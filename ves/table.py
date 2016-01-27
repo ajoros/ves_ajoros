@@ -204,6 +204,19 @@ class PalettedTableModel(QAbstractTableModel):
         return False
 
 
+    def stripCommas(self, table):
+
+        for row in len(table):
+
+            for column in len(table[0]):
+
+                value = self.table[row][column]
+                value.replace(',', '.')
+
+                self.table[row][column] = value
+                del value
+
+
     def headerData(self, section, orientation, role):
         """Sets the headers for both the rows and columns of the tableView
 

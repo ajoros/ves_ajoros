@@ -105,11 +105,18 @@ class Main(QMainWindow, UI_MainWindow):
 
         # Connect to the decimal separator check box
         self.decimalCheckBox.clicked.connect(self.stripCommas)
-
+        print(dir(self.decimalCheckBox))
+        print(dir(self.decimalCheckBox.clicked))
+        print(self.decimalCheckBox.stateChanged.connect(self.print_hey))
+        # print
         # self.initPlot(True)
 
 
         # self.initUi()
+
+
+    def print_hey(self):
+        print('hey')
 
 
     def initUi(self):
@@ -185,14 +192,6 @@ class Main(QMainWindow, UI_MainWindow):
                 voltageSpacing = self.voltageSpacing[:-1]
 
             self.canvas.initFigure(voltageSpacing, self.apparentResistivity)
-            # plt.clf()
-            # self.compute()
-        else:
-
-            image = mpimg.imread('startup.png')
-            plot = plt.imshow(image)
-            plt.show()
-            # self.canvas.initFigure(np.array([]), np.array([]))
 
         if draw:
             self.canvas.fig.tight_layout()
@@ -215,16 +214,17 @@ class Main(QMainWindow, UI_MainWindow):
 
 
     def stripCommas(self, table):
+        pass
 
-        for row in len(table):
+    #     for row in len(table):
 
-            for column in len(table[0]):
+    #         for column in len(table[0]):
 
-                value = self.table[row][column]
-                value.replace(',', '.')
+    #             value = self.table[row][column]
+    #             value.replace(',', '.')
 
-                self.table[row][column] = value
-                del value
+    #             self.table[row][column] = value
+    #             del value
 
 
     def newRectangle(self):

@@ -103,6 +103,9 @@ class Main(QMainWindow, UI_MainWindow):
         self.newRectangleButton.clicked.connect(self.newRectangle)
         self.resetPlotButton.clicked.connect(self.resetPlot)
 
+        # Connect to the decimal separator check box
+        self.decimalCheckBox.clicked.connect(self.stripCommas)
+
         # self.initPlot(True)
 
 
@@ -211,6 +214,19 @@ class Main(QMainWindow, UI_MainWindow):
             pass
 
 
+    def stripCommas(self, table):
+
+        for row in len(table):
+
+            for column in len(table[0]):
+
+                value = self.table[row][column]
+                value.replace(',', '.')
+
+                self.table[row][column] = value
+                del value
+
+
     def newRectangle(self):
 
         try:
@@ -289,7 +305,7 @@ class Main(QMainWindow, UI_MainWindow):
 
         self.msgBox = QMessageBox(self)
         self.msgBox.about(
-            self,   'Warning',
+            self, 'Warning',
             ('The probe spacing radio button has been set to Wenner Spacing ' +
              'all of the Voltage Sep. values are NOT EQUAL. All Voltage ' +
              'Sep. values SHOULD BE EQUAL to eachother.\n\n' +

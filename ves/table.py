@@ -54,7 +54,6 @@ class PalettedTableModel(QAbstractTableModel):
         self.colors = colors
 
 
-
     def rowCount(self, parent):
         """Define the row count of the table
 

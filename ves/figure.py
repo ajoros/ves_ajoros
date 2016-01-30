@@ -25,6 +25,7 @@ class InteractiveCanvas(FigureCanvas):
         Parameters
         ----------
         xdata: `np.array.float64`
+
         """
         # Save figure input parameters as class properties
         self.xdata = xdata

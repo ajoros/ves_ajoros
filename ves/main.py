@@ -72,15 +72,6 @@ class Main(QMainWindow, UI_MainWindow):
         self.toolbar = NavigationToolbar(
             self.canvas, self.canvas, coordinates=True)
 
-        # self.toolbar.setMinimumHeight(0)
-        # self.toolbar.setMinimumWidth(self.tableViewWidget.minimumWidth())
-
-        # self.toolbar.setMaximumHeight(self.tableViewWidget.maximumHeight())
-        # self.toolbar.setMaximumWidth(self.tableViewWidget.maximumWidth())
-        # print(dir(self.toolbar.geometry))
-        # self.toolbar.resize(20, 300)
-        # self.toolbar.width(300)
-
         self.mplvl.addWidget(self.canvas)
         self.mplvl.addWidget(self.toolbar)
 
@@ -104,14 +95,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.resetPlotButton.clicked.connect(self.resetPlot)
 
         # Connect to the decimal separator check box
-        self.decimalCheckBox.clicked.connect(self.stripCommas)
-        print(dir(self.decimalCheckBox))
-        print(dir(self.decimalCheckBox.clicked))
-        print(self.decimalCheckBox.stateChanged.connect(self.print_hey))
-        # print
-        # self.initPlot(True)
-
-
+        self.decimalCheckBox.clicked.connect(self.model.stripCommas)
         # self.initUi()
 
 
@@ -296,7 +280,6 @@ class Main(QMainWindow, UI_MainWindow):
 
     def wennerMessageBox(self, suppress=False):
 
-        print('SUPPRESS={}'.format(suppress))
         # Suppress argument is to simplify testing
         if suppress:
             return
@@ -309,6 +292,7 @@ class Main(QMainWindow, UI_MainWindow):
             ('The probe spacing radio button has been set to Wenner Spacing ' +
              'all of the Voltage Sep. values are NOT EQUAL. All Voltage ' +
              'Sep. values SHOULD BE EQUAL to eachother.\n\n' +
+
              'Please ensure that the proper radio box is ' +
              'selected and that the electrodes are placed in ' +
              'the desired arrangement.'))
@@ -331,6 +315,7 @@ class Main(QMainWindow, UI_MainWindow):
              'separation must follow a particular pattern, ' +
              'in which the first and last separation values ' +
              'should NOT BE EQUAL.\n\n' +
+
              'Please ensure that the proper radio box is ' +
              'selected and that the electrodes are placed in ' +
              'the desired arrangement.'))
@@ -348,6 +333,7 @@ class Main(QMainWindow, UI_MainWindow):
         self.msgBox.about(
             self, 'Warning',
             ('The probe spacing radio button has not been set.\n\n' +
+
              'Please indicate whether a Schlumberger or Wenner layout '
              'has been used by selecting one of the radio buttons. The ' +
              'radio buttons are located at the botton left of the ' +

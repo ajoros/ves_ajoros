@@ -204,16 +204,16 @@ class PalettedTableModel(QAbstractTableModel):
         return False
 
 
-    def stripCommas(self, table):
+    def stripCommas(self):
 
-        for row in len(table):
+        for row in range(len(self.table)):
 
-            for column in len(table[0]):
+            for column in  range(len(self.table[0])):
 
                 value = self.table[row][column]
-                value.replace(',', '.')
-
-                self.table[row][column] = value
+                print(self.table)
+                self.table[row][column] = value.replace('.', ',')
+                print(self.table)
                 del value
 
 

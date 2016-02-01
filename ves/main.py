@@ -32,7 +32,7 @@ from templates.tempData import (
 
 os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))
 UI_MainWindow, QMainWindow = loadUiType('mainwindow.ui')
-
+UI_ReportWindow, QReportWindow = loadUiType('reportwindow.ui')
 
 class Main(QMainWindow, UI_MainWindow):
 

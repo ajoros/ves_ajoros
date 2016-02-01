@@ -105,7 +105,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLineEdit" name="longitudeLineEdit"/>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_3">
@@ -115,56 +115,76 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="lineEdit_2"/>
+       <widget class="QLineEdit" name="latitudeLineEdit"/>
       </item>
       <item row="3" column="0" colspan="2">
-       <widget class="QDateTimeEdit" name="dateTimeEdit"/>
+       <widget class="QDateTimeEdit" name="dateTimeEdit">
+        <property name="dateTime">
+         <datetime>
+          <hour>0</hour>
+          <minute>0</minute>
+          <second>0</second>
+          <year>2000</year>
+          <month>1</month>
+          <day>1</day>
+         </datetime>
+        </property>
+        <property name="displayFormat">
+         <string>yyyy-M-d hh:mm </string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+        <property name="currentSectionIndex">
+         <number>0</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
     <item row="1" column="1">
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>rhoM</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="lineEdit_5"/>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>rhoA</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLineEdit" name="lineEdit_4"/>
-      </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>dA</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEdit_6"/>
-      </item>
-      <item row="1" column="2">
        <widget class="QLabel" name="label_6">
         <property name="text">
          <string>rhoB</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QLineEdit" name="lineEdit_3"/>
+      <item row="0" column="2" colspan="2">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>rhoM</string>
+        </property>
+       </widget>
       </item>
-      <item row="2" column="0" colspan="4">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>rhoA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="rhoALineEdit"/>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLineEdit" name="rhoMLineEdit"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="rhoBLineEdit"/>
+      </item>
+      <item row="1" column="2" colspan="2">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>dA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QLineEdit" name="dALineEdit"/>
+      </item>
+      <item row="2" column="0" colspan="5">
        <widget class="QPushButton" name="pushButton">
         <property name="font">
          <font>
@@ -173,6 +193,13 @@
         </property>
         <property name="text">
          <string>Drill or no drill?</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="5">
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>Rerun VES Inverse Analysis with New Parameters</string>
         </property>
        </widget>
       </item>

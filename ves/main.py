@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import sys
 import time
@@ -16,7 +17,7 @@ from matplotlib.figure import Figure
 import numpy as np
 np.seterr(over='ignore')
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QDateTime, Qt
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (
     QAction, QApplication, QMessageBox, QSizePolicy, QSplashScreen)
@@ -31,14 +32,14 @@ from templates.tempData import (
 
 
 os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))
-UI_MainWindow, QMainWindow = loadUiType('mainwindow.ui')
+UI_StartupWindow, QStartupWindow = loadUiType('mainwindow.ui')
 UI_ReportWindow, QReportWindow = loadUiType('reportwindow.ui')
 
-class Main(QMainWindow, UI_MainWindow):
+class StartupWindow(QStartupWindow, UI_StartupWindow):
 
     def __init__(self, tableData, headers, colors):
 
-        super(Main, self).__init__()
+        super(StartupWindow, self).__init__()
 
         self.setupUi(self)
 
@@ -352,6 +353,31 @@ class Main(QMainWindow, UI_MainWindow):
         self.wennerLayout = False
 
 
+class ReportWindow(UI_ReportWindow, QReportWindow):
+
+    def __init__(self):
+
+        super(QReportWindow, self).__init__()
+
+        self.setupUi(self)
+
+        self.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
+
+        # Set default Earth parameters
+        self.rhoALineEdit.setText('1.0')
+        self.rhoBLineEdit.setText('10.0')
+        self.rhoMLineEdit.setText('100.0')
+        self.dALineEdit.setText('10.0')
+
+        # Set default lat/long values
+        self.longitudeLineEdit.setText('Please enter logitude (E/W)')
+        self.latitudeLineEdit.setText('Please enter latitude (N/S)')
+
+# rhoA = 1.
+# rhoB = 10.
+# rhoM = 100.
+# dA = 10.
+
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
@@ -365,9 +391,12 @@ if __name__ == '__main__':
 
     time.sleep(0.1)
 
-    main = Main(tableData, headers, colors)
-    main.show()
+    startup = StartupWindow(tableData, headers, colors)
+    startup.show()
 
-    splashScreen.finish(main)
+    splashScreen.finish(startup)
+
+    report = ReportWindow()
+    report.show()
 
     sys.exit(app.exec_())

@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import QApplication
 sys.path.append(os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..', 'ves')))
 from templates.tempData import headers, colors
-from main import Main
+from main import StartupWindow
 
 
 class TestMain(unittest.TestCase):
@@ -41,7 +41,7 @@ class TestMain(unittest.TestCase):
         self.rowCount = len(self.tableData)
 
         self.app = QApplication([])
-        self.main = Main(
+        self.main = StartupWindow(
             self.tableData, headers, colors)
 
 

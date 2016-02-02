@@ -17,7 +17,7 @@ from matplotlib.figure import Figure
 import numpy as np
 np.seterr(over='ignore')
 
-from PyQt5.QtCore import QDateTime, Qt
+from PyQt5.QtCore import pyqtSlot, QDateTime, Qt
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (
     QAction, QApplication, QMessageBox, QSizePolicy, QSplashScreen)
@@ -26,14 +26,17 @@ from PyQt5.uic import loadUiType
 from aggregate import aggregateTable
 from equations import schlumbergerResistivity, wennerResistivity
 from figure import InteractiveCanvas
+from reportwindow import ReportWindow
 from table import PalettedTableModel
 from templates.tempData import (
     columns, colors, headers, rowCount, tableData)
 
 
-os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))
+# No need to change directory, as the change from loading
+#  reportwindow.ReportWindow has the interpreters working directory still
+#  set to the templates folder
 UI_StartupWindow, QStartupWindow = loadUiType('mainwindow.ui')
-UI_ReportWindow, QReportWindow = loadUiType('reportwindow.ui')
+
 
 class StartupWindow(QStartupWindow, UI_StartupWindow):
 
@@ -99,9 +102,23 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         self.decimalCheckBox.clicked.connect(self.model.stripCommas)
         # self.initUi()
 
+        # Connect to analysis button
+        self.launchAnalysisButton.clicked.connect(self.launchReportWindow)
+
 
     def print_hey(self):
         print('hey')
+
+
+    @pyqtSlot()
+    def launchReportWindow(self):
+
+        self.reportWindowClass = ReportWindow()
+
+        self.reportWindowClass.setupUi(self.reportWindowClass)
+        self.close()
+        self.reportWindowClass.show()
+
 
 
     def initUi(self):
@@ -353,26 +370,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         self.wennerLayout = False
 
 
-class ReportWindow(UI_ReportWindow, QReportWindow):
-
-    def __init__(self):
-
-        super(QReportWindow, self).__init__()
-
-        self.setupUi(self)
-
-        self.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
-
-        # Set default Earth parameters
-        self.rhoALineEdit.setText('  1.00')
-        self.rhoBLineEdit.setText(' 10.00')
-        self.rhoMLineEdit.setText('100.00')
-        self.dALineEdit.setText(' 10.00')
-
-        # Set default lat/long values
-        self.longitudeLineEdit.setText('Please enter logitude (E/W)')
-        self.latitudeLineEdit.setText('Please enter latitude (N/S)')
-
 
 if __name__ == '__main__':
 
@@ -391,8 +388,5 @@ if __name__ == '__main__':
     startup.show()
 
     splashScreen.finish(startup)
-
-    report = ReportWindow()
-    report.show()
 
     sys.exit(app.exec_())

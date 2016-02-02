@@ -4,9 +4,7 @@ from PyQt5.QtCore import QDateTime
 from PyQt5.uic import loadUiType
 
 
-os.chdir(os.path.join(
-    os.path.dirname(__file__),
-    'templates'))
+os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))
 UI_ReportWindow, QReportWindow = loadUiType('reportwindow.ui')
 
 

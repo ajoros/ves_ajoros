@@ -104,6 +104,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         # Connect to analysis button
         self.launchAnalysisButton.clicked.connect(self.launchReportWindow)
 
+        self.initUi()
 
     def print_hey(self):
         print('hey')
@@ -123,19 +124,18 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         saveAction = QAction(QIcon('save.png'), '&Save As', self)
         saveAction.setShortcut('Ctrl+S')
+        saveAction.triggered.connect(QApplication.saveStateRequest)
 
         exitAction = QAction(QIcon('exit.png'), '&Exit', self)
-        exitAction.setShortcut('Alt+F4')
-
-        saveAction.triggered.connect(QApplication.saveStateRequest)
+        exitAction.setShortcut('Ctrl+Q')
         exitAction.triggered.connect(QApplication.quit)
 
         # fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(saveAction)
-        fileMenu.addAction(exitAction)
+        self.menuBar.addAction(saveAction)
+        self.menuBar.addAction(exitAction)
 
-        addRowButton = QPushButton()
-        addRowButton.clicked.connect(PalettedTableModel.insertRows(0, 1))
+        # addRowButton = QPushButton()
+        # addRowButton.clicked.connect(PalettedTableModel.insertRows(0, 1))
 
         # self.show()
 

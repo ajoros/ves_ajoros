@@ -27,3 +27,5 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         # Set default lat/long values
         self.longitudeLineEdit.setText('Please enter logitude (E/W)')
         self.latitudeLineEdit.setText('Please enter latitude (N/S)')
+
+        self.resultsTextBox.append('This is a test:\n  {}'.format('drill'))

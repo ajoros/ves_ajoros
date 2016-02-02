@@ -54,7 +54,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QTextBrowser" name="textBrowser"/>
+       <widget class="QTextBrowser" name="resultsTextBox">
+        <property name="toolTip">
+         <string>Display of preliminary results from the VES analysis</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -76,7 +80,7 @@
        <bool>true</bool>
       </property>
       <property name="toolTip">
-       <string>Draw a rectangle on the plot using the mouse or trackpad</string>
+       <string>Plot of the VES inverse analysis results</string>
       </property>
       <property name="toolTipDuration">
        <number>-1</number>
@@ -92,6 +96,9 @@
           <pointsize>13</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>Use a negative sign (-) for coordinates that are South or West</string>
+        </property>
         <property name="text">
          <string>Coordinates (use negative values for South and West)</string>
         </property>
@@ -106,6 +113,9 @@
       </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="longitudeLineEdit">
+        <property name="toolTip">
+         <string>Enter longitude (- sign for West)</string>
+        </property>
         <property name="inputMask">
          <string>#000.00000</string>
         </property>
@@ -120,6 +130,9 @@
       </item>
       <item row="2" column="1">
        <widget class="QLineEdit" name="latitudeLineEdit">
+        <property name="toolTip">
+         <string>Enter latitude (- sign for South)</string>
+        </property>
         <property name="inputMask">
          <string>#00.00000</string>
         </property>
@@ -127,6 +140,9 @@
       </item>
       <item row="3" column="0" colspan="2">
        <widget class="QDateTimeEdit" name="dateTimeEdit">
+        <property name="toolTip">
+         <string>Enter current time and date if incorrect</string>
+        </property>
         <property name="dateTime">
          <datetime>
           <hour>0</hour>
@@ -175,6 +191,9 @@
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="rhoALineEdit">
+        <property name="toolTip">
+         <string>Adjust rhoA value</string>
+        </property>
         <property name="inputMask">
          <string>000.00</string>
         </property>
@@ -182,6 +201,9 @@
       </item>
       <item row="0" column="4">
        <widget class="QLineEdit" name="rhoMLineEdit">
+        <property name="toolTip">
+         <string>Adjust rhoM value</string>
+        </property>
         <property name="inputMask">
          <string>000.00</string>
         </property>
@@ -189,6 +211,9 @@
       </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="rhoBLineEdit">
+        <property name="toolTip">
+         <string>Adjust rhoB value</string>
+        </property>
         <property name="inputMask">
          <string>000.00</string>
         </property>
@@ -203,6 +228,9 @@
       </item>
       <item row="1" column="4">
        <widget class="QLineEdit" name="dALineEdit">
+        <property name="toolTip">
+         <string>Adjust dA value</string>
+        </property>
         <property name="inputMask">
          <string>000.00</string>
         </property>
@@ -215,6 +243,9 @@
           <pointsize>14</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>If satisfied with the preliminary results, click for an estimate of drilling feasibility</string>
+        </property>
         <property name="text">
          <string>Drill or no drill?</string>
         </property>
@@ -222,6 +253,9 @@
       </item>
       <item row="3" column="0" colspan="5">
        <widget class="QPushButton" name="pushButton_2">
+        <property name="toolTip">
+         <string>Rerun the analysis after fine tuning some parameters</string>
+        </property>
         <property name="text">
          <string>Rerun VES Inverse Analysis with New Parameters</string>
         </property>

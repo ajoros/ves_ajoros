@@ -89,11 +89,11 @@
        <widget class="QLabel" name="label">
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
+          <pointsize>13</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>Coordinates (WGS 84):</string>
+         <string>Coordinates (use negative values for South and West)</string>
         </property>
        </widget>
       </item>
@@ -105,7 +105,11 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="longitudeLineEdit"/>
+       <widget class="QLineEdit" name="longitudeLineEdit">
+        <property name="inputMask">
+         <string>#000.00000</string>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_3">
@@ -115,7 +119,11 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="latitudeLineEdit"/>
+       <widget class="QLineEdit" name="latitudeLineEdit">
+        <property name="inputMask">
+         <string>#00.00000</string>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0" colspan="2">
        <widget class="QDateTimeEdit" name="dateTimeEdit">
@@ -166,13 +174,25 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="rhoALineEdit"/>
+       <widget class="QLineEdit" name="rhoALineEdit">
+        <property name="inputMask">
+         <string>000.00</string>
+        </property>
+       </widget>
       </item>
       <item row="0" column="4">
-       <widget class="QLineEdit" name="rhoMLineEdit"/>
+       <widget class="QLineEdit" name="rhoMLineEdit">
+        <property name="inputMask">
+         <string>000.00</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="rhoBLineEdit"/>
+       <widget class="QLineEdit" name="rhoBLineEdit">
+        <property name="inputMask">
+         <string>000.00</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="2" colspan="2">
        <widget class="QLabel" name="label_8">
@@ -182,7 +202,11 @@
        </widget>
       </item>
       <item row="1" column="4">
-       <widget class="QLineEdit" name="dALineEdit"/>
+       <widget class="QLineEdit" name="dALineEdit">
+        <property name="inputMask">
+         <string>000.00</string>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0" colspan="5">
        <widget class="QPushButton" name="pushButton">

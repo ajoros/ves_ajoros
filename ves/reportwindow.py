@@ -1,6 +1,11 @@
 import os
 import sys
 
+from matplotlib.backends.backend_qt5agg import (
+    NavigationToolbar2QT as NavigationToolbar)
+import numpy as np
+np.seterr(over='ignore')
+
 from PyQt5.QtCore import QDateTime
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.uic import loadUiType
@@ -12,11 +17,15 @@ UI_ReportWindow, QReportWindow = loadUiType('reportwindow.ui')
 
 class ReportWindow(UI_ReportWindow, QReportWindow):
 
-    def __init__(self, rectCoordinates=[]):
+    def __init__(self, canvas):
 
         super(QReportWindow, self).__init__()
 
         self.setupUi(self)
+
+        self.canvas = canvas
+
+        rectCoordinates = canvas.rectCoordinates
 
         self.rectCoordinates = rectCoordinates
         self.nLayers = len(rectCoordinates)
@@ -41,6 +50,11 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
 
         self.resultsTextBox.append('This is a test:\n  {}'.format('drill'))
 
+        # Add a plot and matplotlib toolbar to the report window
+        self.mplvl.addWidget(self.canvas)
+        self.mplvl.addWidget(NavigationToolbar(
+            self.canvas, self.canvas, coordinates=True))
+
 
     def layersFromRectangles(self):
 
@@ -58,7 +72,6 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.layerWidths = layerWidths
         self.maxResistivities = maxResistivities
         self.minResistivities = minResistivities
-
 
 
     def emptyRectangles(self, event):

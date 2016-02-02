@@ -111,7 +111,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         self.close()
 
-        self.ReportWindow = ReportWindow(self.canvas.rectCoordinates)
+        self.ReportWindow = ReportWindow(self.canvas)
         self.ReportWindow.show()
 
 

@@ -63,29 +63,11 @@
      </layout>
     </item>
     <item row="0" column="1">
-     <widget class="QWidget" name="figureViewWidget" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>100</width>
-        <height>100</height>
-       </size>
-      </property>
-      <property name="mouseTracking">
-       <bool>true</bool>
-      </property>
-      <property name="toolTip">
-       <string>Plot of the VES inverse analysis results</string>
-      </property>
-      <property name="toolTipDuration">
-       <number>-1</number>
-      </property>
-     </widget>
+     <layout class="QVBoxLayout" name="mplvl">
+      <item>
+       <widget class="QWidget" name="widget" native="true"/>
+      </item>
+     </layout>
     </item>
     <item row="1" column="0">
      <layout class="QGridLayout" name="gridLayout">
@@ -264,6 +246,12 @@
      </layout>
     </item>
    </layout>
+   <zorder>figureViewWidget</zorder>
+   <zorder>pushButton_3</zorder>
+   <zorder>figureViewWidget</zorder>
+   <zorder>figureViewWidget</zorder>
+   <zorder>widget</zorder>
+   <zorder>lineEdit</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

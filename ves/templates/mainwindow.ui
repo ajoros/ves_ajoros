@@ -230,10 +230,10 @@
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>Freeze the current rectangle and add a new rectangle to the plot</string>
+             <string>Freeze the current rectangle. Must be clicked prior to launching the analysis after drawing the last rectangle.</string>
             </property>
             <property name="text">
-             <string>New Rectangle</string>
+             <string>Add Rectangle</string>
             </property>
            </widget>
           </item>
@@ -283,10 +283,6 @@
     </item>
    </layout>
    <zorder></zorder>
-   <zorder>schlumbergerRadioButton</zorder>
-   <zorder>decimalCheckBox</zorder>
-   <zorder>removeRowButton</zorder>
-   <zorder>addRowButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

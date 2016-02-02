@@ -369,18 +369,18 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
 
-    splashPix = QPixmap('splash.png')
-    splashScreen = QSplashScreen(splashPix, Qt.WindowStaysOnTopHint)
+    # splashPix = QPixmap('splash.png')
+    # splashScreen = QSplashScreen(splashPix, Qt.WindowStaysOnTopHint)
 
-    splashScreen.setMask(splashPix.mask())
-    splashScreen.show()
-    app.processEvents()
+    # splashScreen.setMask(splashPix.mask())
+    # splashScreen.show()
+    # app.processEvents()
 
     time.sleep(0.1)
 
     startup = StartupWindow(tableData, headers, colors)
     startup.show()
 
-    splashScreen.finish(startup)
+    # splashScreen.finish(startup)
 
     sys.exit(app.exec_())

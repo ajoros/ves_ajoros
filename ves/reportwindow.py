@@ -19,9 +19,13 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.setupUi(self)
 
         self.rectCoordinates = rectCoordinates
+        self.nLayers = len(rectCoordinates)
 
-        if len(rectCoordinates) == 0:
+        if self.nLayers == 0:
             self.emptyRectangles(QApplication.quit)
+
+        if self.nLayers > 0:
+            self.layersFromRectangles()
 
         self.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
 
@@ -38,6 +42,25 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.resultsTextBox.append('This is a test:\n  {}'.format('drill'))
 
 
+    def layersFromRectangles(self):
+
+        layerWidths, maxResistivities, minResistivities = [], [], []
+
+        for rectangle in self.rectCoordinates:
+            xy, width, height = rectangle
+
+            layerWidths.append(float(xy[0] + width))
+            maxResistivities.append(float(xy[1]))
+            minResistivities.append(float(xy[1] + height))
+
+            del xy, width, height
+
+        self.layerWidths = layerWidths
+        self.maxResistivities = maxResistivities
+        self.minResistivities = minResistivities
+
+
+
     def emptyRectangles(self, event):
 
         msgBox = QMessageBox(self)
@@ -52,4 +75,6 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
             sys.exit()
 
         else:
-            pass
+            self.layerWidths = None
+            self.maxResistivities = None
+            self.minResistivities = None

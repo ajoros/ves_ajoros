@@ -112,10 +112,9 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
     @pyqtSlot()
     def launchReportWindow(self):
 
-        self.reportWindowClass = ReportWindow()
-
-        self.reportWindowClass.setupUi(self.reportWindowClass)
         self.close()
+
+        self.reportWindowClass = ReportWindow()
         self.reportWindowClass.show()
 
 

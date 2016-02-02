@@ -63,7 +63,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         # Set up the QWidget with an InteractiveCanvas and
         #  NavigationToolbar instance
-        self.rects = []
         self.canvas = InteractiveCanvas(
             np.array([]), np.array([]),
             xlabel='Voltage Probe Spacing (m)',
@@ -106,17 +105,14 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         self.initUi()
 
-    def print_hey(self):
-        print('hey')
-
 
     @pyqtSlot()
     def launchReportWindow(self):
 
         self.close()
 
-        self.reportWindowClass = ReportWindow()
-        self.reportWindowClass.show()
+        self.ReportWindow = ReportWindow(self.canvas.rectCoordinates)
+        self.ReportWindow.show()
 
 
 

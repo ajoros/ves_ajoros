@@ -43,12 +43,13 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         msgBox = QMessageBox(self)
         reply = msgBox.question(
             self, 'Warning',
-            ('There were no rectangles drawn to define layers. Would ' +
-             'you like to exit the program or continue to adjust the ' +
-             'Earth parameters and mark location?'),
+            ('There were no rectangles drawn to define Earth layers. ' +
+             'Slect "yes" to exit the program or "no" continue to '+
+             'record latitude and longitude.'),
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             sys.exit()
+
         else:
             pass

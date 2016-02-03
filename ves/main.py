@@ -38,9 +38,28 @@ UI_StartupWindow, QStartupWindow = loadUiType('mainwindow.ui')
 
 
 class StartupWindow(QStartupWindow, UI_StartupWindow):
+    """A Qt QMainWindow class object that is the first window of the
+    Water 4/DRI VES Inverse Analysis software
 
+    """
     def __init__(self, tableData, headers, colors):
+        """Initialization code that is executed on every instantiation
 
+        Parameters
+        ----------
+        tableData: list
+            A nested list [row][column] of the data that is associated with
+            the QTableViewWidget. This data should always be up to date with
+            what is present in the table view itself. Passed in to the
+            PalettedTableModel
+        headers: list
+            Column header names passed in as a list of strings. Passed in to
+            the PalettedTableModel
+        colors: list
+            List of strings that include hex colors defining the
+            table row coloring. Passed in to the PalettedTableModel
+
+        """
         super(StartupWindow, self).__init__()
 
         self.setupUi(self)
@@ -111,7 +130,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def launchReportWindow(self):
-
+        """Launches the ReportWindow class on launch of VES Inverse Analysis"""
         self.close()
 
         self.ReportWindow = ReportWindow(self.canvas)
@@ -120,7 +139,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def initUi(self):
-
+        """Work in progress. Should hook up file menu"""
         saveAction = QAction(QIcon('save.png'), '&Save As', self)
         saveAction.setShortcut('Ctrl+S')
         saveAction.triggered.connect(QApplication.saveStateRequest)
@@ -140,7 +159,18 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def initTableView(self, model):
+        """Set up the QTableViewWidget with the proper data and row spacing
 
+        Parameters
+        ----------
+        model: `PalettedTableModel`
+            An instantiated an active PalettedTableModel instance
+
+        Notes
+        -----
+        Run once on instantiation of the class to space the rows
+
+        """
         nRows = len(self.model.table)
 
         self.tableViewWidget.setModel(model)
@@ -155,7 +185,14 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def aggregateTableForPlot(self):
+        """Apply the  aggregation function and assign the outputs to the class
 
+        Notes
+        -----
+        This method assures that the voltageSpacing, meanVoltage, and
+        meanCurrent properties are up to date with the table
+
+        """
         voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
             self.model.table, len(self.model.table))
 
@@ -164,7 +201,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         self.meanCurrent = meanCurrent
 
     def addRow(self):
-
+        """Add 4 new rows (one sample location) to the table"""
         startRow = len(self.model.table)
 
         self.model.insertRows(startRow, 4)
@@ -172,7 +209,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def removeRow(self):
-
+        """Remove 4 rows (one sample location) from the table"""
         startRow = len(self.model.table) - 4
 
         self.model.removeRows(startRow, 4)
@@ -180,7 +217,19 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def initPlot(self, draw=True):
+        """Initialize the plot for the main window
 
+        Parameters
+        ----------
+        draw: bool
+            If True, the figure canvas will update. Otherwise, it will not
+
+        Notes
+        -----
+        The plot is only created if apparentResistivity has already
+        been calculated
+
+        """
         plt.clf()
         self.aggregateTableForPlot()
 
@@ -198,7 +247,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def resetPlot(self):
-
+        """Clear the plot of data and rectangles to redraw the layers"""
         # Catch ValueError that occurs if reset is clicked prior to plotting
         try:
             self.canvas.mplRectangles = []
@@ -213,6 +262,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def stripCommas(self, table):
+        """Work in progress. Worth it?"""
         pass
 
     #     for row in len(table):
@@ -227,7 +277,15 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def newRectangle(self):
+        """Add a new rectangle to the figure canvas
 
+        Notes
+        -----
+        Adds the rectangles coordinates to the mplRectangles list and locks
+        the latest rectangle into the plot. This button MUST be pressed prior
+        to launching the analysis to include all defined layers.
+
+        """
         try:
             if self.canvas.rectxy:
                 self.canvas.mplRectangles.append(self.rect)
@@ -252,7 +310,26 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def compute(self, suppress=False):
+        """Compute apparent resistivity
 
+        Parameters
+        ----------
+        suppress: bool
+            If True, message boxes should be suppressed. Implemented to allow
+            cross platform testing between Mac OS X and Ubuntu. Not currently
+            working, likely going to ditch it
+
+        Notes
+        -----
+        This is where all of the numerical crunching happens. The radioboxes
+        in the main window define whether the schlumberger or wenner equation
+        is employed, and there are warnings when the data do not fit the
+        assumptions of the model. That is, when all of the spacings are not
+        equal in a Wenner array, there is a warning. When at least 2 of the
+        Schlumberger spacings are equal, there is a warning. Finally, if the
+        operator forgets to select a radio button, there is a warning.
+
+        """
         # Suppress msgBox if this module is not called directly for testing
         if __name__ != '__main__':
             suppress = True
@@ -294,7 +371,16 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def wennerMessageBox(self, suppress=False):
+        """Warning message box if Wenner assumptions are not met
 
+        Parameters
+        ----------
+        suppress: bool
+            If True, message boxes should be suppressed. Implemented to allow
+            cross platform testing between Mac OS X and Ubuntu. Not currently
+            working, likely going to ditch it
+
+        """
         # Suppress argument is to simplify testing
         if suppress:
             return
@@ -314,7 +400,16 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def schlumbergerMessageBox(self, suppress=False):
+        """Warning message box if Schlumberger assumptions are not met
 
+        Parameters
+        ----------
+        suppress: bool
+            If True, message boxes should be suppressed. Implemented to allow
+            cross platform testing between Mac OS X and Ubuntu. Not currently
+            working, likely going to ditch it
+
+        """
         # Suppress argument is to simplify testing
         if suppress:
             return
@@ -337,7 +432,16 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def noSpacingMessageBox(self, suppress=False):
+        """Warning message box if no probe layout radiobutton has been selected
 
+        Parameters
+        ----------
+        suppress: bool
+            If True, message boxes should be suppressed. Implemented to allow
+            cross platform testing between Mac OS X and Ubuntu. Not currently
+            working, likely going to ditch it
+
+        """
         # Suppress argument is to simplify testing
         if suppress:
             return
@@ -356,13 +460,13 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
 
     def wenner(self):
-
+        """Define Wenner layout is True"""
         self.schlumbergerLayout = False
         self.wennerLayout = True
 
 
     def schlumberger(self):
-
+        """Define Schlumberger layout is True"""
         self.schlumbergerLayout = True
         self.wennerLayout = False
 
@@ -372,18 +476,18 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
 
-    # splashPix = QPixmap('splash.png')
-    # splashScreen = QSplashScreen(splashPix, Qt.WindowStaysOnTopHint)
+    splashPix = QPixmap('splash.png')
+    splashScreen = QSplashScreen(splashPix, Qt.WindowStaysOnTopHint)
 
-    # splashScreen.setMask(splashPix.mask())
-    # splashScreen.show()
-    # app.processEvents()
+    splashScreen.setMask(splashPix.mask())
+    splashScreen.show()
+    app.processEvents()
 
-    # time.sleep(0.1)
+    time.sleep(0.1)
 
     startup = StartupWindow(tableData, headers, colors)
     startup.show()
 
-    # splashScreen.finish(startup)
+    splashScreen.finish(startup)
 
     sys.exit(app.exec_())

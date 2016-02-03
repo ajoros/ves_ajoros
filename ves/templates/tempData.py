@@ -32,3 +32,19 @@ columns = list(range(columnCount))
 
 for value in range(3, 5):
     columns.remove(value)
+
+# Digital filter coefficients required for VES analysis
+#  Reference:
+#  GHOSH, D.P., 1971a, THE APPLICATION OF LINEAR FILTER THEORY
+#   TO THE DIRECT INTERPRETATION OF GEOELECTRICAL RESISTIVITY
+#   SOUNDING MEASUREMENTS, GEOPHYS. PROSP., 19, 192-217.
+longFilterCoefficients = {
+    'a-3': 0.0060, 'a-2': -0.0783, 'a-1': 0.3999,
+    'a0': 0.3492, 'a1': 0.1675, 'a2': 0.0858, 'a3': 0.0358,
+    'a4': 0.0198, 'a5': 0.0067, 'a6': 0.0051, 'a7': 0.0007, 'a8': 0.0018
+    }
+shortFilterCoefficients = {
+    'a-2': -0.0723, 'a-1': 0.3999,
+    'a0': 0.3492, 'a1': 0.1675, 'a2': 0.0858, 'a3': 0.0358,
+    'a4': 0.0198, 'a5': 0.0067, 'a6': 0.0076
+}

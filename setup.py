@@ -1,6 +1,9 @@
+from setuptools import find_packages
 import sys
-from cx_Freeze import setup, Executable
 
+from cx_Freeze import Executable, setup
+
+print(find_packages())
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {"packages": ["os"], "excludes": ["tkinter"]}
 
@@ -15,5 +18,7 @@ setup(name = "Water4 VES Inverse Analysis",
       description = (
           'Softare application to determine depth to water using vertical ' +
           'electical sounding.'),
+      packages=find_packages(),
       # options = {"build_exe": build_exe_options},
-      executables = [Executable('ves/main.py', base=base)])
+      executables = [Executable(
+        'ves/main.py', base=base, packages=find_packages())])

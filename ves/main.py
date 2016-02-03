@@ -45,6 +45,11 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         self.setupUi(self)
 
+        # Center the window by default
+        screenCenter = QApplication.desktop().screen().rect().center()
+        windowCenter = self.rect().center()
+        self.move(screenCenter - windowCenter)
+
         # Set up the propoerties dictating probe layout
         self.schlumbergerLayout = False
         self.wennerLayout = False

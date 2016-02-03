@@ -23,6 +23,11 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
 
         self.setupUi(self)
 
+        # Center the window by default
+        screenCenter = QApplication.desktop().screen().rect().center()
+        windowCenter = self.rect().center()
+        self.move(screenCenter - windowCenter)
+
         self.canvas = canvas
 
         rectCoordinates = canvas.rectCoordinates

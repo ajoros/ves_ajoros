@@ -86,7 +86,7 @@ def schlumbergerResistivityModified(ab, Vm, I):
     return apparentResitivity
 
 
-def T(lam):
+def T(lam, rhoA, rhoB, rhoM, dA):
 
    TTT = (
       (rhoB + rhoM * np.tanh(lam * dA)) /
@@ -98,12 +98,12 @@ def T(lam):
    return TT
 
 
-def integrand(lam):
+def integrand(lam, rhoA, rhoB, rhoM, dA):
 
-   kernel = lam * (T(lam) - qrhoA)
-   integrand = kernel * sp.jn(1, r * lam)
+   kernel = lam * (T(lam, rhoA, rhoB, rhoM, dA) - rhoA)
+   integrandResult = kernel * sp.jn(1, r * lam)
 
-   return integrand
+   return integrandResult
 
 
 def apparentResitivity(aSpacing, ab, dA):

@@ -1,4 +1,7 @@
 import numpy as np
+import scipy.integrate as integrate
+import scipy.special as special
+
 
 
 def wennerResistivity(voltageSpacing, Vm, I):
@@ -81,3 +84,46 @@ def schlumbergerResistivityModified(ab, Vm, I):
     apparentResitivity = np.pi * Vm * ab / 2 * (Vm / I)
 
     return apparentResitivity
+
+
+def T(lam):
+
+   TTT = (
+      (rhoB + rhoM * np.tanh(lam * dA)) /
+      (1. + (rhoB / rhoM) * np.tanh(lam * dA)) )
+   TT = (
+      (TTT + rhoA * np.tanh(lam * 5.)) /
+      (1. + (TTT / rhoA) * np.tanh(lam * 5.)) )
+
+   return TT
+
+
+def integrand(lam):
+
+   kernel = lam * (T(lam) - qrhoA)
+   integrand = kernel * sp.jn(1, r * lam)
+
+   return integrand
+
+
+def apparentResitivity(aSpacing, ab, dA):
+
+    for a in aSpacing:
+
+        rhoA = a
+        answers, rhoplot, rplot = [], [], []
+
+        for r in ab:
+
+            integral = integrate.quad(integrand, 0, np.inf, limit=100)
+
+            answer = rhoA + (r**2) * float(integral[0])
+
+            answers.append(answer)
+            rplot.append(r / dA)
+            rhoplot.append(answer / rhoA)
+
+            del answer, integral
+
+    return (answers, rplot, rhoplot)
+

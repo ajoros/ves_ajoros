@@ -80,6 +80,12 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0" colspan="2">
        <widget class="QLabel" name="label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="font">
          <font>
           <pointsize>13</pointsize>
@@ -106,7 +112,7 @@
          <string>Enter longitude (- sign for West)</string>
         </property>
         <property name="inputMask">
-         <string>#000.00000</string>
+         <string>#000.00000; </string>
         </property>
        </widget>
       </item>
@@ -123,12 +129,18 @@
          <string>Enter latitude (- sign for South)</string>
         </property>
         <property name="inputMask">
-         <string>#00.00000</string>
+         <string>#00.00000; </string>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="2">
        <widget class="QDateTimeEdit" name="dateTimeEdit">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="toolTip">
          <string>Enter current time and date if incorrect</string>
         </property>
@@ -184,7 +196,7 @@
          <string>Adjust rhoA value</string>
         </property>
         <property name="inputMask">
-         <string>000.00</string>
+         <string>000.00; </string>
         </property>
        </widget>
       </item>
@@ -194,7 +206,7 @@
          <string>Adjust rhoM value</string>
         </property>
         <property name="inputMask">
-         <string>000.00</string>
+         <string>000.00; </string>
         </property>
        </widget>
       </item>
@@ -204,7 +216,7 @@
          <string>Adjust rhoB value</string>
         </property>
         <property name="inputMask">
-         <string>000.00</string>
+         <string>000.00; </string>
         </property>
        </widget>
       </item>
@@ -221,7 +233,7 @@
          <string>Adjust dA value</string>
         </property>
         <property name="inputMask">
-         <string>000.00</string>
+         <string>000.00; </string>
         </property>
        </widget>
       </item>
@@ -253,12 +265,6 @@
      </layout>
     </item>
    </layout>
-   <zorder>figureViewWidget</zorder>
-   <zorder>pushButton_3</zorder>
-   <zorder>figureViewWidget</zorder>
-   <zorder>figureViewWidget</zorder>
-   <zorder>widget</zorder>
-   <zorder>lineEdit</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -266,7 +272,7 @@
      <x>0</x>
      <y>0</y>
      <width>725</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="sizePolicy">

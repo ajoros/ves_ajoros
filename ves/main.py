@@ -16,7 +16,7 @@ from matplotlib.figure import Figure
 import numpy as np
 np.seterr(over='ignore')
 
-from PyQt5.QtCore import pyqtSlot, QDateTime, Qt
+from PyQt5.QtCore import QDateTime, Qt
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (
     QAction, QApplication, QMessageBox, QSizePolicy, QSplashScreen)
@@ -69,7 +69,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
             ylabel='Resistivity (Ohm-m)',
             linestyle='--', marker='o',
             dpi=150, hold=False, alpha=0.4, colors=self.colors)
-
         self.canvas.setParent(self)
         self.toolbar = NavigationToolbar(
             self.canvas, self.canvas, coordinates=True)
@@ -106,7 +105,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         self.initUi()
 
 
-    @pyqtSlot()
     def launchReportWindow(self):
 
         self.close()
@@ -244,7 +242,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
             return
 
-
         except AttributeError:
             pass
 
@@ -271,6 +268,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
             self.canvas.addPointsAndLine(
                 self.voltageSpacing, self.apparentResistivity)
 
+        # Calculate apparent resistivity using the Schlumberger array
         elif self.schlumbergerLayout == True:
 
             # Test and let user know spacing does not indicate Schlum. array
@@ -376,7 +374,7 @@ if __name__ == '__main__':
     # splashScreen.show()
     # app.processEvents()
 
-    time.sleep(0.1)
+    # time.sleep(0.1)
 
     startup = StartupWindow(tableData, headers, colors)
     startup.show()

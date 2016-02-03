@@ -25,6 +25,36 @@ class InteractiveCanvas(FigureCanvas):
         Parameters
         ----------
         xdata: `np.array.float64`
+            Array of the input data to be plotted on the x-axis
+        ydata: np.array.float64
+            Array of the input data to be plotted on the y-axis
+        parent: None
+            Parent object of the class
+        xlabel: str
+            Label for the x-axis of the plot
+        ylabel: str
+            Label for the y-axis of the plot
+        linestyle: str
+            Matplotlib linestyle to be used to draw the line on the graph
+        marker: str
+            Matplotlib marker type to be used to draw the points on the graph
+        dpi: int
+            Dots per inch of the desired figure
+        hold: bool
+            Boolean that desides whether or not the plot should hold on
+            the axes during instantiation/drawing
+        alpha: float
+            Transparency level of the rectangles that are drawn onto the
+            figure canvas
+        colors: list
+            List of matplotlib acceptable color keys to be used in generation
+            of the rectangles. Typically matches the table rows
+
+        Notes
+        -----
+        This class implements the matplotlib Qt5 backend to allow for insertion
+        of the resultant figure into a Qt application. The class allows for
+        interactive generation of rectangles over a log/log axes plot.
 
         """
         # Save figure input parameters as class properties
@@ -73,7 +103,22 @@ class InteractiveCanvas(FigureCanvas):
 
 
     def initFigure(self, xdata, ydata):
+        """Initialize the figure
 
+        Parameters
+        ----------
+        xdata: `np.array`
+            A flat numpy array of x values for the plot
+        ydata: `np.array`
+            A flat numpy array of y values for the plot
+
+        Notes
+        -----
+        The plot will not have a tight layout until data has been passed in.
+        This is currently the source of the semi-unsightly bug of misaligned
+        axes on start up. Plotting the data "fixes" the bug.
+
+        """
         if xdata is None or ydata is None:
             return
 
@@ -107,7 +152,7 @@ class InteractiveCanvas(FigureCanvas):
         self.fig.tight_layout()
 
     def drawRectangles(self):
-
+        """Adds rectangles to the plot if they are currently stored"""
         # Iterate through the mpl Rectangles to draw them with the proper color
         for i, rectangle in enumerate(self.rectCoordinates):
 
@@ -121,7 +166,21 @@ class InteractiveCanvas(FigureCanvas):
 
 
     def addPointsAndLine(self, xdata, ydata, color='#003366', draw=True):
+        """Adds the points and a line to the figure
 
+        Parameters
+        ----------
+        xdata: `np.array`
+            A flat numpy array of x values for the plot
+        ydata: `np.array`
+            A flat numpy array of y values for the plot
+        color: str
+            Hex code or other matplotlib accepted color key for the points/line
+        draw: bool
+            If True, the plot will be drawn. If False, it will not. Mainly a
+            product of the test code
+
+        """
         # Currently ydata is longer than xdata with schlumberger, so handle
         #   that if it makes it this far into the program
         if len(xdata) != len(ydata):
@@ -148,13 +207,27 @@ class InteractiveCanvas(FigureCanvas):
 
 
     def onPress(self, event):
+        """Handle mouse press events on the matplotlib figure cavas
 
+        Parameters
+        ----------
+        event: matplotlib.event
+            The matplotlib event definition. In this case, a mouse click.
+
+        """
         self.x0 = event.xdata
         self.y0 = event.ydata
 
 
     def onRelease(self, event):
+        """Handles release of mouse button events on the matplotlib canvas
 
+        Parameters
+        ----------
+        event: matplotlib.event
+            The matplotlib event definition. In this case, a mouse release.
+
+        """
         try:
             self.x1 = event.xdata
             self.y1 = event.ydata

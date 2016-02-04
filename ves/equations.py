@@ -1,5 +1,7 @@
 import numpy as np
+from numpy import nan
 import scipy.integrate as integrate
+import scipy.interpolate as interpolate
 import scipy.special as special
 
 
@@ -125,4 +127,88 @@ def apparentResitivity(aSpacing, ab, dA):
             del answer, integral
 
     return (answers, rplot, rhoplot)
+
+def interpolateFieldData(voltageSpacing, apparentResistivity,
+                         bounds_error=False):
+    """"""
+    # Define the recommended sample interval from Gosh 1971
+    # np.log is natural log
+    sampleInterval = np.log(10) / 3.
+
+    # Deal with the fact that Schlumberger layout produces nan as last value
+    apparentResistivity[np.isnan(apparentResistivity)] = np.nanmax(
+        apparentResistivity)
+    lastApparentRestivity = np.max(apparentResistivity)
+
+    ## The following two steps are done to ensure np.interpolate can produce
+    ##  new values, as it mandates that the new values be contained within the
+    ##  range of values used to produce the function
+    # Extend the voltageSpacing and apparentRestivity arrays
+    # New arrays for max and min sample ranges
+    voltageSpacingInsertion = np.array(
+        [voltageSpacing[0] - sampleInterval * i + 1 for i in range(3)])
+    voltageSpacingAppend = np.array(
+        [voltageSpacing[0] + sampleInterval * i + 1 for i in range(3)])
+    apparentResistivityInsertion = np.empty(3)
+    apparentResistivityInsertion.fill(apparentResistivity[0])
+    apparentResistivityAppend = np.empty(3)
+    apparentResistivityAppend.fill(lastApparentRestivity)
+    # New arrays with the extended values for input into scipy.interpolate
+    #  Voltage (Vm)
+    voltageSpacingIterpolate = np.insert(
+        voltageSpacing, 0, voltageSpacingInsertion)
+    voltageSpacingIterpolate = np.append(
+        voltageSpacingIterpolate, voltageSpacingAppend)
+    voltageSpacingIterpolate.sort() # Sort the array to assure decrease to increase
+    #  Apparent Restivity
+    apparentResistivityInterpolate = np.insert(
+        apparentResistivity, 0, apparentResistivityInsertion)
+    apparentResistivityInterpolate = np.append(
+        apparentResistivityInterpolate, apparentResistivityAppend)
+
+    # Replace nan values with the maximum
+    apparentResistivityInterpolate[np.isnan(
+        apparentResistivityInterpolate)] = np.nanmax(apparentResistivity)
+
+    # Interpolate the measured resistivity data
+    function = interpolate.interp1d(
+        voltageSpacingIterpolate, apparentResistivityInterpolate,
+        bounds_error=bounds_error)
+
+    newPoints = function(voltageSpacingIterpolate)
+
+    return (voltageSpacingIterpolate, newPoints)
+
+
+if __name__ == '__main__':
+    bounds_error = False
+    import matplotlib
+    matplotlib.use('Qt5Agg')
+
+    import matplotlib.pyplot as plt
+    plt.style.use('bmh')
+
+    from templates.tempData import colors, tableData, shortFilterCoefficients
+    from equations import schlumbergerResistivity
+    from aggregate import aggregateTable
+
+    voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
+        tableData, len(tableData))
+
+    apparentResistivity = schlumbergerResistivity(
+        voltageSpacing, meanVoltage, meanCurrent)
+
+    voltageSpacingIterpolate, newPoints = interpolateFieldData(
+        voltageSpacing, apparentResistivity)
+
+    print('new points {}'.format(newPoints))
+
+    print('\nlen(voltageSpacingIterpolate): {}'.format(
+        len(voltageSpacingIterpolate)))
+    print('len(newPoints): {}'.format(len(newPoints)))
+    # plt.loglog(voltageSpacing, apparentResistivity,
+    #     marker='o', linestyle='--', color='blue')
+    plt.loglog(voltageSpacingIterpolate, newPoints, marker='o', linestyle='-')
+    # for m in voltageSpacing:
+    plt.show()
 

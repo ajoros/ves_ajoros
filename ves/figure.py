@@ -191,15 +191,6 @@ class InteractiveCanvas(FigureCanvas):
             xdata, ydata, linestyle=self.linestyle,
             marker=self.marker, color=color)
 
-        # Plot of sample interval just for thinking sake
-        sample_interval = (1 / 3.) * np.log(10)
-        sample_points = np.arange(0, sample_interval * 12.)
-
-        print('Suggested sample interval from Gosh 1971: {}'.format(
-            sample_interval))
-        plt.loglog(
-            sample_points, [100 for _ in range(10)], marker='o')
-
         # Draw the updates
         if draw:
             self.fig.tight_layout()

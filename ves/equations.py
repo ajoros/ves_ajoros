@@ -3,7 +3,6 @@ import scipy.integrate as integrate
 import scipy.special as special
 
 
-
 def wennerResistivity(voltageSpacing, Vm, I):
     """Wenner spacing apparent restivity implementation
 
@@ -101,7 +100,7 @@ def T(lam, rhoA, rhoB, rhoM, dA):
 def integrand(lam, rhoA, rhoB, rhoM, dA):
 
    kernel = lam * (T(lam, rhoA, rhoB, rhoM, dA) - rhoA)
-   integrandResult = kernel * sp.jn(1, r * lam)
+   integrandResult = kernel * special.jn(1, r * lam)
 
    return integrandResult
 

@@ -477,6 +477,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon('hand_drill.png'))
 
     splashPix = QPixmap('splash.png')
     splashScreen = QSplashScreen(splashPix, Qt.WindowStaysOnTopHint)

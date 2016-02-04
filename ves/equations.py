@@ -142,7 +142,8 @@ def interpolateFieldData(voltageSpacing, apparentResistivity,
 
     ## The following two steps are done to ensure np.interpolate can produce
     ##  new values, as it mandates that the new values be contained within the
-    ##  range of values used to produce the function
+    ##  range of values used to produce the function;
+    ##  Gosh refers to this as extrapolation
     # Extend the voltageSpacing and apparentRestivity arrays
     # New arrays for max and min sample ranges
     voltageSpacingInsertion = np.array(
@@ -154,30 +155,30 @@ def interpolateFieldData(voltageSpacing, apparentResistivity,
     apparentResistivityAppend = np.empty(3)
     apparentResistivityAppend.fill(lastApparentRestivity)
     # New arrays with the extended values for input into scipy.interpolate
-    #  Voltage (Vm)
-    voltageSpacingIterpolate = np.insert(
+    #  Voltage Spacing (m)
+    voltageSpacingExtrapolated = np.insert(
         voltageSpacing, 0, voltageSpacingInsertion)
-    voltageSpacingIterpolate = np.append(
-        voltageSpacingIterpolate, voltageSpacingAppend)
-    voltageSpacingIterpolate.sort() # Sort the array to assure decrease to increase
-    #  Apparent Restivity
-    apparentResistivityInterpolate = np.insert(
+    voltageSpacingExtrapolated = np.append(
+        voltageSpacingExtrapolated, voltageSpacingAppend)
+    voltageSpacingExtrapolated.sort() # Sort the array to assure decrease to increase
+    #  Apparent Restivity (ohm-m)
+    apparentResistivityExtrapolate = np.insert(
         apparentResistivity, 0, apparentResistivityInsertion)
-    apparentResistivityInterpolate = np.append(
-        apparentResistivityInterpolate, apparentResistivityAppend)
+    apparentResistivityExtrapolate = np.append(
+        apparentResistivityExtrapolate, apparentResistivityAppend)
 
-    # Replace nan values with the maximum
-    apparentResistivityInterpolate[np.isnan(
-        apparentResistivityInterpolate)] = np.nanmax(apparentResistivity)
+    # # Replace nan values with the maximum
+    # apparentResistivityExtrapolate[np.isnan(
+    #     apparentResistivityExtrapolate)] = np.nanmax(apparentResistivity)
 
     # Interpolate the measured resistivity data
     function = interpolate.interp1d(
-        voltageSpacingIterpolate, apparentResistivityInterpolate,
+        voltageSpacingExtrapolated, apparentResistivityExtrapolate,
         bounds_error=bounds_error)
 
-    newPoints = function(voltageSpacingIterpolate)
+    newPoints = function(voltageSpacingExtrapolated)
 
-    return (voltageSpacingIterpolate, newPoints)
+    return (voltageSpacingExtrapolated, newPoints)
 
 
 if __name__ == '__main__':

@@ -68,6 +68,8 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         screenCenter = QApplication.desktop().screen().rect().center()
         windowCenter = self.rect().center()
         self.move(screenCenter - windowCenter)
+        # Set the icon
+        self.setWindowIcon(QIcon('hand_drill.png'))
 
         # Set up the propoerties dictating probe layout
         self.schlumbergerLayout = False

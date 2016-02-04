@@ -7,6 +7,7 @@ import numpy as np
 np.seterr(over='ignore')
 
 from PyQt5.QtCore import QDateTime
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.uic import loadUiType
 
@@ -27,6 +28,8 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         screenCenter = QApplication.desktop().screen().rect().center()
         windowCenter = self.rect().center()
         self.move(screenCenter - windowCenter)
+        # Set the icon
+        self.setWindowIcon(QIcon('hand_drill.png'))
 
         self.canvas = canvas
 

@@ -93,7 +93,7 @@
          <string>Use the Wenner Spacing in calculating depth to water</string>
         </property>
         <property name="text">
-         <string>Wenner Spacing</string>
+         <string>Wenner Array</string>
         </property>
        </widget>
       </item>
@@ -109,7 +109,7 @@
          <string>Use the Schlumberger Spacing in calculating depth to water</string>
         </property>
         <property name="text">
-         <string>Schlumberger Spacing</string>
+         <string>Schlumberger Array</string>
         </property>
        </widget>
       </item>

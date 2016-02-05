@@ -129,7 +129,7 @@ def apparentResitivity(aSpacing, ab, dA):
     return (answers, rplot, rhoplot)
 
 def interpolateFieldData(voltageSpacing, apparentResistivity,
-                         bounds_error=False):
+                         bounds_error=True):
     """"""
     # Define the recommended sample interval from Gosh 1971
     # np.log is natural log

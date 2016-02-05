@@ -79,10 +79,10 @@ def schlumbergerResistivity(voltageSpacing, Vm, I):
     return apparentResitivity
 
 
-def schlumbergerResistivityModified(ab, Vm, I):
+def schlumbergerResistivityModified(voltageSpacing, Vm, I):
     """Alternative impleMENtation for a modified Schlumber arrangement"""
 
-    apparentResitivity = np.pi * Vm * ab / 2 * (Vm / I)
+    apparentResitivity = 2 * np.pi * voltageSpacing * (Vm / I)
 
     return apparentResitivity
 
@@ -230,8 +230,9 @@ if __name__ == '__main__':
     voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
         tableData, len(tableData))
 
-    apparentResistivity = schlumbergerResistivity(
+    apparentResistivity = schlumbergerResistivityModified(
         voltageSpacing, meanVoltage, meanCurrent)
+    print('apparent res {}'.format(apparentResistivity))
 
     voltageSpacingExtrapolated, newRestivity = interpolateFieldData(
         voltageSpacing, apparentResistivity)
@@ -268,7 +269,8 @@ if __name__ == '__main__':
     # print(len(filteredResistivity))
     print(samplePoints)
     print(filteredResistivity)
-    plt.plot(
+    plt.loglog(
         samplePoints[:len(filteredResistivity)], filteredResistivity,
         marker='o', linestyle='--')
-    plt.show()
+    # plt.show()
+    print(meanVoltage/meanCurrent)

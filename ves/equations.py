@@ -181,13 +181,37 @@ def interpolateFieldData(voltageSpacing, apparentResistivity,
     return (voltageSpacingExtrapolated, newRestivity)
 
 
-def applyFilter(voltageSpacingExtrapolated, newRestivity, filterCoefficients):
-    for resistivityValue in newRestivity:
-        resistivityValue
-    for k, v in filterCoefficients.items():
-        print('k: {}, v: {}'.format(k, v))
-    pass
+def applyFilter(voltageSpacingExtrapolated, extrapolatedResistivity,
+                filterCoefficients):
+    """"""
+    # Calculate the last index of the extrapolated resistivity values
+    #  upon which the filters are to be applied
+    lastIndex = len(extrapolatedResistivity) - len(filterCoefficients)
 
+    # Fill a list with numpy arrays of the extrapolated resistivity values
+    #  with the digitial filter coefficients systematically applied
+    resistList = []
+
+    for i in range(lastIndex):
+        resistOut = np.copy(extrapolatedResistivity)
+
+        for j in range(len(filterCoefficients)):
+            try:
+                resistOut[(i + 1) + j] = (
+                    newRestivity[(i + 1) + j] * filterCoefficients[j])
+            except IndexError:
+                break
+
+        resistList.append(resistOut)
+        del resistOut
+
+    # Collapse the list into a one dimensional array of the sum of all the
+    #  extrapolated values with the digital filter coefficients applied
+    resistArray = np.array(resistList)
+    # resistArray.dump('/Users/avitale/Desktop/array') # load with np.load
+    filteredApparentResistivity = np.nansum(resistArray, axis=0)
+
+    return filteredApparentResistivity
 
 
 if __name__ == '__main__':
@@ -198,7 +222,8 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
     plt.style.use('bmh')
 
-    from templates.tempData import colors, tableData, shortFilterCoefficients
+    from templates.tempData import (
+        colors, tableData, shortFilterCoefficients, longFilterCoefficients)
     from equations import schlumbergerResistivity
     from aggregate import aggregateTable
 
@@ -211,22 +236,39 @@ if __name__ == '__main__':
     voltageSpacingExtrapolated, newRestivity = interpolateFieldData(
         voltageSpacing, apparentResistivity)
 
-    print('new points {}'.format(newRestivity))
-    print('new points subsetted {}'.format(newRestivity[3:-3]))
-    print('apparent resistivity {}'.format(apparentResistivity))
-    print('len(newRestivity) {}'.format(len(newRestivity)))
-    print('len(newRestivity[3:-3]) {}'.format(len(newRestivity[3:-3])))
-    print('len(apparentResistivity) {}'.format(len(apparentResistivity)))
+    # print('new points {}'.format(newRestivity))
+    # print('new points subsetted {}'.format(newRestivity[3:-3]))
+    # print('apparent resistivity {}'.format(apparentResistivity))
+    # print('len(newRestivity) {}'.format(len(newRestivity)))
+    # print('len(newRestivity[3:-3]) {}'.format(len(newRestivity[3:-3])))
+    # print('len(apparentResistivity) {}'.format(len(apparentResistivity)))
 
-    print('\nlen(voltageSpacingExtrapolated): {}'.format(
-        len(voltageSpacingExtrapolated)))
-    print('len(newRestivity): {}'.format(len(newRestivity)))
+    # print('\nlen(voltageSpacingExtrapolated): {}'.format(
+    #     len(voltageSpacingExtrapolated)))
+    # print('len(newRestivity): {}'.format(len(newRestivity)))
+
+
+    # print(len(shortFilterCoefficients))
     # plt.loglog(voltageSpacing, apparentResistivity,
     #     marker='o', linestyle='--', color='blue')
-    plt.loglog(
-        voltageSpacingExtrapolated, newRestivity, marker='o', linestyle='-')
-    # for m in voltageSpacing:
+    # plt.loglog(
+    #     voltageSpacingExtrapolated, newRestivity, marker='o', linestyle='-')
+    # # for m in voltageSpacing:
     # plt.show()
 
-    applyFilter(voltageSpacingExtrapolated, newRestivity,
-                shortFilterCoefficients)
+    sampleInterval = np.log(10) / 3.
+    samplePoints = np.arange(
+        start=( - sampleInterval * 2), stop=sampleInterval * 20,
+        step=sampleInterval)
+
+
+    filteredResistivity = applyFilter(
+        voltageSpacingExtrapolated, newRestivity, shortFilterCoefficients)
+    # print(len(samplePoints))
+    # print(len(filteredResistivity))
+    print(samplePoints)
+    print(filteredResistivity)
+    plt.plot(
+        samplePoints[:len(filteredResistivity)], filteredResistivity,
+        marker='o', linestyle='--')
+    plt.show()

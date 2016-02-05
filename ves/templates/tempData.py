@@ -1,6 +1,8 @@
 import os
 import csv
 
+import numpy as np
+
 
 # Read in the data from a template CSV
 tableData = []
@@ -37,18 +39,28 @@ for value in range(3, 5):
 #  GHOSH, D.P., 1971a, THE APPLICATION OF LINEAR FILTER THEORY
 #   TO THE DIRECT INTERPRETATION OF GEOELECTRICAL RESISTIVITY
 #   SOUNDING MEASUREMENTS, GEOPHYS. PROSP., 19, 192-217.
-longFilterCoefficients = {
-    'a-3': 0.0060, 'a-2': -0.0783, 'a-1': 0.3999,
-    'a0': 0.3492, 'a1': 0.1675, 'a2': 0.0858, 'a3': 0.0358,
-    'a4': 0.0198, 'a5': 0.0067, 'a6': 0.0051, 'a7': 0.0007, 'a8': 0.0018
-    }
-shortFilterCoefficients = {
-    'a-2': -0.0723, 'a-1': 0.3999,
-    'a0': 0.3492, 'a1': 0.1675, 'a2': 0.0858, 'a3': 0.0358,
-    'a4': 0.0198, 'a5': 0.0067, 'a6': 0.0076
-    }
-wennerFilterCoefficients = {
-    'a-2': 0.0212, 'a-1': -0.1199,
-    'a0': 0.4226, 'a1': 0.3553, 'a2': 0.1664, 'a3': 0.0873,
-    'a4': 0.0345, 'a5': 0.0208, 'a6': 0.0118
-    }
+# longFilterCoefficients = {
+#     'a-3': 0.0060, 'a-2': -0.0783, 'a-1': 0.3999,
+#     'a0': 0.3492, 'a1': 0.1675, 'a2': 0.0858, 'a3': 0.0358,
+#     'a4': 0.0198, 'a5': 0.0067, 'a6': 0.0051, 'a7': 0.0007, 'a8': 0.0018
+#     }
+# shortFilterCoefficients = {
+#     'a-2': -0.0723, 'a-1': 0.3999,
+#     'a0': 0.3492, 'a1': 0.1675, 'a2': 0.0858, 'a3': 0.0358,
+#     'a4': 0.0198, 'a5': 0.0067, 'a6': 0.0076
+#     }
+# wennerFilterCoefficients = {
+#     'a-2': 0.0212, 'a-1': -0.1199,
+#     'a0': 0.4226, 'a1': 0.3553, 'a2': 0.1664, 'a3': 0.0873,
+#     'a4': 0.0345, 'a5': 0.0208, 'a6': 0.0118
+#     }
+
+longFilterCoefficients = np.array([
+    0.0060, -0.0783, 0.3999, 0.3492, 0.1675, 0.0858,
+    0.0358, 0.0198, 0.0067, 0.0051, 0.0007, 0.0018])
+shortFilterCoefficients = np.array([
+    -0.0723, 0.3999, 0.3492, 0.1675, 0.0858,
+    0.0358, 0.0198, 0.0067, 0.0076])
+wennerFilterCoefficients = np.array([
+    0.0212, -0.1199, 0.4226, 0.3553, 0.1664,
+    0.0873, 0.0345, 0.0208, 0.0118])

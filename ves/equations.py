@@ -160,7 +160,7 @@ def interpolateFieldData(voltageSpacing, apparentResistivity,
         voltageSpacing, 0, voltageSpacingInsertion)
     voltageSpacingExtrapolated = np.append(
         voltageSpacingExtrapolated, voltageSpacingAppend)
-    voltageSpacingExtrapolated.sort() # Sort the array to assure decrease to increase
+    voltageSpacingExtrapolated.sort()
     #  Apparent Restivity (ohm-m)
     apparentResistivityExtrapolate = np.insert(
         apparentResistivity, 0, apparentResistivityInsertion)
@@ -176,13 +176,22 @@ def interpolateFieldData(voltageSpacing, apparentResistivity,
         voltageSpacingExtrapolated, apparentResistivityExtrapolate,
         bounds_error=bounds_error)
 
-    newPoints = function(voltageSpacingExtrapolated)
+    newRestivity = function(voltageSpacingExtrapolated)
 
-    return (voltageSpacingExtrapolated, newPoints)
+    return (voltageSpacingExtrapolated, newRestivity)
+
+
+def applyFilter(voltageSpacingExtrapolated, newRestivity, filterCoefficients):
+    for resistivityValue in newRestivity:
+        resistivityValue
+    for k, v in filterCoefficients.items():
+        print('k: {}, v: {}'.format(k, v))
+    pass
+
 
 
 if __name__ == '__main__':
-    bounds_error = False
+
     import matplotlib
     matplotlib.use('Qt5Agg')
 
@@ -199,17 +208,25 @@ if __name__ == '__main__':
     apparentResistivity = schlumbergerResistivity(
         voltageSpacing, meanVoltage, meanCurrent)
 
-    voltageSpacingIterpolate, newPoints = interpolateFieldData(
+    voltageSpacingExtrapolated, newRestivity = interpolateFieldData(
         voltageSpacing, apparentResistivity)
 
-    print('new points {}'.format(newPoints))
+    print('new points {}'.format(newRestivity))
+    print('new points subsetted {}'.format(newRestivity[3:-3]))
+    print('apparent resistivity {}'.format(apparentResistivity))
+    print('len(newRestivity) {}'.format(len(newRestivity)))
+    print('len(newRestivity[3:-3]) {}'.format(len(newRestivity[3:-3])))
+    print('len(apparentResistivity) {}'.format(len(apparentResistivity)))
 
-    print('\nlen(voltageSpacingIterpolate): {}'.format(
-        len(voltageSpacingIterpolate)))
-    print('len(newPoints): {}'.format(len(newPoints)))
+    print('\nlen(voltageSpacingExtrapolated): {}'.format(
+        len(voltageSpacingExtrapolated)))
+    print('len(newRestivity): {}'.format(len(newRestivity)))
     # plt.loglog(voltageSpacing, apparentResistivity,
     #     marker='o', linestyle='--', color='blue')
-    plt.loglog(voltageSpacingIterpolate, newPoints, marker='o', linestyle='-')
+    plt.loglog(
+        voltageSpacingExtrapolated, newRestivity, marker='o', linestyle='-')
     # for m in voltageSpacing:
-    plt.show()
+    # plt.show()
 
+    applyFilter(voltageSpacingExtrapolated, newRestivity,
+                shortFilterCoefficients)

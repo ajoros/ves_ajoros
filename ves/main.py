@@ -23,7 +23,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.uic import loadUiType
 
 from aggregate import aggregateTable
-from equations import schlumbergerResistivity, wennerResistivity
+from equations import schlumbergerResistivityModified, wennerResistivity
 from figure import InteractiveCanvas
 from reportwindow import ReportWindow
 from table import PalettedTableModel
@@ -359,7 +359,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
             if np.any(self.voltageSpacing[1:] == self.voltageSpacing[0]):
                 self.schlumbergerMessageBox(suppress)
 
-            self.apparentResistivity = schlumbergerResistivity(
+            self.apparentResistivity = schlumbergerResistivityModified(
                 self.voltageSpacing, self.meanVoltage, self.meanCurrent)[:-1] # Leave off last return values as it should be nan
             self.canvas.addPointsAndLine(
                 self.voltageSpacing[:-1], self.apparentResistivity)

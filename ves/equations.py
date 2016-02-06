@@ -138,7 +138,7 @@ def interpolateFieldData(voltageSpacing, apparentResistivity,
     # Deal with the fact that Schlumberger layout produces nan as last value
     apparentResistivity[np.isnan(apparentResistivity)] = np.nanmax(
         apparentResistivity)
-    lastApparentRestivity = np.max(apparentResistivity)
+    lastApparentRestivity = apparentResistivity[-1]
 
     ## The following two steps are done to ensure np.interpolate can produce
     ##  new values, as it mandates that the new values be contained within the

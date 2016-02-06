@@ -285,6 +285,8 @@ if __name__ == '__main__':
                marker='o', linestyle='--', color='#348ABD')
     plt.loglog(voltageSpacing, apparentResistivity,
                marker='o', linestyle='-', color='#A60628')
+    plt.loglog(voltageSpacingExtrapolated, newRestivity,
+               marker='o', linestyle='-.', color='#7A68A6')
     plt.xlabel('Electrode Spacing (m)')
     plt.ylabel('Apparent Resitivity (ohm-m)')
 
@@ -294,8 +296,11 @@ if __name__ == '__main__':
     red_lines = mlines.Line2D(
         [], [], marker='o', linestyle='-',
         label='Field values', color='#A60628')
+    purp_lines = mlines.Line2D(
+        [], [], marker='o', linestyle='-.',
+        label='Interpolated Values', color='#7A68A6')
     plt.legend(
-        handles=[blue_line, red_lines],
+        handles=[blue_line, red_lines, purp_lines],
         bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
         ncol=2, mode="expand", borderaxespad=0.)
 

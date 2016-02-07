@@ -160,6 +160,7 @@ def interpolateFieldData(voltageSpacing, apparentResistivity, arraySpacing,
             [-0.48 - sampleInterval * i + 1 for i in range(3)])
         voltageSpacingAppend = np.array(
             [-0.48 + sampleInterval * i + 1 for i in range(3)])
+
     apparentResistivityInsertion = np.empty(3)
     apparentResistivityInsertion.fill(apparentResistivity[0])
     apparentResistivityAppend = np.empty(3)
@@ -243,7 +244,8 @@ if __name__ == '__main__':
 
     # Import some parameters that are defined elsewhere
     from templates.tempData import (
-        colors, tableData, shortFilterCoefficients, longFilterCoefficients)
+        colors, tableData, shortFilterCoefficients,
+        longFilterCoefficients, wennerFilterCoefficients)
     from equations import schlumbergerResistivity
     from aggregate import aggregateTable
 

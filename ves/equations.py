@@ -128,7 +128,7 @@ def apparentResitivity(aSpacing, ab, dA):
 
     return (answers, rplot, rhoplot)
 
-def interpolateFieldData(voltageSpacing, apparentResistivity,
+def interpolateFieldData(voltageSpacing, apparentResistivity, arraySpacing,
                          bounds_error=True):
     """"""
     # Define the recommended sample interval from Gosh 1971
@@ -146,10 +146,20 @@ def interpolateFieldData(voltageSpacing, apparentResistivity,
     ##  Gosh refers to this as extrapolation
     # Extend the voltageSpacing and apparentRestivity arrays
     # New arrays for max and min sample ranges
-    voltageSpacingInsertion = np.array(
-        [voltageSpacing[0] - sampleInterval * i + 1 for i in range(3)])
-    voltageSpacingAppend = np.array(
-        [voltageSpacing[0] + sampleInterval * i + 1 for i in range(3)])
+    # voltageSpacingInsertion = np.array(
+    #     [voltageSpacing[0] - sampleInterval * i + 1 for i in range(3)])
+    # voltageSpacingAppend = np.array(
+    #     [voltageSpacing[0] + sampleInterval * i + 1 for i in range(3)])
+    if arraySpacing.lower() == 'schlumberger':
+        voltageSpacingInsertion = np.array(
+            [0 - sampleInterval * i + 1 for i in range(3)])
+        voltageSpacingAppend = np.array(
+            [0 + sampleInterval * i + 1 for i in range(3)])
+    if arraySpacing.lower() == 'wenner':
+        voltageSpacingInsertion = np.array(
+            [-0.48 - sampleInterval * i + 1 for i in range(3)])
+        voltageSpacingAppend = np.array(
+            [-0.48 + sampleInterval * i + 1 for i in range(3)])
     apparentResistivityInsertion = np.empty(3)
     apparentResistivityInsertion.fill(apparentResistivity[0])
     apparentResistivityAppend = np.empty(3)
@@ -215,6 +225,8 @@ def applyFilter(voltageSpacingExtrapolated, extrapolatedResistivity,
 
 
 if __name__ == '__main__':
+    sleep_time = 0.5
+
     # Import time to control the printing a bit
     import time
 
@@ -239,46 +251,46 @@ if __name__ == '__main__':
     print('This is the starting table:')
     for row in tableData:
         print(row)
-    time.sleep(2)
+    time.sleep(sleep_time)
 
     # Aggregate the table to get the mean voltage and current
     voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
         tableData, len(tableData))
     # Print out the aggregated values
-    print('Voltage Spacing: {}\nMean Voltage: {}'.format(
+    print('\nVoltage Spacing: {}\nMean Voltage: {}'.format(
         voltageSpacing, meanVoltage))
-    print('Mean Current:\n{}'.format(meanCurrent))
-    time.sleep(2)
+    print('\nMean Current:\n{}'.format(meanCurrent))
+    time.sleep(sleep_time)
 
     # Use the modified Schlumberger equation like that used in the spreadsheet
     apparentResistivity = schlumbergerResistivityModified(
         voltageSpacing, meanVoltage, meanCurrent)
-    print('Apparent resistivity (same formula as ' +
+    print('\nApparent resistivity (same formula as ' +
           'spreadsheet for Schlum):\n{}'.format(apparentResistivity))
-    time.sleep(2)
+    time.sleep(sleep_time)
 
     # Interpolate the field data to get values at Gosh's suggested intervals
     voltageSpacingExtrapolated, newRestivity = interpolateFieldData(
-        voltageSpacing, apparentResistivity)
-    print('New Resitivity values:\n{}'.format(newRestivity))
-    time.sleep(2)
+        voltageSpacing, apparentResistivity, 'schlumberger')
+    print('\nNew Resitivity values:\n{}'.format(newRestivity))
+    time.sleep(sleep_time)
 
     # Apply the filter coefficients. In this case, using the Schlumber short
     #  coeffieients for the digital filter
     filteredResistivity = applyFilter(
-        voltageSpacingExtrapolated, newRestivity, shortFilterCoefficients)
-    print('Filtered resistivity after coefficients applied:\n{}'.format(
+        voltageSpacingExtrapolated, newRestivity, longFilterCoefficients)
+    print('\nFiltered resistivity after coefficients applied:\n{}'.format(
         filteredResistivity))
-    time.sleep(2)
+    time.sleep(sleep_time)
 
     # Create poitns for the plot
     sampleInterval = np.log(10) / 3.
     samplePoints = np.arange(
         start=( - sampleInterval * 2), stop=sampleInterval * 20,
         step=sampleInterval)
-    print('New sample points based on Gosh\'s suggested interval:\n{}'.format(
+    print('\nNew sample points based on Gosh\'s suggested interval:\n{}'.format(
         samplePoints))
-    time.sleep(2)
+    time.sleep(sleep_time)
 
     # Plot out the results
     plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,

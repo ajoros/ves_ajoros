@@ -393,3 +393,65 @@ if __name__ == '__main__':
 
     plt.show()
 
+
+    with open('./ves/templates/MafingaExample.txt', 'r') as f:
+        lines = f.read()
+
+    newLines = [line.split('  ') for line in lines.split('\n')]
+
+    print('\n\nWenner Example 2:')
+    time.sleep(2)
+    print('Probe spacing (m), apparent res.')
+    for spacing, res in zip(wennerVoltageSpacing, wennerApparentResistivity):
+        print('{:<17}  {:<12}'.format(spacing, res))
+
+    wennerVoltageSpacing = np.array(
+        wennerVoltageSpacing, dtype=np.float64)
+    wennerApparentResistivity = np.array(
+        wennerApparentResistivity, dtype=np.float64)
+
+    # Interpolate the field data to get values at Gosh's suggested intervals
+    voltageSpacingExtrapolated, newRestivity = interpolateFieldData(
+        wennerVoltageSpacing, wennerApparentResistivity, 'wenner')
+    print('\nNew Resitivity values:\n{}'.format(newRestivity))
+    time.sleep(sleep_time)
+
+    # Apply the filter coefficients. In this case, using the Schlumber short
+    #  coeffieients for the digital filter
+    filteredResistivity = applyFilter(
+        voltageSpacingExtrapolated, newRestivity, wennerFilterCoefficients)
+    print('\nFiltered resistivity after coefficients applied:\n{}'.format(
+        filteredResistivity))
+    time.sleep(sleep_time)
+
+    # Create poitns for the plot
+    sampleInterval = np.log(10) / 3.
+    samplePoints = np.arange(
+        start=( - sampleInterval * 2),
+        stop=sampleInterval * 20,
+        step=sampleInterval)
+    print('\nNew sample points based on Gosh\'s suggested interval:\n{}'.format(
+        samplePoints))
+    time.sleep(sleep_time)
+
+
+    # Plot out the results
+    plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
+               marker='o', linestyle='--', color='#348ABD')
+    plt.loglog(voltageSpacing, apparentResistivity,
+               marker='o', linestyle='-', color='#A60628')
+    plt.xlabel('Electrode Spacing (m)')
+    plt.ylabel('Apparent Resitivity (ohm-m)')
+
+    blue_line = mlines.Line2D(
+        [], [], marker='o',linestyle='--',
+        label='Filtered values', color='#348ABD')
+    red_lines = mlines.Line2D(
+        [], [], marker='o', linestyle='-',
+        label='Field values', color='#A60628')
+    plt.legend(
+        handles=[blue_line, red_lines],
+        bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+        ncol=2, mode="expand", borderaxespad=0.)
+
+    plt.show()

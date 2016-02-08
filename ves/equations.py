@@ -156,6 +156,7 @@ def interpolateFieldData(voltageSpacing, apparentResistivity, arraySpacing,
         voltageSpacingAppend = np.array(
             [0 + sampleInterval * i + 1 for i in range(3)])
     if arraySpacing.lower() == 'wenner':
+        voltageSpacing = voltageSpacing - sampleInterval
         voltageSpacingInsertion = np.array(
             [-0.48 - sampleInterval * i + 1 for i in range(3)])
         voltageSpacingAppend = np.array(
@@ -240,16 +241,22 @@ if __name__ == '__main__':
 
     import matplotlib.pyplot as plt
     plt.style.use('bmh') # Prettier defaults on matplotlib.__version__ >= 1.5
+    # plt.hold(False) # Don't hold on first plt.show()
     import matplotlib.lines as mlines # to create manual legend
 
     # Import some parameters that are defined elsewhere
     from templates.tempData import (
-        colors, tableData, shortFilterCoefficients,
-        longFilterCoefficients, wennerFilterCoefficients)
-    from equations import schlumbergerResistivity
+        colors, tableData, coefficients)
     from aggregate import aggregateTable
 
+
+    (shortFilterCoefficients, longFilterCoefficients,
+        wennerFilterCoefficients) = coefficients
+
+
     # Print out the table that is the "input" table from the field survey
+    print('Schlumberger example:')
+    time.sleep(2)
     print('This is the starting table:')
     for row in tableData:
         print(row)
@@ -259,9 +266,9 @@ if __name__ == '__main__':
     voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
         tableData, len(tableData))
     # Print out the aggregated values
-    print('\nVoltage Spacing:\n{}\nMean Voltage:\n{}'.format(
+    print('\nVoltage Spacing: {}\nMean Voltage: {}'.format(
         voltageSpacing, meanVoltage))
-    print('\nMean Current:\n{}'.format(meanCurrent))
+    print('Mean Current: {}'.format(meanCurrent))
     time.sleep(sleep_time)
 
     # Use the modified Schlumberger equation like that used in the spreadsheet
@@ -280,7 +287,7 @@ if __name__ == '__main__':
     # Apply the filter coefficients. In this case, using the Schlumber short
     #  coeffieients for the digital filter
     filteredResistivity = applyFilter(
-        voltageSpacingExtrapolated, newRestivity, longFilterCoefficients)
+        voltageSpacingExtrapolated, newRestivity, shortFilterCoefficients)
     print('\nFiltered resistivity after coefficients applied:\n{}'.format(
         filteredResistivity))
     time.sleep(sleep_time)
@@ -288,9 +295,10 @@ if __name__ == '__main__':
     # Create poitns for the plot
     sampleInterval = np.log(10) / 3.
     samplePoints = np.arange(
-        start=( - sampleInterval * 2), stop=sampleInterval * 20,
+        start=( - sampleInterval * 2),
+        stop=sampleInterval * 20,
         step=sampleInterval)
-    print('\nNew sample points based on Gosh\'s suggested interval:\n{}'.format(
+    print("\nNew sample points based on Gosh's suggested interval:\n{}".format(
         samplePoints))
     time.sleep(sleep_time)
 
@@ -299,8 +307,6 @@ if __name__ == '__main__':
                marker='o', linestyle='--', color='#348ABD')
     plt.loglog(voltageSpacing, apparentResistivity,
                marker='o', linestyle='-', color='#A60628')
-    plt.loglog(voltageSpacingExtrapolated, newRestivity,
-               marker='o', linestyle='-.', color='#7A68A6')
     plt.xlabel('Electrode Spacing (m)')
     plt.ylabel('Apparent Resitivity (ohm-m)')
 
@@ -310,12 +316,79 @@ if __name__ == '__main__':
     red_lines = mlines.Line2D(
         [], [], marker='o', linestyle='-',
         label='Field values', color='#A60628')
-    purp_lines = mlines.Line2D(
-        [], [], marker='o', linestyle='-.',
-        label='Interpolated Values', color='#7A68A6')
     plt.legend(
-        handles=[blue_line, red_lines, purp_lines],
-        bbox_to_anchor=(0., 0.99, 1., .7), loc=3,
+        handles=[blue_line, red_lines],
+        bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+        ncol=2, mode="expand", borderaxespad=0.)
+
+    plt.show()
+
+    with open('./ves/templates/MafingaExample.txt', 'r') as f:
+        lines = f.read()
+
+    newLines = [line.split('  ') for line in lines.split('\n')]
+
+    wennerVoltageSpacing, wennerApparentResistivity = [], []
+    for line in newLines[2:-3]:
+        try:
+            wennerVoltageSpacing.append(line.pop(0))
+            wennerApparentResistivity.append(line.pop(-1))
+        except IndexError:
+            pass
+
+    print('\n\nWenner Example:')
+    time.sleep(2)
+    print('Probe spacing (m), apparent res.')
+    for spacing, res in zip(wennerVoltageSpacing, wennerApparentResistivity):
+        print('{:<17}  {:<12}'.format(spacing, res))
+
+    wennerVoltageSpacing = np.array(
+        wennerVoltageSpacing, dtype=np.float64)
+    wennerApparentResistivity = np.array(
+        wennerApparentResistivity, dtype=np.float64)
+
+    # Interpolate the field data to get values at Gosh's suggested intervals
+    voltageSpacingExtrapolated, newRestivity = interpolateFieldData(
+        wennerVoltageSpacing, wennerApparentResistivity, 'wenner')
+    print('\nNew Resitivity values:\n{}'.format(newRestivity))
+    time.sleep(sleep_time)
+
+    # Apply the filter coefficients. In this case, using the Schlumber short
+    #  coeffieients for the digital filter
+    filteredResistivity = applyFilter(
+        voltageSpacingExtrapolated, newRestivity, wennerFilterCoefficients)
+    print('\nFiltered resistivity after coefficients applied:\n{}'.format(
+        filteredResistivity))
+    time.sleep(sleep_time)
+
+    # Create poitns for the plot
+    sampleInterval = np.log(10) / 3.
+    samplePoints = np.arange(
+        start=( - sampleInterval * 2),
+        stop=sampleInterval * 20,
+        step=sampleInterval)
+    print('\nNew sample points based on Gosh\'s suggested interval:\n{}'.format(
+        samplePoints))
+    time.sleep(sleep_time)
+
+
+    # Plot out the results
+    plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
+               marker='o', linestyle='--', color='#348ABD')
+    plt.loglog(voltageSpacing, apparentResistivity,
+               marker='o', linestyle='-', color='#A60628')
+    plt.xlabel('Electrode Spacing (m)')
+    plt.ylabel('Apparent Resitivity (ohm-m)')
+
+    blue_line = mlines.Line2D(
+        [], [], marker='o',linestyle='--',
+        label='Filtered values', color='#348ABD')
+    red_lines = mlines.Line2D(
+        [], [], marker='o', linestyle='-',
+        label='Field values', color='#A60628')
+    plt.legend(
+        handles=[blue_line, red_lines],
+        bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
         ncol=2, mode="expand", borderaxespad=0.)
 
     plt.show()

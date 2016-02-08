@@ -377,7 +377,8 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
             sampleInterval = np.log(10) / 3.
             self.samplePoints = np.arange(
-                start=(-sampleInterval * 2), stop=(sampleInterval * 20),
+                start=(-sampleInterval * 2),
+                stop=(sampleInterval * 20),
                 step=sampleInterval)
 
             print(self.filteredResistivity)
@@ -391,7 +392,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
                 self.schlumbergerMessageBox(suppress)
 
             self.apparentResistivity = schlumbergerResistivityModified(
-                self.voltageSpacing, self.meanVoltage, self.meanCurrent) # Leave off last return values as it should be nan
+                self.voltageSpacing, self.meanVoltage, self.meanCurrent)
             self.canvas.addPointsAndLine(
                 self.voltageSpacing, self.apparentResistivity)
 
@@ -407,7 +408,8 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
             sampleInterval = np.log(10) / 3.
             self.samplePoints = np.arange(
-                start=(-sampleInterval * 2), stop=(sampleInterval * 20),
+                start=(-sampleInterval * 2),
+                stop=(sampleInterval * 20),
                 step=sampleInterval)
 
             print(self.filteredResistivity)
@@ -519,7 +521,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         """Define Schlumberger layout is True"""
         self.schlumbergerLayout = True
         self.wennerLayout = False
-
 
 
 if __name__ == '__main__':

@@ -381,9 +381,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
                 stop=(sampleInterval * 20),
                 step=sampleInterval)
 
-            print(self.filteredResistivity)
-
-
         # Calculate apparent resistivity using the Schlumberger array
         elif self.schlumbergerLayout == True:
 
@@ -411,8 +408,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
                 start=(-sampleInterval * 2),
                 stop=(sampleInterval * 20),
                 step=sampleInterval)
-
-            print(self.filteredResistivity)
 
         # Provide a message box if neither Wenner nor Schlumberger are selected
         else:

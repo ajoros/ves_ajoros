@@ -1,5 +1,3 @@
-#/usr/bin/env bash
-
 # Clone the source code repository from github.com
 git clone https://github.com/vitale232/ves.git
 # Change into the source code directory

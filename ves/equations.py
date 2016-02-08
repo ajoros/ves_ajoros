@@ -259,7 +259,7 @@ if __name__ == '__main__':
     voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
         tableData, len(tableData))
     # Print out the aggregated values
-    print('\nVoltage Spacing: {}\nMean Voltage: {}'.format(
+    print('\nVoltage Spacing:\n{}\nMean Voltage:\n{}'.format(
         voltageSpacing, meanVoltage))
     print('\nMean Current:\n{}'.format(meanCurrent))
     time.sleep(sleep_time)
@@ -315,7 +315,7 @@ if __name__ == '__main__':
         label='Interpolated Values', color='#7A68A6')
     plt.legend(
         handles=[blue_line, red_lines, purp_lines],
-        bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+        bbox_to_anchor=(0., 0.99, 1., .7), loc=3,
         ncol=2, mode="expand", borderaxespad=0.)
 
     plt.show()

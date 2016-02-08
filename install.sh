@@ -1,0 +1,46 @@
+#/usr/bin/env bash
+
+# Clone the source code repository from github.com
+git clone https://github.com/vitale232/ves.git
+# Change into the source code directory
+cd ./ves
+
+# Use pip3 (assumes Python3 is installed) to create a virtualenv
+pip3 install virtualenv
+# Make sure to point to the proper Python (3.4+ supported)
+virtualenv --python=python3.5 vesvenv
+# Activate the environment
+source vesvenv/bin/activate
+
+# Upgrade pip and install the requirements from the text file
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
+
+
+# Make a src directory for SIP, Qt, and PyQt (PyQt and its binding software)
+mkdir src
+cd ./src
+
+# Download, configure, and compile sip
+wget http://downloads.sourceforge.net/project/pyqt/sip/sip-4.17/sip-4.17.tar.gz
+
+tar -xvzf sip-4.17.tar.gz
+cd ./sip-4.17
+
+python configure.py
+make
+make install
+
+cd ..
+
+# Download configure, and compile Qt and PyQt
+wget http://downloads.sourceforge.net/project/pyqt/PyQt5/PyQt-5.5.1/PyQt-gpl-5.5.1.tar.gz
+
+tar -xvzf PyQt-gpl-5.5.1.tar.gz
+cd ./PyQt-gpl-5.5.1
+
+python configure.py
+make
+make install
+
+exit

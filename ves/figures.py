@@ -11,6 +11,8 @@ from PyQt5.QtWidgets import QSizePolicy
 
 import numpy as np
 
+from templates.tempData import colors
+
 
 class InteractiveCanvas(FigureCanvas):
     """An interactive matplotlib figure that allows for the plotting of data
@@ -251,8 +253,25 @@ class ReportCanvas(FigureCanvas):
                  voltageSpacingExtrapolated, newResistivity,
                  xlabel='Electrode Spacing (m)',
                  ylabel='Apparent Resitivity (ohm-m)',
-                 dpi=150, hold=False):
+                 linestyle='--', marker='o',
+                 dpi=150, hold=False, colors=colors[0:5:4]):
+        plt.clf()
 
+        # Save figure input parameters as class properties
+        self.samplePoints = samplePoints
+        self.filteredResistivity = filteredResistivity
+        self.voltageSpacing = voltageSpacing
+        self.apparentResistivity = apparentResistivity
+        self.voltageSpacingExtrapolated = voltageSpacingExtrapolated
+        self.newResistivity = newResistivity
+
+        self.xlabel = xlabel
+        self.ylabel = ylabel
+        self.linestyle = linestyle
+        self.marker = marker
+        self.dpi = dpi
+        self.hold = hold
+        self.colors = colors
         self.fig = Figure(dpi=dpi)
 
         # Super from the class for Qt
@@ -273,29 +292,67 @@ class ReportCanvas(FigureCanvas):
         self.axes = self.fig.add_subplot(111)
         self.axes.hold(hold)
 
+        self.initFigure()
 
+        # Allow the FigureCanvas to adjust with Main window using mpl Qt5 API
+        FigureCanvas.setSizePolicy(
+            self, QSizePolicy.Expanding, QSizePolicy.Expanding)
+        FigureCanvas.updateGeometry(self)
+
+        # # Connect the mouse/trackpad to the FigureCanvas
+        # self.ax.figure.canvas.mpl_connect(
+        #     'button_press_event', self.onPress)
+        # self.ax.figure.canvas.mpl_connect(
+        #     'button_release_event', self.onRelease)
+
+        # Super from the class for Qt
+        super(ReportCanvas, self).__init__(self.fig)
+
+
+    def initFigure(self):
         # Plot out the results
-        plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
-                   marker='o', linestyle='--', color='#348ABD')
-        plt.loglog(voltageSpacing, apparentResistivity,
-                   marker='o', linestyle='-', color='#A60628')
-        plt.loglog(voltageSpacingExtrapolated, newResistivity,
-                   marker='o', linestyle='-.', color='#7A68A6')
-        plt.xlabel('Electrode Spacing (m)')
-        plt.ylabel('Apparent Resitivity (ohm-m)')
+        plt.loglog(self.samplePoints[:len(self.filteredResistivity)],
+                   self.filteredResistivity,
+                   marker=self.marker, linestyle=self.linestyle,
+                   color=self.colors[0])
+        plt.loglog(self.voltageSpacing, self.apparentResistivity,
+                   marker=self.marker, linestyle=self.linestyle,
+                   color=self.colors[1])
 
-        blue_line = mlines.Line2D(
-            [], [], marker='o',linestyle='--',
-            label='Filtered values', color='#348ABD')
-        red_lines = mlines.Line2D(
-            [], [], marker='o', linestyle='-',
-            label='Field values', color='#A60628')
-        purp_lines = mlines.Line2D(
-            [], [], marker='o', linestyle='-.',
-            label='Interpolated Values', color='#7A68A6')
-        plt.legend(
-            handles=[blue_line, red_lines, purp_lines],
-            bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-            ncol=2, mode="expand", borderaxespad=0.)
+        # Create an mpl axis and set the labels, add the rectangle
+        self.ax = plt.gca()
+        self.ax.set_xlabel(self.xlabel)
+        self.ax.set_ylabel(self.ylabel)
+        # self.ax.add_patch(self.rect)
         self.ax.figure.canvas.draw()
 
+        # Update the figure object/property
+        self.fig = plt.gcf()
+
+        self.fig.tight_layout()
+        # plt.show()
+
+        # plt.loglog(voltageSpacingExtrapolated, newResistivity,
+        #            marker='o', linestyle='-.', color='#7A68A6')
+        # plt.xlabel('Electrode Spacing (m)')
+        # plt.ylabel('Apparent Resitivity (ohm-m)')
+
+        # blue_line = mlines.Line2D(
+        #     [], [], marker='o',linestyle='--',
+        #     label='Filtered values', color='#348ABD')
+        # red_lines = mlines.Line2D(
+        #     [], [], marker='o', linestyle='-',
+        #     label='Field values', color='#A60628')
+        # # purp_lines = mlines.Line2D(
+        # #     [], [], marker='o', linestyle='-.',
+        # #     label='Interpolated Values', color='#7A68A6')
+        # plt.legend(
+        #     handles=[blue_line, red_lines],
+        #     # handles=[blue_line, red_lines, purp_lines],
+        #     bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+        #     ncol=2, mode="expand", borderaxespad=0.)
+        # self.ax.figure.canvas.draw()
+
+if __name__ == '__main__':
+    # rc = ReportCanvas
+    pass

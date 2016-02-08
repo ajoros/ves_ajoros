@@ -209,7 +209,7 @@ def applyFilter(voltageSpacingExtrapolated, extrapolatedResistivity,
         for j in range(len(filterCoefficients)):
             try:
                 resistOut[(i + 1) + j] = (
-                    newRestivity[(i + 1) + j] * filterCoefficients[j])
+                    resistOut[(i + 1) + j] * filterCoefficients[j])
             except IndexError:
                 break
 

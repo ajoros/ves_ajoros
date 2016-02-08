@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication
 
 sys.path.append(os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..', 'ves')))
-from templates.tempData import headers, colors
+from templates.tempData import headers, colors, coefficients
 from main import StartupWindow
 
 
@@ -42,7 +42,7 @@ class TestMain(unittest.TestCase):
 
         self.app = QApplication([])
         self.main = StartupWindow(
-            self.tableData, headers, colors)
+            self.tableData, headers, colors, coefficients)
 
 
     def tearDown(self):

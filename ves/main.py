@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import os
 import sys
 import time
@@ -23,12 +24,15 @@ from PyQt5.QtWidgets import (
 from PyQt5.uic import loadUiType
 
 from aggregate import aggregateTable
-from equations import schlumbergerResistivityModified, wennerResistivity
-from figure import InteractiveCanvas
+from equations import (
+    applyFilter, interpolateFieldData,
+    schlumbergerResistivityModified,
+    wennerResistivity)
+from figures import InteractiveCanvas, ReportCanvas
 from reportwindow import ReportWindow
 from table import PalettedTableModel
 from templates.tempData import (
-    columns, colors, headers, rowCount, tableData)
+    coefficients, columns, colors, headers, rowCount, tableData)
 
 
 # No need to change directory, as the change from loading
@@ -42,7 +46,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
     Water 4/DRI VES Inverse Analysis software
 
     """
-    def __init__(self, tableData, headers, colors):
+    def __init__(self, tableData, headers, colors, coefficients):
         """Initialization code that is executed on every instantiation
 
         Parameters
@@ -76,6 +80,10 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         self.wennerLayout = False
         self.colors = colors
         self.color = colors[0]
+
+        # Set up the coefficients
+        (self.longFilterCoefficients, self.shortFilterCoefficients,
+            self.wennerCoefficients) = coefficients
 
         # Set up the model and tableView
         self.model = PalettedTableModel(tableData, headers, colors)
@@ -135,7 +143,12 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         """Launches the ReportWindow class on launch of VES Inverse Analysis"""
         self.close()
 
-        self.ReportWindow = ReportWindow(self.canvas)
+        self.ReportCanvas = ReportCanvas(
+            self.samplePoints, self.filteredResistivity,
+            self.voltageSpacing, self.apparentResistivity,
+            self.voltageSpacingExtrapolated, self.newResistivity)
+
+        self.ReportWindow = ReportWindow(self.ReportCanvas)
         self.ReportWindow.show()
 
 
@@ -238,8 +251,8 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         if hasattr(self, 'apparentResistivity'):
             voltageSpacing = self.voltageSpacing
 
-            if self.schlumberger:
-                voltageSpacing = self.voltageSpacing[:-1]
+            # if self.schlumberger:
+            #     voltageSpacing = self.voltageSpacing[:-1]
 
             self.canvas.initFigure(voltageSpacing, self.apparentResistivity)
 
@@ -352,6 +365,24 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
             self.canvas.addPointsAndLine(
                 self.voltageSpacing, self.apparentResistivity)
 
+            voltageSpacingExtrapolated, newResistivity = interpolateFieldData(
+                self.voltageSpacing, self.apparentResistivity, 'wenner')
+            self.voltageSpacingExtrapolated = voltageSpacingExtrapolated
+            self.newResistivity = newResistivity
+
+            self.filteredResistivity = applyFilter(
+                self.voltageSpacingExtrapolated,
+                self.newResistivity,
+                self.wennerCoefficients)
+
+            sampleInterval = np.log(10) / 3.
+            self.samplePoints = np.arange(
+                start=(-sampleInterval * 2), stop=(sampleInterval * 20),
+                step=sampleInterval)
+
+            print(self.filteredResistivity)
+
+
         # Calculate apparent resistivity using the Schlumberger array
         elif self.schlumbergerLayout == True:
 
@@ -360,9 +391,26 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
                 self.schlumbergerMessageBox(suppress)
 
             self.apparentResistivity = schlumbergerResistivityModified(
-                self.voltageSpacing, self.meanVoltage, self.meanCurrent)[:-1] # Leave off last return values as it should be nan
+                self.voltageSpacing, self.meanVoltage, self.meanCurrent) # Leave off last return values as it should be nan
             self.canvas.addPointsAndLine(
-                self.voltageSpacing[:-1], self.apparentResistivity)
+                self.voltageSpacing, self.apparentResistivity)
+
+            voltageSpacingExtrapolated, newResistivity = interpolateFieldData(
+                self.voltageSpacing, self.apparentResistivity, 'schlumberger')
+            self.voltageSpacingExtrapolated = voltageSpacingExtrapolated
+            self.newResistivity = newResistivity
+
+            self.filteredResistivity = applyFilter(
+                self.voltageSpacingExtrapolated,
+                self.newResistivity,
+                self.longFilterCoefficients)
+
+            sampleInterval = np.log(10) / 3.
+            self.samplePoints = np.arange(
+                start=(-sampleInterval * 2), stop=(sampleInterval * 20),
+                step=sampleInterval)
+
+            print(self.filteredResistivity)
 
         # Provide a message box if neither Wenner nor Schlumberger are selected
         else:
@@ -488,7 +536,7 @@ if __name__ == '__main__':
 
     time.sleep(0.1)
 
-    startup = StartupWindow(tableData, headers, colors)
+    startup = StartupWindow(tableData, headers, colors, coefficients)
     startup.show()
 
     splashScreen.finish(startup)

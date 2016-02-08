@@ -3,6 +3,7 @@ matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvasQTAgg as FigureCanvas)
 from matplotlib.figure import Figure
+import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
@@ -184,7 +185,10 @@ class InteractiveCanvas(FigureCanvas):
         # Currently ydata is longer than xdata with schlumberger, so handle
         #   that if it makes it this far into the program
         if len(xdata) != len(ydata):
-            xdata = xdata[:len(ydata)]
+            if len(ydata) > len(xdata):
+                xdata = xdata[:len(ydata)]
+            else:
+                ydata = ydata[:len(xdata)]
 
         # log/log plot of x and y data
         plt.loglog(
@@ -238,3 +242,60 @@ class InteractiveCanvas(FigureCanvas):
 
         except TypeError:
             pass
+
+
+class ReportCanvas(FigureCanvas):
+    """pass"""
+    def __init__(self, samplePoints, filteredResistivity,
+                 voltageSpacing, apparentResistivity,
+                 voltageSpacingExtrapolated, newResistivity,
+                 xlabel='Electrode Spacing (m)',
+                 ylabel='Apparent Resitivity (ohm-m)',
+                 dpi=150, hold=False):
+
+        self.fig = Figure(dpi=dpi)
+
+        # Super from the class for Qt
+        super(ReportCanvas, self).__init__(self.fig)
+
+        # Initialize a FigureCanvas from the figure
+        FigureCanvas.__init__(self, self.fig)
+
+        # Allow the FigureCanvas to adjust with Main window using mpl Qt5 API
+        FigureCanvas.setSizePolicy(
+            self, QSizePolicy.Expanding, QSizePolicy.Expanding)
+        FigureCanvas.updateGeometry(self)
+
+        # self.setParent(self.ax.figure.canvas)
+        self.ax = plt.gca()
+        self.ax.set_xlabel(xlabel)
+        self.ax.set_ylabel(ylabel)
+        self.axes = self.fig.add_subplot(111)
+        self.axes.hold(hold)
+
+
+        # Plot out the results
+        plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
+                   marker='o', linestyle='--', color='#348ABD')
+        plt.loglog(voltageSpacing, apparentResistivity,
+                   marker='o', linestyle='-', color='#A60628')
+        plt.loglog(voltageSpacingExtrapolated, newResistivity,
+                   marker='o', linestyle='-.', color='#7A68A6')
+        plt.xlabel('Electrode Spacing (m)')
+        plt.ylabel('Apparent Resitivity (ohm-m)')
+
+        blue_line = mlines.Line2D(
+            [], [], marker='o',linestyle='--',
+            label='Filtered values', color='#348ABD')
+        red_lines = mlines.Line2D(
+            [], [], marker='o', linestyle='-',
+            label='Field values', color='#A60628')
+        purp_lines = mlines.Line2D(
+            [], [], marker='o', linestyle='-.',
+            label='Interpolated Values', color='#7A68A6')
+        plt.legend(
+            handles=[blue_line, red_lines, purp_lines],
+            bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+            ncol=2, mode="expand", borderaxespad=0.)
+        self.ax.figure.canvas.draw()
+

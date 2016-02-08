@@ -33,16 +33,16 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
 
         self.canvas = canvas
 
-        rectCoordinates = canvas.rectCoordinates
+        # rectCoordinates = canvas.rectCoordinates
 
-        self.rectCoordinates = rectCoordinates
-        self.nLayers = len(rectCoordinates)
+        # self.rectCoordinates = rectCoordinates
+        # self.nLayers = len(rectCoordinates)
 
-        if self.nLayers == 0:
-            self.emptyRectangles(QApplication.quit)
+        # if self.nLayers == 0:
+        #     self.emptyRectangles(QApplication.quit)
 
-        if self.nLayers > 0:
-            self.layersFromRectangles()
+        # if self.nLayers > 0:
+        #     self.layersFromRectangles()
 
         self.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
 

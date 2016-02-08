@@ -64,3 +64,5 @@ shortFilterCoefficients = np.array([
 wennerFilterCoefficients = np.array([
     0.0212, -0.1199, 0.4226, 0.3553, 0.1664,
     0.0873, 0.0345, 0.0208, 0.0118])
+coefficients = (longFilterCoefficients,
+    shortFilterCoefficients, wennerFilterCoefficients)

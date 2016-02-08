@@ -1,3 +1,6 @@
+# Ignore src directory
+src/
+
 # Ignore virtualenv
 vesvenv/
 

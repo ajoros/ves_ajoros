@@ -1,3 +1,6 @@
+# Ignore docs
+docs/
+
 # Ignore src directory
 src/
 

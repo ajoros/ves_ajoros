@@ -38,3 +38,8 @@ cd ./PyQt-gpl-5.5.1
 
 python configure.py
 sudo make && make install
+
+
+# To run the software after install of the dependecies:
+cd ../..
+python ./ves/main.py

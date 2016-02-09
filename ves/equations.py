@@ -394,10 +394,18 @@ if __name__ == '__main__':
     plt.show()
 
 
-    with open('./ves/templates/MafingaExample.txt', 'r') as f:
+    with open('./ves/templates/UgandaPIM.txt', 'r') as f:
         lines = f.read()
 
     newLines = [line.split('  ') for line in lines.split('\n')]
+
+    wennerVoltageSpacing, wennerApparentResistivity = [], []
+    for line in newLines[2:-3]:
+        try:
+            wennerVoltageSpacing.append(line.pop(0))
+            wennerApparentResistivity.append(line.pop(-1))
+        except IndexError:
+            pass
 
     print('\n\nWenner Example 2:')
     time.sleep(2)

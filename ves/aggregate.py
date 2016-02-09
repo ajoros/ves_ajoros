@@ -3,7 +3,7 @@ import copy
 import numpy as np
 
 
-def aggregateTable(tableData, rowCount):
+def aggregateTable(tableData):
     """Aggreate the PalletedTableModel class input data for analysis
 
     Parameters
@@ -11,8 +11,6 @@ def aggregateTable(tableData, rowCount):
     tableData: list
         A nested list of [row][column] defining the data that was input to the
         Qt table
-    rowCount: int
-        The number of rows in the table
 
     Notes
     -----
@@ -28,6 +26,7 @@ def aggregateTable(tableData, rowCount):
         the 0, 1, 2 indices
 
     """
+    rowCount = len(tableData)
     temporaryTableData = copy.deepcopy(tableData)
     # Convert values from Qt model strings to floats or np.nan
     for i in range(rowCount):

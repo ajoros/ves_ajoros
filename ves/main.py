@@ -209,7 +209,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         """
         voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
-            self.model.table, len(self.model.table))
+            self.model.table)
 
         self.voltageSpacing = voltageSpacing
         self.meanVoltage = meanVoltage

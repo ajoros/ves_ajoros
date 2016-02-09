@@ -264,7 +264,7 @@ if __name__ == '__main__':
 
     # Aggregate the table to get the mean voltage and current
     voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
-        tableData, len(tableData))
+        tableData)
     # Print out the aggregated values
     print('\nVoltage Spacing: {}\nMean Voltage: {}'.format(
         voltageSpacing, meanVoltage))

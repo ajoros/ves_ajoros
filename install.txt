@@ -1,3 +1,7 @@
+# Install Qt using the GUI downloaded via their website prior to running
+# these instructions. Install in the default locations.
+# http://www.qt.io/
+
 # Clone the source code repository from github.com
 git clone https://github.com/vitale232/ves.git
 # Change into the source code directory

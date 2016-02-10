@@ -530,7 +530,7 @@ if __name__ == '__main__':
     splashScreen.show()
     app.processEvents()
 
-    time.sleep(0.1)
+    time.sleep(3)
 
     startup = StartupWindow(tableData, headers, colors, coefficients)
     startup.show()

@@ -82,7 +82,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         self.color = colors[0]
 
         # Set up the coefficients
-        (self.longFilterCoefficients, self.shortFilterCoefficients,
+        (self.shortFilterCoefficients, self.longFilterCoefficients,
             self.wennerCoefficients) = coefficients
 
         # Set up the model and tableView

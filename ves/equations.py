@@ -302,6 +302,11 @@ if __name__ == '__main__':
         samplePoints))
     time.sleep(sleep_time)
 
+    print('\nCoefficients:')
+    print(' Schlum. short:\n  {}'.format(shortFilterCoefficients))
+    print(' Schlum. long: \n  {}'.format(longFilterCoefficients))
+    print(' Wenner. short:\n  {}'.format(wennerFilterCoefficients))
+
     # Plot out the results
     plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
                marker='o', linestyle='--', color='#348ABD')
@@ -371,6 +376,10 @@ if __name__ == '__main__':
         samplePoints))
     time.sleep(sleep_time)
 
+    print('\nCoefficients:')
+    print(' Schlum. short:\n  {}'.format(shortFilterCoefficients))
+    print(' Schlum. long: \n  {}'.format(longFilterCoefficients))
+    print(' Wenner. short:\n  {}'.format(wennerFilterCoefficients))
 
     # Plot out the results
     plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
@@ -442,6 +451,10 @@ if __name__ == '__main__':
         samplePoints))
     time.sleep(sleep_time)
 
+    print('\nCoefficients:')
+    print(' Schlum. short:\n  {}'.format(shortFilterCoefficients))
+    print(' Schlum. long: \n  {}'.format(longFilterCoefficients))
+    print(' Wenner. short:\n  {}'.format(wennerFilterCoefficients))
 
     # Plot out the results
     plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,

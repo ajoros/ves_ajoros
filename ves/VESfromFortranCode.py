@@ -71,7 +71,7 @@ def transf(y, i):
         b = (1. - a) / (1. + a)
         rs = p[n + 1 - j]
         tpr = b * rs
-        t[j] = (tpr + t[j - 1])/(1. + tpr * t[j-1] / (rs * rs))
+        t[j] = (tpr + t[j - 1]) / (1. + tpr * t[j-1] / (rs * rs))
     r[i] = t[n_layers]
     return
 

@@ -305,7 +305,7 @@ class ReportCanvas(FigureCanvas):
 
     def initFigure(self):
         # Plot out the results
-        plt.loglog(self.samplePoints[:len(self.filteredResistivity)],
+        plt.loglog(self.voltageSpacingExtrapolated,
                    self.filteredResistivity,
                    marker=self.marker,
                    linestyle=self.linestyle,

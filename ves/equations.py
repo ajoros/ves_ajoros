@@ -184,6 +184,13 @@ def interpolateFieldData(voltageSpacing, apparentResistivity, arraySpacing,
     #     apparentResistivityExtrapolate)] = np.nanmax(apparentResistivity)
 
     # Interpolate the measured resistivity data
+    if len(voltageSpacingExtrapolated) > len(apparentResistivityExtrapolate):
+        voltageSpacingExtrapolated = (
+            voltageSpacingExtrapolated[:len(apparentResistivityExtrapolate)])
+    if len(apparentResistivityExtrapolate) > len(voltageSpacingExtrapolated):
+        apparentResistivityExtrapolate = (
+            apparentResistivityExtrapolate[:len(voltageSpacingExtrapolated)])
+
     function = interpolate.interp1d(
         voltageSpacingExtrapolated, apparentResistivityExtrapolate,
         bounds_error=bounds_error)
@@ -193,8 +200,7 @@ def interpolateFieldData(voltageSpacing, apparentResistivity, arraySpacing,
     return (voltageSpacingExtrapolated, newRestivity)
 
 
-def applyFilter(voltageSpacingExtrapolated, extrapolatedResistivity,
-                filterCoefficients):
+def applyFilter(extrapolatedResistivity, filterCoefficients):
     """"""
     # Calculate the last index of the extrapolated resistivity values
     #  upon which the filters are to be applied
@@ -252,15 +258,15 @@ if __name__ == '__main__':
 
     (shortFilterCoefficients, longFilterCoefficients,
         wennerFilterCoefficients) = coefficients
+    sampleInterval = np.log(10) / 3.
 
 
     # Print out the table that is the "input" table from the field survey
     print('Schlumberger example:')
-    time.sleep(2)
+    time.sleep(sleep_time)
     print('This is the starting table:')
     for row in tableData:
         print(row)
-    time.sleep(sleep_time)
 
     # Aggregate the table to get the mean voltage and current
     voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
@@ -269,38 +275,30 @@ if __name__ == '__main__':
     print('\nVoltage Spacing: {}\nMean Voltage: {}'.format(
         voltageSpacing, meanVoltage))
     print('Mean Current: {}'.format(meanCurrent))
-    time.sleep(sleep_time)
-
     # Use the modified Schlumberger equation like that used in the spreadsheet
     apparentResistivity = schlumbergerResistivityModified(
         voltageSpacing, meanVoltage, meanCurrent)
     print('\nApparent resistivity (same formula as ' +
           'spreadsheet for Schlum):\n{}'.format(apparentResistivity))
-    time.sleep(sleep_time)
 
     # Interpolate the field data to get values at Gosh's suggested intervals
     voltageSpacingExtrapolated, newRestivity = interpolateFieldData(
         voltageSpacing, apparentResistivity, 'schlumberger')
     print('\nNew Resitivity values:\n{}'.format(newRestivity))
-    time.sleep(sleep_time)
 
     # Apply the filter coefficients. In this case, using the Schlumber short
     #  coeffieients for the digital filter
-    filteredResistivity = applyFilter(
-        voltageSpacingExtrapolated, newRestivity, shortFilterCoefficients)
+    filteredResistivity = applyFilter(newRestivity, shortFilterCoefficients)
     print('\nFiltered resistivity after coefficients applied:\n{}'.format(
         filteredResistivity))
-    time.sleep(sleep_time)
 
     # Create poitns for the plot
-    sampleInterval = np.log(10) / 3.
     samplePoints = np.arange(
         start=( - sampleInterval * 2),
-        stop=sampleInterval * 20,
+        stop=sampleInterval * 30,
         step=sampleInterval)
     print("\nNew sample points based on Gosh's suggested interval:\n{}".format(
         samplePoints))
-    time.sleep(sleep_time)
 
     print('\nCoefficients:')
     print(' Schlum. short:\n  {}'.format(shortFilterCoefficients))
@@ -308,6 +306,8 @@ if __name__ == '__main__':
     print(' Wenner. short:\n  {}'.format(wennerFilterCoefficients))
 
     # Plot out the results
+    print(len(samplePoints))
+    print(len(filteredResistivity))
     plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
                marker='o', linestyle='--', color='#348ABD')
     plt.loglog(voltageSpacing, apparentResistivity,
@@ -342,7 +342,7 @@ if __name__ == '__main__':
             pass
 
     print('\n\nWenner Example:')
-    time.sleep(2)
+    time.sleep(sleep_time)
     print('Probe spacing (m), apparent res.')
     for spacing, res in zip(wennerVoltageSpacing, wennerApparentResistivity):
         print('{:<17}  {:<12}'.format(spacing, res))
@@ -356,25 +356,20 @@ if __name__ == '__main__':
     voltageSpacingExtrapolated, newRestivity = interpolateFieldData(
         wennerVoltageSpacing, wennerApparentResistivity, 'wenner')
     print('\nNew Resitivity values:\n{}'.format(newRestivity))
-    time.sleep(sleep_time)
 
     # Apply the filter coefficients. In this case, using the Schlumber short
     #  coeffieients for the digital filter
-    filteredResistivity = applyFilter(
-        voltageSpacingExtrapolated, newRestivity, wennerFilterCoefficients)
+    filteredResistivity = applyFilter(newRestivity, wennerFilterCoefficients)
     print('\nFiltered resistivity after coefficients applied:\n{}'.format(
         filteredResistivity))
-    time.sleep(sleep_time)
 
     # Create poitns for the plot
-    sampleInterval = np.log(10) / 3.
     samplePoints = np.arange(
         start=( - sampleInterval * 2),
         stop=sampleInterval * 20,
         step=sampleInterval)
     print('\nNew sample points based on Gosh\'s suggested interval:\n{}'.format(
         samplePoints))
-    time.sleep(sleep_time)
 
     print('\nCoefficients:')
     print(' Schlum. short:\n  {}'.format(shortFilterCoefficients))
@@ -417,7 +412,7 @@ if __name__ == '__main__':
             pass
 
     print('\n\nWenner Example 2:')
-    time.sleep(2)
+    time.sleep(sleep_time)
     print('Probe spacing (m), apparent res.')
     for spacing, res in zip(wennerVoltageSpacing, wennerApparentResistivity):
         print('{:<17}  {:<12}'.format(spacing, res))
@@ -431,31 +426,27 @@ if __name__ == '__main__':
     voltageSpacingExtrapolated, newRestivity = interpolateFieldData(
         wennerVoltageSpacing, wennerApparentResistivity, 'wenner')
     print('\nNew Resitivity values:\n{}'.format(newRestivity))
-    time.sleep(sleep_time)
 
     # Apply the filter coefficients. In this case, using the Schlumber short
     #  coeffieients for the digital filter
-    filteredResistivity = applyFilter(
-        voltageSpacingExtrapolated, newRestivity, wennerFilterCoefficients)
+    filteredResistivity = applyFilter(newRestivity, wennerFilterCoefficients)
     print('\nFiltered resistivity after coefficients applied:\n{}'.format(
         filteredResistivity))
-    time.sleep(sleep_time)
 
     # Create poitns for the plot
-    sampleInterval = np.log(10) / 3.
     samplePoints = np.arange(
         start=( - sampleInterval * 2),
         stop=sampleInterval * 20,
         step=sampleInterval)
     print('\nNew sample points based on Gosh\'s suggested interval:\n{}'.format(
         samplePoints))
-    time.sleep(sleep_time)
 
     print('\nCoefficients:')
     print(' Schlum. short:\n  {}'.format(shortFilterCoefficients))
     print(' Schlum. long: \n  {}'.format(longFilterCoefficients))
     print(' Wenner. short:\n  {}'.format(wennerFilterCoefficients))
 
+    # print(samplePoints[:len(filteredResistivity)])
     # Plot out the results
     plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
                marker='o', linestyle='--', color='#348ABD')

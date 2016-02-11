@@ -371,7 +371,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
             self.newResistivity = newResistivity
 
             self.filteredResistivity = applyFilter(
-                self.voltageSpacingExtrapolated,
                 self.newResistivity,
                 self.wennerCoefficients)
 
@@ -399,7 +398,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
             self.newResistivity = newResistivity
 
             self.filteredResistivity = applyFilter(
-                self.voltageSpacingExtrapolated,
                 self.newResistivity,
                 self.longFilterCoefficients)
 

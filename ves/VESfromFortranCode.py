@@ -38,7 +38,8 @@ asavl = [0] * 65
 rl = [0] * 65
 
 # INPUT
-index = 1   # 1 is for shchlumberger and 2 is for Wenner
+array_spacing = 'schlumberger'
+# array_spacing = 'wenner'
 n_layers = 3   #number of layers
 n = 2 * n_layers - 1
 
@@ -71,7 +72,7 @@ def transf(y, i):
         b = (1. - a) / (1. + a)
         rs = p[n + 1 - j]
         tpr = b * rs
-        t[j] = (tpr + t[j - 1])/(1. + tpr * t[j-1] / (rs * rs))
+        t[j] = (tpr + t[j - 1]) / (1. + tpr * t[j-1] / (rs * rs))
     r[i] = t[n_layers]
     return
 
@@ -85,7 +86,7 @@ def filters(b, k):
     return
 
 
-if index == 1:
+if array_spacing.lower() == 'schlumberger':
     y = spac - 19. * delx - 0.13069
     mum1 = m + 28
     print(y)
@@ -94,7 +95,7 @@ if index == 1:
         y = y + delx
     print(y)
     filters(fltr1, 29)
-elif index == 2:
+elif array_spacing.lower() == 'wenner':
     s = np.log(2.)
     y = spac -10.8792495 * delx
     mum2 = m + 33

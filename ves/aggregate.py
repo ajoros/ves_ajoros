@@ -61,4 +61,9 @@ def aggregateTable(tableData):
     meanVoltage = np.mean(voltage, axis=1)
     meanCurrent = np.mean(current, axis=1)
 
+    if voltageSpacing[0] != 0:
+        voltageSpacing = np.insert(voltageSpacing, 0, 0.)
+        meanVoltage = np.insert(meanVoltage, 0, 0.)
+        meanCurrent = np.insert(meanCurrent, 0, 0.)
+
     return (voltageSpacing, meanVoltage, meanCurrent)

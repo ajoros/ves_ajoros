@@ -47,8 +47,8 @@ asav = [0] * 65 # voltage spacing in meters?
 asavl = [0] * 65 # np.log(asav)
 adatl = [0] * 65 # interpolated voltage spacing ( np.log(10) / 6 )?
 rdatl = [0] * 65 # np.log()
-adat = [0] * 65 # voltage spacing input
-rdat = [0] * 65 # apparent res input
+# adat = [0] * 65 # voltage spacing input
+# rdat = [0] * 65 # apparent res input
 pkeep = [0] * 65 # earth parameters after applying equations?
 rkeep = [0] * 65 # r after applying equations?
 rkeepl = [0] * 65 # np.log()!
@@ -72,14 +72,14 @@ ndat = 13
 #in teh field
 adat = [0., 0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
 rdat = [0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
-one30 = 1.e30
-rms = one30
-errmin = 1.e10
+one30 = 1.e30 # What's the purpose of this and should it be user input?
+rms = one30 # Just a starting value for rmserror?
+errmin = 1.e10 # Should this be user input?
 
 # INPUT
 array_spacing = 'wenner'   # 1 is for shchlumberger and 2 is for Wenner
 e = 3   #number of layers
-n = 2*e-1 # What does n represent?
+n = 2 * e - 1 # What does n represent?
 
 
 spac = 0.2 # smallest electrode spacing - should this come from the input file?

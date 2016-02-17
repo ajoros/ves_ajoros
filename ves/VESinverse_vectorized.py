@@ -201,8 +201,8 @@ def rmsfit():
             y = y + delx
         filters(fltr2, 34)
     else:
-        print(" type of survey not indicated")
-        sys.exit()
+        print("\nType of survey not indicated.")
+        raise SystemExit('Exiting.\n\n  Take better care next time.')
 
     x = spac
     #print("A-Spacing   App. Resistivity")

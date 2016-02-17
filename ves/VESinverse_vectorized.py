@@ -135,11 +135,12 @@ def readData(adat, rdat, ndat, return_indexed=False):
         return adatl, rdatl
 
 
-def error():
+def error(): # simple rms error calc
     sumerror = 0.
     #pltanswer = [0]*64
     spline(m, one30, one30, asavl, rl, y2) # So this calculates the predicted fit?
-    for i in range(1,ndat, 1):
+    # and essentially operates on the list in place?
+    for i in range(1, ndat): # So you always skip the value 0? due to -inf returns?
         ans = splint(m, adatl[i], asavl, rl, y2) # Then this calulates error?
         sumerror = sumerror + (rdatl[i] - ans) * (rdatl[i] - ans)
         #print(i,sum1,rdat[i],rdatl[i],ans)

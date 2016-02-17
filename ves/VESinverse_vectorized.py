@@ -77,18 +77,19 @@ rms = one30
 errmin = 1.e10
 
 # INPUT
-index = 2   # 1 is for shchlumberger and 2 is for Wenner
+array_spacing = 'wenner'   # 1 is for shchlumberger and 2 is for Wenner
 e = 3   #number of layers
-n = 2*e-1
+n = 2*e-1 # What does n represent?
 
 
-spac = 0.2 # smallest electrode spacing
+spac = 0.2 # smallest electrode spacing - should this come from the input file?
 m = 20  # number of points where resistivity is calculated
 
 spac = np.log(spac)
-delx = np.log(10.0) / 6.
+delx = np.log(10.0) / 6. # I take it this is the sample interval on the log scale?
 
 # these lines apparently find the computer precision ep
+# What is computer precision ep?
 ep = 1.0
 ep = ep / 2.0
 fctr = ep + 1.
@@ -103,6 +104,8 @@ while fctr > 1.:
 #for 3 layers small[1] and small[2] are low end of thickness range
 # small[3], small[4] and small[5] are the low end of resistivities
 
+# I think I have it coded up that these are getting grabbed from the rectangles currently.
+# Is that the best way to go?
 small[1] = 1.
 xlarge[1] = 5
 small[2] = 10.
@@ -116,6 +119,7 @@ xlarge[5] = 3000.
 
 
 iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
+# Is 10000 the most reasonable default, or should I play with it?
 
 def readData(adat, rdat, ndat, return_indexed=False):
     #normally this is where the data would be read from the csv file
@@ -134,7 +138,7 @@ def readData(adat, rdat, ndat, return_indexed=False):
 def error():
     sumerror = 0.
     #pltanswer = [0]*64
-    spline(m, one30, one30,asavl, rl, y2)
+    spline(m, one30, one30, asavl, rl, y2)
     for i in range(1,ndat, 1):
         ans = splint(m, adatl[i], asavl, rl, y2)
         sumerror = sumerror + (rdatl[i] - ans) * (rdatl[i] - ans)
@@ -169,22 +173,22 @@ def transf(y, i):
     return
 
 def filters(b, k):
-    for i in range(1, m + 1, 1):
+    for i in range(1, m + 1):
         re = 0.
-        for j in range(1, k + 1, 1):
+        for j in range(1, k + 1):
             re = re + b[j] * r[i + k - j]
         r[i] = re
     return
 
 def rmsfit():
-    if index == 1:
+    if array_spacing.lower() == 'wenner':
         y = spac - 19. * delx - 0.13069
         mum1 = m + 28
         for i in range(1, mum1 + 1):
             transf(y, i)
             y = y + delx
         filters(fltr1, 29)
-    elif index == 2:
+    elif array_spacing.lower() == 'schlumberger':
         s = np.log(2.)
         y = spac - 10.8792495 * delx
         mum2 = m + 33
@@ -202,12 +206,12 @@ def rmsfit():
 
     x = spac
     #print("A-Spacing   App. Resistivity")
-    for i in range(1, m+1, 1):
+    for i in range(1, m + 1):
         a = np.exp(x)
         asav[i] = a
         asavl[i] = np.log10(a)
         rl[i] = np.log10(r[i])
-        x = x+delx
+        x = x + delx
         #print("%7.2f   %9.3f " % ( asav[i], r[i]))
 
     rms = error()
@@ -250,7 +254,7 @@ def spline(n, yp1, ypn, x=[] ,y=[] ,y2=[]):
 
     return
 
-def splint(n, x ,xa=[], ya=[], y2a=[]):
+def splint(n, x ,xa=[], ya=[], y2a=[]): # Is this function the T function?
     klo = 0
     khi = n
     while khi - klo > 1:

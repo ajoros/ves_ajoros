@@ -133,6 +133,33 @@ def readData(adat, rdat, ndat, return_indexed=False):
     else:
         return adatl, rdatl
 
+<<<<<<< HEAD
+=======
+
+def error(): # simple rms error calc
+    sumerror = 0.
+    #pltanswer = [0]*64
+    spline(m, one30, one30, asavl, rl, y2) # So this calculates the predicted fit?
+    # and essentially operates on the list in place?
+    for i in range(1, ndat): # So you always skip the value 0? due to -inf returns?
+        ans = splint(m, adatl[i], asavl, rl, y2) # Then this calulates error?
+        sumerror = sumerror + (rdatl[i] - ans) * (rdatl[i] - ans)
+        #print(i,sum1,rdat[i],rdatl[i],ans)
+        pltanswerl[i] = ans
+        pltanswer[i] = np.power(10, ans)
+    rms = np.sqrt(sumerror / (ndat - 1))
+
+    # check the spline routine
+#    for i in range(1,m+1,1):
+#        anstest = splint(m, asavl[i],asavl,rl,y2)
+#        print( asavl[i], rl[i], anstest)
+    #print(' rms  =  ', rms)
+# if you erally want to get a good idea of all perdictions from Montecarlo
+# perform the following plot (caution - change iter to a smaller number)
+    #plt.loglog(adat[1:ndat],pltanswer[1:ndat])
+    return rms
+
+>>>>>>> 60497dd... ?s
 def transf(y, i):
     # these lines apparently find the computer precision ep
     ep = 1.0

@@ -138,9 +138,9 @@ def readData(adat, rdat, ndat, return_indexed=False):
 def error():
     sumerror = 0.
     #pltanswer = [0]*64
-    spline(m, one30, one30, asavl, rl, y2)
+    spline(m, one30, one30, asavl, rl, y2) # So this calculates the predicted fit?
     for i in range(1,ndat, 1):
-        ans = splint(m, adatl[i], asavl, rl, y2)
+        ans = splint(m, adatl[i], asavl, rl, y2) # Then this calulates error?
         sumerror = sumerror + (rdatl[i] - ans) * (rdatl[i] - ans)
         #print(i,sum1,rdat[i],rdatl[i],ans)
         pltanswerl[i] = ans
@@ -223,6 +223,7 @@ def rmsfit():
 # spacing where the measured resistivity was taken - to compare observation
 # to prediction
 def spline(n, yp1, ypn, x=[] ,y=[] ,y2=[]):
+    """Still struggling to understand the general operation of this function."""
     u = [0] * 1000
     one29 = 0.99e30
     #print(x,y)
@@ -255,6 +256,7 @@ def spline(n, yp1, ypn, x=[] ,y=[] ,y2=[]):
     return
 
 def splint(n, x ,xa=[], ya=[], y2a=[]): # Is this function the T function?
+    """Still struggling to understand the general operation of this function."""
     klo = 0
     khi = n
     while khi - klo > 1:
@@ -289,7 +291,7 @@ if __name__ == '__main__':
     for iloop in range(1, iter_ + 1):
         #print( '  iloop is ', iloop)
         for i in range(1, n + 1):
-            randNumber = random.random()
+            randNumber = random.random() # IS this just to add noise to the model?
             #print(randNumber, '  random')
             p[i] = (xlarge[i] - small[i]) * randNumber + small[i]
 

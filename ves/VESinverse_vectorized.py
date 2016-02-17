@@ -15,6 +15,7 @@ import random
 import matplotlib
 matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
+plt.style.use('bmh')
 import sys
 
 # Schlumberger filter
@@ -37,20 +38,20 @@ fltr2 = [0., .000238935, .00011557, .00017034, .00024935,
 #is an 'l' that means it is a log10 of the value
 
 # 65 is completely arbitrary
-p = [0] * 20
-r = [0] * 65
-rl = [0] * 65
-t = [0] * 50
-b = [0] * 65
-asav = [0] * 65
-asavl = [0] * 65
-adatl = [0] * 65
-rdatl = [0] * 65
-adat = [0] * 65
-rdat = [0] * 65
-pkeep = [0] * 65
-rkeep = [0] * 65
-rkeepl = [0] * 65
+p = [0] * 20 # earth layer parameters?
+r = [0] * 65 # apparent resistivty?
+rl = [0] * 65 # np.log(r) ?
+t = [0] * 50 #
+b = [0] * 65 #
+asav = [0] * 65 # voltage spacing in meters?
+asavl = [0] * 65 # np.log(asav)
+adatl = [0] * 65 # interpolated voltage spacing ( np.log(10) / 6 )?
+rdatl = [0] * 65 # np.log()
+adat = [0] * 65 # voltage spacing input
+rdat = [0] * 65 # apparent res input
+pkeep = [0] * 65 # earth parameters after applying equations?
+rkeep = [0] * 65 # r after applying equations?
+rkeepl = [0] * 65 # np.log()!
 pltanswer = [0] * 65
 pltanswerl = [0] * 65
 pltanswerkeep = [0] * 65
@@ -101,9 +102,6 @@ while fctr > 1.:
 #enter thickenss range for each layer and then resistivity range.
 #for 3 layers small[1] and small[2] are low end of thickness range
 # small[3], small[4] and small[5] are the low end of resistivities
-print(small)
-s = input('$:')
-print(s)
 
 small[1] = 1.
 xlarge[1] = 5
@@ -116,21 +114,23 @@ xlarge[4] = 100
 small[5] = 500.
 xlarge[5] = 3000.
 
-print(small)
-s = input('$:')
-print(s)
 
 iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
 
-def readData():
+def readData(adat, rdat, ndat, return_indexed=False):
     #normally this is where the data would be read from the csv file
     # but now I'm just hard coding it in as global lists
 
-    for i in range(1,ndat,1):
+    for i in range(1, ndat):
         adatl[i] = np.log10(adat[i])
         rdatl[i] = np.log10(rdat[i])
 
-    return adatl
+    if return_indexed:
+        return adatl[:ndat], rdatl[:ndat]
+    else:
+        return adatl, rdatl
+
+
 def error():
     sumerror = 0.
     #pltanswer = [0]*64
@@ -164,7 +164,7 @@ def transf(y, i):
         b = (1. - a) / (1. + a)
         rs = p[n + 1 - j]
         tpr = b * rs
-        t[j] = (tpr + t[j-1]) / (1. + tpr * t[j-1] / (rs * rs))
+        t[j] = (tpr + t[j - 1]) / (1. + tpr * t[j - 1] / (rs * rs))
     r[i] = t[e]
     return
 
@@ -180,7 +180,7 @@ def rmsfit():
     if index == 1:
         y = spac - 19. * delx - 0.13069
         mum1 = m + 28
-        for i in range(1, mum1 + 1, 1):
+        for i in range(1, mum1 + 1):
             transf(y, i)
             y = y + delx
         filters(fltr1, 29)
@@ -188,7 +188,7 @@ def rmsfit():
         s = np.log(2.)
         y = spac - 10.8792495 * delx
         mum2 = m + 33
-        for i in range(1, mum2 + 1, 1):
+        for i in range(1, mum2 + 1):
             transf(y, i)
             a = r[i]
             y1 = y + s
@@ -275,11 +275,13 @@ def splint(n, x ,xa=[], ya=[], y2a=[]):
 #main here
 if __name__ == '__main__':
 
-    readData()
+    adatl, rdatl = readData(adat, rdat, ndat, return_indexed=False)
+
     print(adat[1:ndat],rdat[1:ndat])
     print('log stufffff')
 
-    print(adatl[1:ndat],rdatl[1:ndat])
+    print(adatl[1:ndat], rdatl[1:ndat]) # is this to skip 0?
+
     for iloop in range(1, iter_ + 1):
         #print( '  iloop is ', iloop)
         for i in range(1, n + 1):
@@ -291,12 +293,12 @@ if __name__ == '__main__':
 
         if rms < errmin:
             print('rms  ', rms, '   errmin ', errmin)
-            for i in range(1,n+1,1):
+            for i in range(1, n + 1):
                 pkeep[i] = p[i]
-            for i in range(1, m+1, 1):
+            for i in range(1, m + 1):
                 rkeep[i] = r[i]
                 rkeepl[i] = rl[i]
-            for i in range(1,ndat+1,1):
+            for i in range(1, ndat + 1):
                 pltanswerkeepl[i] = pltanswerl[i]
                 pltanswerkeep[i] = pltanswer[i]
             errmin = rms
@@ -318,6 +320,7 @@ if __name__ == '__main__':
         print("%7.2f   %9.3f  %9.3f  %9.3f" % ( asav[i], rkeep[i],
               asavl[i], rkeepl[i]))
 
+    print('plot a lot')
     plt.loglog(asav[1:m],rkeep[1:m],'-')  # resistivity prediction curve
     plt.loglog(adat[1:ndat],pltanswerkeep[1:ndat], 'ro')  # predicted data red dots
     s=7

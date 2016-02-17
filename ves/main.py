@@ -32,7 +32,7 @@ from figures import InteractiveCanvas, ReportCanvas
 from reportwindow import ReportWindow
 from table import PalettedTableModel
 from templates.tempData import (
-    coefficients, columns, colors, headers, rowCount, tableData)
+    coefficients, columns, colors, headers, rowCount, tableData, old_coefficients)
 
 
 # No need to change directory, as the change from loading
@@ -315,7 +315,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
                 self.canvas.drawRectangles()
 
             plt.tight_layout()
-
             self.canvas.ax.figure.canvas.draw()
 
             return
@@ -530,7 +529,7 @@ if __name__ == '__main__':
 
     time.sleep(3)
 
-    startup = StartupWindow(tableData, headers, colors, coefficients)
+    startup = StartupWindow(tableData, headers, colors, old_coefficients)
     startup.show()
 
     splashScreen.finish(startup)

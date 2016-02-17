@@ -101,6 +101,10 @@ while fctr > 1.:
 #enter thickenss range for each layer and then resistivity range.
 #for 3 layers small[1] and small[2] are low end of thickness range
 # small[3], small[4] and small[5] are the low end of resistivities
+print(small)
+s = input('$:')
+print(s)
+
 small[1] = 1.
 xlarge[1] = 5
 small[2] = 10.
@@ -112,6 +116,10 @@ xlarge[4] = 100
 small[5] = 500.
 xlarge[5] = 3000.
 
+print(small)
+s = input('$:')
+print(s)
+
 iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
 
 def readData():
@@ -122,8 +130,7 @@ def readData():
         adatl[i] = np.log10(adat[i])
         rdatl[i] = np.log10(rdat[i])
 
-    return
-
+    return adatl
 def error():
     sumerror = 0.
     #pltanswer = [0]*64
@@ -270,12 +277,15 @@ if __name__ == '__main__':
 
     readData()
     print(adat[1:ndat],rdat[1:ndat])
-    for iloop in range(1, iter_ + 1, 1):
+    print('log stufffff')
+
+    print(adatl[1:ndat],rdatl[1:ndat])
+    for iloop in range(1, iter_ + 1):
         #print( '  iloop is ', iloop)
-        for i in range(1,n+1,1):
+        for i in range(1, n + 1):
             randNumber = random.random()
             #print(randNumber, '  random')
-            p[i] = (xlarge[i] - small[i])*randNumber + small[i]
+            p[i] = (xlarge[i] - small[i]) * randNumber + small[i]
 
         rms = rmsfit()
 

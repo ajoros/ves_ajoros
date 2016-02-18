@@ -88,14 +88,7 @@ m = 20  # number of points where resistivity is calculated
 spac = np.log(spac)
 delx = np.log(10.0) / 6. # I take it this is the sample interval on the log scale?
 
-# these lines apparently find the computer precision ep
-# What is computer precision ep?
-ep = 1.0
-ep = ep / 2.0
-fctr = ep + 1.
-while fctr > 1.:
-    ep = ep / 2.0
-    fctr = ep + 1.
+
 
 # this is where the range in parameters should be input from a GUI
 # I'm hard coding this in for now
@@ -104,18 +97,18 @@ while fctr > 1.:
 #for 3 layers small[1] and small[2] are low end of thickness range
 # small[3], small[4] and small[5] are the low end of resistivities
 
-# I think I have it coded up that these are getting grabbed from the rectangles currently.
-# Is that the best way to go?
-small[1] = 1.
-xlarge[1] = 5
-small[2] = 10.
-xlarge[2] = 75.
-small[3] = 20.
-xlarge[3] = 200.
-small[4] = 2.
-xlarge[4] = 100
-small[5] = 500.
-xlarge[5] = 3000.
+# # I think I have it coded up that these are getting grabbed from the rectangles currently.
+# # Is that the best way to go?
+# small[1] = 1.
+# xlarge[1] = 5
+# small[2] = 10.
+# xlarge[2] = 75.
+# small[3] = 20.
+# xlarge[3] = 200.
+# small[4] = 2.
+# xlarge[4] = 100
+# small[5] = 500.
+# xlarge[5] = 3000.
 
 
 iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
@@ -159,6 +152,14 @@ def error(): # simple rms error calc
     return rms
 
 def transf(y, i):
+    # these lines apparently find the computer precision ep
+    ep = 1.0
+    ep = ep / 2.0
+    fctr = ep + 1.
+    while fctr > 1.:
+        ep = ep / 2.0
+        fctr = ep + 1.
+
     u = 1. / np.exp(y)
     t[1] = p[n]
     for j in range(2, e + 1, 1):

@@ -47,13 +47,27 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
               'Must be schlumberger or wenner')
         sys.exit()
 
+    for mcIter in range(iterations):
+        p = np.empty((nLayers + 1, ))
+        for i in range(nLayers + 1):
+            randomNumber = np.random.random_sample()
+            try:
+                p[i] = (
+                    (layerThickness['max'][i] - layerThickness['min'][i]) *
+                     randomNumber + layerThickness['min'][i])
+            except IndexError:
+                pass
+        print(p)
 
 
+
+def calcEarthParam(layerThickness, layerResistivity):
+    pass
 def thicknessResistivityFromRectangles(rectangleCoordinates):
 
     (minLayerThickness, maxLayerThickness,
-     minLayerRestivity, maxLayerResitivity) = (np.array([]), np.array([]),
-                                               np.array([]), np.array([]))
+     minLayerResistivity, maxLayerResitivity) = (np.array([]), np.array([]),
+                                                 np.array([]), np.array([]))
     for rectangle in rectangleCoordinates:
         # xy will be the origin of drawing, and height and width are positive
         #  or negative appropriately. Hence, adding height/width should always
@@ -61,30 +75,34 @@ def thicknessResistivityFromRectangles(rectangleCoordinates):
         #  a positive coordinate space. No abs() needed.
         xy, width, height = rectangle
 
-        thicknessValues = np.array([xy[0], xy[0] + width])
-        resistivityValues = np.array([xy[1], xy[1] + height])
+        thicknessValue = np.array([xy[0], xy[0] + width])
+        resistivityValue = np.array([xy[1], xy[1] + height])
 
         minLayerThickness = np.append(
-            minLayerThickness, np.min(thicknessValues))
+            minLayerThickness, np.min(thicknessValue))
         maxLayerThickness = np.append(
-            maxLayerThickness, np.max(thicknessValues))
+            maxLayerThickness, np.max(thicknessValue))
 
-        minLayerRestivity = np.append(
-            minLayerRestivity, np.min(resistivityValues))
+        minLayerResistivity = np.append(
+            minLayerResistivity, np.min(resistivityValue))
         maxLayerResitivity = np.append(
-            maxLayerResitivity, np.max(resistivityValues))
+            maxLayerResitivity, np.max(resistivityValue))
+
 
     # Return NumPy array objects with min values index:0, max index:1
     # layerThickness = np.array([minLayerThickness, maxLayerThickness])
-    # layerResistivity = np.array([minLayerRestivity, maxLayerResitivity])
+    # layerResistivity = np.array([minLayerResistivity, maxLayerResitivity])
 
     # Return dictionary of numpy arrays with keys set as min or max strings
     layerThickness = {'min': minLayerThickness, 'max': maxLayerThickness}
-    layerResistivity = {'min': minLayerRestivity, 'max': maxLayerResitivity}
+    layerResistivity = {'min': minLayerResistivity, 'max': maxLayerResitivity}
 
     # Last layer goes to infinity
     layerThickness['max'][-1] = np.inf
 
+    minThicknessResistivity = np.array(
+        [minLayerResistivity[:-1], minLayerThickness])
+    maxThicknessResisttivi
     return layerThickness, layerResistivity
 
 
@@ -136,3 +154,5 @@ if __name__ == '__main__':
 
     # print(np.log(voltageSpacing))
     # print(np.log(apparentResistivity))
+
+    #

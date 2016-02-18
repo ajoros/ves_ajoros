@@ -80,8 +80,8 @@ errmin = 1.e10 # Should this be user input?
 
 # INPUT
 array_spacing = 'wenner'   # 1 is for shchlumberger and 2 is for Wenner
-e = 3   #number of layers
-n = 2 * e - 1 # What does n represent?
+nLayers = 3   #number of layers
+n = 2 * nLayers - 1 # What does n represent? number of parameters
 
 
 spac = 0.2 # smallest electrode spacing - should this come from the input file?
@@ -102,15 +102,19 @@ delx = np.log(10.0) / 6. # I take it this is the sample interval on the log scal
 # I think I have it coded up that these are getting grabbed from the rectangles currently.
 # Is that the best way to go?
 small[1] = 1.
-xlarge[1] = 5
 small[2] = 10.
-xlarge[2] = 75.
 small[3] = 20.
-xlarge[3] = 200.
 small[4] = 2.
-xlarge[4] = 100
 small[5] = 500.
+
+xlarge[1] = 5
+xlarge[2] = 75.
+xlarge[3] = 200.
+xlarge[4] = 100
 xlarge[5] = 3000.
+
+
+
 
 
 iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
@@ -129,30 +133,6 @@ def readData(adat, rdat, ndat, return_indexed=False):
     else:
         return adatl, rdatl
 
-
-def error(): # simple rms error calc
-    sumerror = 0.
-    #pltanswer = [0]*64
-    spline(m, one30, one30, asavl, rl, y2) # So this calculates the predicted fit?
-    # and essentially operates on the list in place?
-    for i in range(1, ndat): # So you always skip the value 0? due to -inf returns?
-        ans = splint(m, adatl[i], asavl, rl, y2) # Then this calulates error?
-        sumerror = sumerror + (rdatl[i] - ans) * (rdatl[i] - ans)
-        #print(i,sum1,rdat[i],rdatl[i],ans)
-        pltanswerl[i] = ans
-        pltanswer[i] = np.power(10, ans)
-    rms = np.sqrt(sumerror / (ndat - 1))
-
-    # check the spline routine
-#    for i in range(1,m+1,1):
-#        anstest = splint(m, asavl[i],asavl,rl,y2)
-#        print( asavl[i], rl[i], anstest)
-    #print(' rms  =  ', rms)
-# if you erally want to get a good idea of all perdictions from Montecarlo
-# perform the following plot (caution - change iter to a smaller number)
-    #plt.loglog(adat[1:ndat],pltanswer[1:ndat])
-    return rms
-
 def transf(y, i):
     # these lines apparently find the computer precision ep
     ep = 1.0
@@ -162,10 +142,10 @@ def transf(y, i):
         ep = ep / 2.0
         fctr = ep + 1.
 
-    u = 1. / np.exp(y)
+    u = 1. / np.exp(y) # y = spac - 19. * delx - 0.13069
     t[1] = p[n]
-    for j in range(2, e + 1, 1):
-        pwr = -2. * u * p[e + 1 - j]
+    for j in range(2, nLayers + 1, 1):
+        pwr = -2. * u * p[nLayers + 1 - j]
         if pwr < np.log(2. * ep):
             pwr = np.log(2. * ep)
         a = np.exp(pwr)
@@ -173,7 +153,7 @@ def transf(y, i):
         rs = p[n + 1 - j]
         tpr = b * rs
         t[j] = (tpr + t[j - 1]) / (1. + tpr * t[j - 1] / (rs * rs))
-    r[i] = t[e]
+    r[i] = t[nLayers]
     return
 
 def filters(b, k):
@@ -222,6 +202,28 @@ def rmsfit():
 
     return rms
 
+def error(): # simple rms error calc
+    sumerror = 0.
+    #pltanswer = [0]*64
+    spline(m, one30, one30, asavl, rl, y2) # So this calculates the predicted fit?
+    # and essentially operates on the list in place?
+    for i in range(1, ndat): # So you always skip the value 0? due to -inf returns?
+        ans = splint(m, adatl[i], asavl, rl, y2) # Then this calulates error?
+        sumerror = sumerror + (rdatl[i] - ans) * (rdatl[i] - ans)
+        #print(i,sum1,rdat[i],rdatl[i],ans)
+        pltanswerl[i] = ans
+        pltanswer[i] = np.power(10, ans)
+    rms = np.sqrt(sumerror / (ndat - 1))
+
+    # check the spline routine
+#    for i in range(1,m+1,1):
+#        anstest = splint(m, asavl[i],asavl,rl,y2)
+#        print( asavl[i], rl[i], anstest)
+    #print(' rms  =  ', rms)
+# if you erally want to get a good idea of all perdictions from Montecarlo
+# perform the following plot (caution - change iter to a smaller number)
+    #plt.loglog(adat[1:ndat],pltanswer[1:ndat])
+    return rms
 # my code to do a spline fit to predicted data at the nice spacing of Ghosh
 # use splint to determine the spline interpolated prediction at the
 # spacing where the measured resistivity was taken - to compare observation
@@ -292,13 +294,24 @@ if __name__ == '__main__':
 
     print(adatl[1:ndat], rdatl[1:ndat]) # is this to skip 0?
 
-    for iloop in range(1, iter_ + 1):
-        #print( '  iloop is ', iloop)
-        for i in range(1, n + 1):
-            randNumber = random.random() # IS this just to add noise to the model?
-            #print(randNumber, '  random')
-            p[i] = (xlarge[i] - small[i]) * randNumber + small[i]
+#enter thickenss range for each layer and then resistivity range.
+#for 3 layers small[1] and small[2] are low end of thickness range
+# small[3], small[4] and small[5] are the low end of resistivities
 
+    for iloop in range(1, int(iter_/2) + 1):
+        #print( '  iloop is ', iloop)
+        for i in range(1, n + 1): # number of parameters + 1
+            randNumber = random.random() # IS this just to add noise to the model?
+            # #print(randNumber, '  random')
+            # print(xlarge)
+            # print(small)
+            # s = input('')
+            # print('xlarge[i]: {}, small[i]: {}'.format(xlarge[i], small[i]))
+            p[i] = (xlarge[i] - small[i]) * randNumber + small[i]
+            # print(p)
+        print('\n')
+        print(p)
+        # s = input('')
         rms = rmsfit()
 
         if rms < errmin:
@@ -315,10 +328,10 @@ if __name__ == '__main__':
 
 #output the best fitting earth model
     print(' Layer ', '     Thickness  ', '   Res_ohm-m  ')
-    for i in range(1,e,1):
-        print(i, pkeep[i], pkeep[e+i-1])
+    for i in range(1,nLayers,1):
+        print(i, pkeep[i], pkeep[nLayers+i-1])
 
-    print( e, '  Infinite ', pkeep[n])
+    print( nLayers, '  Infinite ', pkeep[n])
     for i in range(1,m+1, 1):
         asavl[i] = np.log10(asav[i])
 

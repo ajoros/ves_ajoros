@@ -3,7 +3,7 @@ import copy
 import numpy as np
 
 
-def aggregateTable(tableData):
+def aggregateTable(tableData, returnZero=False):
     """Aggreate the PalletedTableModel class input data for analysis
 
     Parameters
@@ -60,5 +60,12 @@ def aggregateTable(tableData):
     # Take the mean of every four rows from the Qt Table
     meanVoltage = np.mean(voltage, axis=1)
     meanCurrent = np.mean(current, axis=1)
+
+    # Set 0 index of return arrays == 0 if not already, pending returnZero flag
+    if returnZero:
+        if voltageSpacing[0] != 0:
+            voltageSpacing = np.insert(voltageSpacing, 0, 0.)
+            meanVoltage = np.insert(meanVoltage, 0, 0.)
+            meanCurrent = np.insert(meanCurrent, 0, 0.)
 
     return (voltageSpacing, meanVoltage, meanCurrent)

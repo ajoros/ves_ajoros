@@ -1,4 +1,5 @@
 import numpy as np
+np.seterr(all='ignore')
 from numpy import nan
 import scipy.integrate as integrate
 import scipy.interpolate as interpolate
@@ -256,8 +257,7 @@ if __name__ == '__main__':
     from aggregate import aggregateTable
 
 
-    (shortFilterCoefficients, longFilterCoefficients,
-        wennerFilterCoefficients) = coefficients
+    schlumberferFilterCoefficients, wennerFilterCoefficients = coefficients
     sampleInterval = np.log(10) / 3.
 
 

@@ -26,8 +26,8 @@ def transform(y, nLayers):
 
 
 if __name__ == '__main__':
-    from templates.tempData import (
-        colors, tableData, coefficients)
+
+    from templates.tempData import colors, tableData, coefficients
 
 
     (shortFilterCoefficients, longFilterCoefficients,

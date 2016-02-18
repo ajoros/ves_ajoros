@@ -6,31 +6,50 @@ from PyQt5.QtWidgets import QApplication
 from aggregate import aggregateTable
 import equations
 from main import StartupWindow
-from templates.tempData import colors, headers, tableData, old_coefficients
+from templates.tempData import (
+    colors, headers, tableData, coefficients, old_coefficients)
 
 
 def inversionAnalysis(apparentResistivity, voltageSpacing,
                        rectangleCoordinates, arraySpacing,
                        iterations=10000,
-                       smallestSpacing=(np.log(0.2)),
+                       smallestSpacing=0.2,
                        p=[0., 2., 30., 100., 10., 2000.],
                        sampleInterval=(np.log(10) / 6.),
-                       ep=0.5):
+                       ep=1.0, nOuputPoints=20, errMin=1.e10):
+
     nLayers = len(rectangleCoordinates)
+    smallestSpacing = np.log(smallestSpacing)
+    n = 2 * nLayers - 1
+
     # these lines apparently find the computer precision ep
     fctr = ep + 1.
-
+    ep = ep / 2.
     while fctr > 1.:
         ep = ep / 2.
         fctr = ep + 1.
 
-    layerThickness, layerResistivity = thicknessResistivityCalculation(
+    layerThickness, layerResistivity = thicknessResistivityFromRectangles(
         rectangleCoordinates)
 
     print(layerThickness)
     print(layerResistivity)
 
-def thicknessResistivityCalculation(rectangleCoordinates):
+    logVoltageSpacing = np.log(voltageSpacing)
+    logApparentResistivity = np.log(apparentResistivity)
+
+    if arraySpacing == 'schlumberger':
+        pass
+    elif arraySpacing == 'wenner':
+        pass
+    else:
+        print('Improper array spacing selected. ' +
+              'Must be schlumberger or wenner')
+        sys.exit()
+
+
+
+def thicknessResistivityFromRectangles(rectangleCoordinates):
 
     (minLayerThickness, maxLayerThickness,
      minLayerRestivity, maxLayerResitivity) = (np.array([]), np.array([]),
@@ -63,12 +82,22 @@ def thicknessResistivityCalculation(rectangleCoordinates):
     layerThickness = {'min': minLayerThickness, 'max': maxLayerThickness}
     layerResistivity = {'min': minLayerRestivity, 'max': maxLayerResitivity}
 
+    # Last layer goes to infinity
+    layerThickness['max'][-1] = np.inf
+
     return layerThickness, layerResistivity
 
 
 def transform(y, nLayers):
     n = 2 * nLayers - 1
     u = 1. / np.exp(y)
+
+
+def rmse(observedValues, predictedValues):
+
+    error = np.sqrt((predictedValues - observedValues) ** 2).mean()
+
+    return error
 
 
 
@@ -97,9 +126,9 @@ if __name__ == '__main__':
     # s = input('s')
 
     voltageSpacing = [
-        0., 0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
+        0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
     apparentResistivity = [
-        0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
+        125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
 
     inversionAnalysis(
         voltageSpacing, apparentResistivity, main.canvas.rectCoordinates,

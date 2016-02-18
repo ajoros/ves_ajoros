@@ -32,6 +32,8 @@ fltr2 = [0., .000238935, .00011557, .00017034, .00024935,
          .053507, .078121, .11319, .16192, .22363, .28821, .30276, .15523,
          -.32026, -.53557, .51787, -.196, .054394, -.015747, .0053941,
          -.0021446, .000665125]
+print(len(fltr1))
+print(len(fltr2))
 
 #I know there must be a better method to assign lists. And probably numpy
 #arrays would be best. But my Python wasn't up to it. If the last letter
@@ -97,18 +99,18 @@ delx = np.log(10.0) / 6. # I take it this is the sample interval on the log scal
 #for 3 layers small[1] and small[2] are low end of thickness range
 # small[3], small[4] and small[5] are the low end of resistivities
 
-# # I think I have it coded up that these are getting grabbed from the rectangles currently.
-# # Is that the best way to go?
-# small[1] = 1.
-# xlarge[1] = 5
-# small[2] = 10.
-# xlarge[2] = 75.
-# small[3] = 20.
-# xlarge[3] = 200.
-# small[4] = 2.
-# xlarge[4] = 100
-# small[5] = 500.
-# xlarge[5] = 3000.
+# I think I have it coded up that these are getting grabbed from the rectangles currently.
+# Is that the best way to go?
+small[1] = 1.
+xlarge[1] = 5
+small[2] = 10.
+xlarge[2] = 75.
+small[3] = 20.
+xlarge[3] = 200.
+small[4] = 2.
+xlarge[4] = 100
+small[5] = 500.
+xlarge[5] = 3000.
 
 
 iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI

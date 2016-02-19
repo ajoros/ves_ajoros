@@ -190,6 +190,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         self.tableViewWidget.setModel(model)
 
+        # Set the table to span 4 rows in the spacing columns
         for row in range(0, nRows, 4):
             for col in columns:
                 self.tableViewWidget.setSpan(row, col, 4, 1)

@@ -4,6 +4,7 @@ import os
 import sys
 import time
 
+
 import matplotlib
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import (
@@ -23,6 +24,7 @@ from PyQt5.QtWidgets import (
     QAction, QApplication, QMessageBox, QSizePolicy, QSplashScreen)
 from PyQt5.uic import loadUiType
 
+
 from aggregate import aggregateTable
 from equations import (
     applyFilter, interpolateFieldData,
@@ -32,7 +34,8 @@ from figures import InteractiveCanvas, ReportCanvas
 from reportwindow import ReportWindow
 from table import PalettedTableModel
 from templates.tempData import (
-    coefficients, columns, colors, headers, rowCount, tableData, old_coefficients)
+    coefficients, columns, colors, headers,
+    rowCount, tableData, old_coefficients)
 
 
 # No need to change directory, as the change from loading

@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QSizePolicy
 
 import numpy as np
 
+
 from templates.tempData import colors
 
 

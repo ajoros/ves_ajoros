@@ -139,11 +139,6 @@ def thicknessResistivityFromRectangles(rectangleCoordinates):
         maxLayerResitivity = np.append(
             maxLayerResitivity, np.max(resistivityValue))
 
-
-    # Return NumPy array objects with min values index:0, max index:1
-    # layerThickness = np.array([minLayerThickness, maxLayerThickness])
-    # layerResistivity = np.array([minLayerResistivity, maxLayerResitivity])
-
     # Return dictionary of numpy arrays with keys set as min or max strings
     layerThickness = {'min': minLayerThickness, 'max': maxLayerThickness}
     layerResistivity = {'min': minLayerResistivity, 'max': maxLayerResitivity}
@@ -151,9 +146,6 @@ def thicknessResistivityFromRectangles(rectangleCoordinates):
     # Last layer goes to infinity
     layerThickness['max'][-1] = np.inf
 
-    minThicknessResistivity = np.array(
-        [minLayerResistivity[:-1], minLayerThickness])
-    # maxThicknessResisttivi
     return layerThickness, layerResistivity
 
 

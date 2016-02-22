@@ -11,16 +11,17 @@ from templates.tempData import (
 
 
 def inversionAnalysis(apparentResistivity, voltageSpacing,
-                       rectangleCoordinates, arraySpacing,
-                       iterations=10000,
-                       smallestSpacing=0.2,
-                       p=[0., 2., 30., 100., 10., 2000.],
-                       sampleInterval=(np.log(10) / 6.),
-                       ep=1.0, nOuputPoints=20, errMin=1.e10):
+                      rectangleCoordinates, arraySpacing,
+                      iterations=10000,
+                      smallestSpacing=0.2,
+                      p=[0., 2., 30., 100., 10., 2000.],
+                      sampleInterval=(np.log(10) / 6.),
+                      ep=1.0, nOuputPoints=20, errMin=1.e10):
 
     nLayers = len(rectangleCoordinates)
     smallestSpacing = np.log(smallestSpacing)
     n = 2 * nLayers - 1
+    # m = 20            # number of points where resistivity will be calculated
 
     # these lines apparently find the computer precision ep
     fctr = ep + 1.
@@ -68,25 +69,33 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
     #     print(p)
 
 
+def rmsFit(sampleInterval, nOuputPoints, arraySpacing):
+    """"""
+    if arraySpacing == 'schlumberger':
+        s = np.log(2.)
+        y = spac - 10.8792495 * sampleInterval
 
-# def calcEarthParam(layerThickness, layerResistivity):
+
 def calcEarthParam(layerThickness, layerResistivity):
     """"""
     nLayers = len(layerResistivity['min']) # or 'max'
-    print(nLayers)
     thicknessParam = np.empty((nLayers, ))
     resistivityParam = np.empty((nLayers, ))
 
-
+    # Iterate through the layers, applying the p formula to both
+    #  thickness and resistivity
     for i in range(nLayers):
+        # Generate a random number to control where in the range of
+        #  possible values the true value of p could lie. This precedes the
+        #  MC iteration, so take one p value with a grain of salt, but many
+        #  with a salt shaker
         randomNumber = np.random.random_sample()
         if i < (nLayers - 1): # Skip last depth (infinite)
             thicknessP = (
                 (layerThickness['max'][i] - layerThickness['min'][i]) *
                 randomNumber + layerThickness['min'][i])
+
             thicknessParam = np.insert(thicknessParam, i, thicknessP)
-            print(thicknessP)
-            print(thicknessParam)
             del thicknessP
 
         resistivityP = (
@@ -94,13 +103,9 @@ def calcEarthParam(layerThickness, layerResistivity):
              randomNumber + layerResistivity['min'][i])
 
         resistivityParam = np.insert(resistivityParam, i, resistivityP)
-
         del resistivityP
 
     return (thicknessParam[:nLayers - 1], resistivityParam[:nLayers])
-    # return (thicknessParam, resistivityParam)
-
-
 
 
 def thicknessResistivityFromRectangles(rectangleCoordinates):

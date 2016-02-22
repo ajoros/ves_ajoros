@@ -39,7 +39,7 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
               'Must be schlumberger or wenner')
         sys.exit()
 
-    thickParam, resParam = calcEarthParam(layerThickness, layerResistivity)
+    thickParam, resParam = calcEarthParams(layerThickness, layerResistivity)
     print('\nthickParam\n{}'.format(thickParam))
     print('resParam\n{}'.format(resParam))
 

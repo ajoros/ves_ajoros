@@ -7,9 +7,11 @@ import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
+
 from PyQt5.QtWidgets import QSizePolicy
 
 import numpy as np
+
 
 from templates.tempData import colors
 

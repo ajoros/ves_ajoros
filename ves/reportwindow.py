@@ -1,8 +1,10 @@
 import os
 import sys
 
+
 from matplotlib.backends.backend_qt5agg import (
     NavigationToolbar2QT as NavigationToolbar)
+
 import numpy as np
 np.seterr(over='ignore')
 

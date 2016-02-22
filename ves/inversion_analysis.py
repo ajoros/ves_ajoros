@@ -19,24 +19,13 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
                       ep=1.0, nOuputPoints=20, errMin=1.e10):
 
     nLayers = len(rectangleCoordinates)
+    n = 2 * nLayers - 1                       # number of layer depths
     smallestSpacing = np.log(smallestSpacing)
-    n = 2 * nLayers - 1
-    # m = 20            # number of points where resistivity will be calculated
-
-    # these lines apparently find the computer precision ep
-    fctr = ep + 1.
-    ep = ep / 2.
-    while fctr > 1.:
-        ep = ep / 2.
-        fctr = ep + 1.
+    # m = number of points where resistivity will be calculated
 
     layerThickness, layerResistivity = thicknessResistivityFromRectangles(
         rectangleCoordinates)
 
-    # print('layerThickness\n min\n{}\n max\n{}'.format(
-    #     layerThickness['min'], layerThickness['max']))
-    # print('\nlayerResistivity\n min\n{}\n max\n{}'.format(
-    #     layerResistivity['min'], layerResistivity['max']))
 
     logVoltageSpacing = np.log(voltageSpacing)
     logApparentResistivity = np.log(apparentResistivity)
@@ -54,26 +43,43 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
     print('\nthickParam\n{}'.format(thickParam))
     print('resParam\n{}'.format(resParam))
 
-    # print()
+    # these lines apparently find the computer precision ep
+    fctr = ep + 1.
+    ep = ep / 2.
+    while fctr > 1.:
+        ep = ep / 2.
+        fctr = ep + 1.
 
-    # for mcIter in range(iterations):
-    #     p = np.empty((nLayers + 1, ))
-    #     for i in range(nLayers + 1):
-    #         randomNumber = np.random.random_sample()
-    #         try:
-    #             p[i] = (
-    #                 (layerThickness['max'][i] - layerThickness['min'][i]) *
-    #                  randomNumber + layerThickness['min'][i])
-    #         except IndexError:
-    #             pass
-    #     print(p)
+    for mcIter in range(iterations):
+        rmsError = rmsFit(
+            thickParam, resParam, apparentResistivity,
+            smallestSpacing, sampleInterval,
+            nOuputPoints, arraySpacing)
+        print(rmsError)
 
 
-def rmsFit(sampleInterval, nOuputPoints, arraySpacing):
+def transform(y, ep):
+    """"""
+    u = 1. / np.exp(y)
+    pwrThickness = -2. * u * thicknessParameters
+    pwrResistivity = -2. * u * resistivityParameters
+
+    return y + sampleInterval
+
+
+
+
+def rmsFit(thicknessParameters, resistivityParameters, apparentResistivity,
+           smallestSpacing, sampleInterval, nOuputPoints, arraySpacing):
     """"""
     if arraySpacing == 'schlumberger':
-        s = np.log(2.)
         y = spac - 10.8792495 * sampleInterval
+        nFilterCoefficients = m + 33
+
+        y = smallestSpacing - 10.8792495 * sampleInterval + np.log(2.)
+        y = trasform(y)
+
+        # for i in range(m + 33):
 
 
 def calcEarthParams(layerThickness, layerResistivity):

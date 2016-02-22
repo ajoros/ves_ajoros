@@ -99,7 +99,7 @@ def calcEarthParams(layerThickness, layerResistivity):
         if i < (nLayers - 1): # Skip last depth (infinite)
             thicknessP = (
                 (layerThickness['max'][i] - layerThickness['min'][i]) *
-                randomNumber + layerThickness['min'][i])
+                 randomNumber + layerThickness['min'][i])
 
             thicknessParam = np.insert(thicknessParam, i, thicknessP)
             del thicknessP
@@ -126,8 +126,8 @@ def thicknessResistivityFromRectangles(rectangleCoordinates):
         #  a positive coordinate space. No abs() needed.
         xy, width, height = rectangle
 
-        thicknessValue = np.array([xy[0], xy[0] + width])
-        resistivityValue = np.array([xy[1], xy[1] + height])
+        thicknessValue = np.array([xy[0], xy[0] + width])    # x-axis
+        resistivityValue = np.array([xy[1], xy[1] + height]) # y-axis
 
         minLayerThickness = np.append(
             minLayerThickness, np.min(thicknessValue))

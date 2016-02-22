@@ -76,7 +76,7 @@ def rmsFit(sampleInterval, nOuputPoints, arraySpacing):
         y = spac - 10.8792495 * sampleInterval
 
 
-def calcEarthParam(layerThickness, layerResistivity):
+def calcEarthParams(layerThickness, layerResistivity):
     """"""
     nLayers = len(layerResistivity['min']) # or 'max'
     thicknessParam = np.empty((nLayers, ))

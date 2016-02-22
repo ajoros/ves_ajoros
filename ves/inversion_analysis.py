@@ -21,7 +21,7 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
     nLayers = len(rectangleCoordinates)
     n = 2 * nLayers - 1                       # number of layer depths
     smallestSpacing = np.log(smallestSpacing)
-    # m = number of points where resistivity will be calculated
+    # m = number of points where resistivity will be calculated = nOutputPoints
 
     layerThickness, layerResistivity = thicknessResistivityFromRectangles(
         rectangleCoordinates)

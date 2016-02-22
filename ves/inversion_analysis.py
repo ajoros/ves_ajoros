@@ -49,6 +49,10 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
 
 
 
+def caluclateP(layerThickness, layerResistivity):
+    p = (largeValue - smallValue) *
+
+
 def thicknessResistivityFromRectangles(rectangleCoordinates):
 
     (minLayerThickness, maxLayerThickness,

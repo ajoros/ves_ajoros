@@ -26,7 +26,6 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
     layerThickness, layerResistivity = thicknessResistivityFromRectangles(
         rectangleCoordinates)
 
-
     logVoltageSpacing = np.log(voltageSpacing)
     logApparentResistivity = np.log(apparentResistivity)
 
@@ -39,18 +38,20 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
               'Must be schlumberger or wenner')
         sys.exit()
 
-    thickParam, resParam = calcEarthParams(layerThickness, layerResistivity)
     print('\nthickParam\n{}'.format(thickParam))
     print('resParam\n{}'.format(resParam))
 
     # these lines apparently find the computer precision ep
-    fctr = ep + 1.
-    ep = ep / 2.
-    while fctr > 1.:
-        ep = ep / 2.
-        fctr = ep + 1.
+    # fctr = ep + 1.
+    # ep = ep / 2.
+    # while fctr > 1.:
+    #     ep = ep / 2.
+    #     fctr = ep + 1.
 
     for mcIter in range(iterations):
+        thickParam, resParam = calcEarthParams(
+            layerThickness, layerResistivity)
+
         rmsError = rmsFit(
             thickParam, resParam, apparentResistivity,
             smallestSpacing, sampleInterval,
@@ -100,15 +101,15 @@ def calcEarthParams(layerThickness, layerResistivity):
             thicknessP = (
                 (layerThickness['max'][i] - layerThickness['min'][i]) *
                  randomNumber + layerThickness['min'][i])
-
-            thicknessParam = np.insert(thicknessParam, i, thicknessP)
+            thicknessParam = np.insert(
+                thicknessParam, i, thicknessP)
             del thicknessP
 
         resistivityP = (
             (layerResistivity['max'][i] - layerResistivity['min'][i]) *
              randomNumber + layerResistivity['min'][i])
-
-        resistivityParam = np.insert(resistivityParam, i, resistivityP)
+        resistivityParam = np.insert(
+            resistivityParam, i, resistivityP)
         del resistivityP
 
     return (thicknessParam[:nLayers - 1], resistivityParam[:nLayers])

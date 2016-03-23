@@ -131,6 +131,7 @@ def readData():
         rdatl[i] = np.log10(rdat[i])
 
     return adatl
+
 def error():
     sumerror = 0.
     #pltanswer = [0]*64
@@ -143,14 +144,6 @@ def error():
         pltanswer[i] = np.power(10, ans)
     rms = np.sqrt(sumerror / (ndat - 1))
 
-    # check the spline routine
-#    for i in range(1,m+1,1):
-#        anstest = splint(m, asavl[i],asavl,rl,y2)
-#        print( asavl[i], rl[i], anstest)
-    #print(' rms  =  ', rms)
-# if you erally want to get a good idea of all perdictions from Montecarlo
-# perform the following plot (caution - change iter to a smaller number)
-    #plt.loglog(adat[1:ndat],pltanswer[1:ndat])
     return rms
 
 def transf(y, i):

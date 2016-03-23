@@ -185,8 +185,6 @@ if __name__ == '__main__':
         main.canvas.rectxy = rectangle
         main.newRectangle()
 
-    # s = input('s')
-
     voltageSpacing = [
         0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
     apparentResistivity = [
@@ -195,8 +193,3 @@ if __name__ == '__main__':
     inversionAnalysis(
         voltageSpacing, apparentResistivity, main.canvas.rectCoordinates,
         'schlumberger')
-
-    # print(np.log(voltageSpacing))
-    # print(np.log(apparentResistivity))
-
-    #

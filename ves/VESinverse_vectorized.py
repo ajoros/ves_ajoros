@@ -160,7 +160,9 @@ def filters(b, k):
     for i in range(1, m + 1):
         re = 0.
         for j in range(1, k + 1):
-            re = re + b[j] * r[i + k - j]
+            re = re + b[j] * r[i + k - j] # include ranges of thickness, res . push button for rmse error, observed data
+            # surf thicknes .2 - 100
+            # res 2-3000              # could use huge ranges at cost of time
         r[i] = re
     return
 
@@ -172,6 +174,7 @@ def rmsfit():
             transf(y, i)
             y = y + delx
         filters(fltr1, 29)
+
     elif array_spacing.lower() == 'schlumberger':
         s = np.log(2.)
         y = spac - 10.8792495 * delx

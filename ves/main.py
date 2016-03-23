@@ -144,16 +144,19 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
     def launchReportWindow(self):
         """Launches the ReportWindow class on launch of VES Inverse Analysis"""
-        self.close()
+        try:
+            self.ReportCanvas = ReportCanvas(
+                self.samplePoints, self.filteredResistivity,
+                self.voltageSpacing, self.apparentResistivity,
+                self.voltageSpacingExtrapolated, self.newResistivity)
 
-        self.ReportCanvas = ReportCanvas(
-            self.samplePoints, self.filteredResistivity,
-            self.voltageSpacing, self.apparentResistivity,
-            self.voltageSpacingExtrapolated, self.newResistivity)
+            self.close()
 
-        self.ReportWindow = ReportWindow(self.ReportCanvas)
-        self.ReportWindow.show()
+            self.ReportWindow = ReportWindow(self.ReportCanvas)
+            self.ReportWindow.show
 
+        except AttributeError:
+            return
 
 
     def initUi(self):

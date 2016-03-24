@@ -68,7 +68,7 @@ new_x = [0] * 1000
 new_y = [0] * 1000
 ndat = 13
 #hard coded data input - spacing and apparent resistivities measured
-#in teh field
+#in the field
 adat = [0., 0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
 rdat = [0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
 one30 = 1.e30

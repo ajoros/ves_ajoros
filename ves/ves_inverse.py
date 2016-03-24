@@ -101,10 +101,6 @@ while fctr > 1.:
 #enter thickenss range for each layer and then resistivity range.
 #for 3 layers small[1] and small[2] are low end of thickness range
 # small[3], small[4] and small[5] are the low end of resistivities
-print(small)
-s = input('$:')
-print(s)
-
 small[1] = 1.
 xlarge[1] = 5
 small[2] = 10.
@@ -135,7 +131,7 @@ def readData():
 def error():
     sumerror = 0.
     #pltanswer = [0]*64
-    spline(m, one30, one30,asavl, rl, y2)
+    spline(m, one30, one30, asavl, rl, y2)
     for i in range(1,ndat, 1):
         ans = splint(m, adatl[i], asavl, rl, y2)
         sumerror = sumerror + (rdatl[i] - ans) * (rdatl[i] - ans)
@@ -194,14 +190,12 @@ def rmsfit():
         sys.exit()
 
     x = spac
-    #print("A-Spacing   App. Resistivity")
     for i in range(1, m+1, 1):
         a = np.exp(x)
         asav[i] = a
         asavl[i] = np.log10(a)
         rl[i] = np.log10(r[i])
-        x = x+delx
-        #print("%7.2f   %9.3f " % ( asav[i], r[i]))
+        x = x + delx
 
     rms = error()
 
@@ -227,8 +221,9 @@ def spline(n, yp1, ypn, x=[] ,y=[] ,y2=[]):
         sig = (x[i] - x[i-1]) / (x[i+1] - x[i-1])
         p=sig * y2[i - 1] + 2.
         y2[i] = (sig-1.) / p
-        u[i] = (((6. * ((y[i+1] - y[i]) / (x[i+1] - x[i]) - (y[i] - y[i-1]) /
-                x[i] - x[i-1])) / (x[i + 1] - x[i - 1]) - sig * u[i - 1]) / p)
+        u[i] = (
+            ((6. * ((y[i + 1] - y[i]) / (x[i + 1] - x[i]) - (y[i] - y[i-1]) /
+              x[i] - x[i-1])) / (x[i + 1] - x[i - 1]) - sig * u[i - 1]) / p)
 
     if ypn > one29:
         qn = 0.
@@ -255,12 +250,11 @@ def splint(n, x ,xa=[], ya=[], y2a=[]):
     h = xa[khi] - xa[klo]
     if abs(h) < 1e-20:
         print(" bad xa input")
-    #print(x,xa[khi],xa[klo])
+
     a = (xa[khi] - x) / h
     b = (x - xa[klo]) / h
     y = (a * ya[klo] + b * ya[khi] + ((a * a * a - a) * y2a[klo] +
                 (b * b * b - b) * y2a[khi]) * (h * h) /6.)
-    #print("x=   ", x,"y=  ", y, "  ya=  ", ya[khi],"  y2a=  ", y2a[khi], "  h=  ",h)
 
     return y
 

@@ -36,7 +36,7 @@ fltr2 = [0., .000238935, .00011557, .00017034, .00024935,
 #arrays would be best. But my Python wasn't up to it. If the last letter
 #is an 'l' that means it is a log10 of the value
 
-# 65 is completely arbitrary
+# 65 is completely arbitrary - > Nearing retirement?
 p = [0] * 20
 r = [0] * 65
 rl = [0] * 65

@@ -72,9 +72,26 @@ rdat = [0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
 one30 = 1.e30
 rms = one30
 errmin = 1.e10
+# this is where the range in parameters should be input from a GUI
+# I'm hard coding this in for now
+
+#enter thickenss range for each layer and then resistivity range.
+#for 3 layers small[1] and small[2] are low end of thickness range
+# small[3], small[4] and small[5] are the low end of resistivities
+small[1] = 1.
+xlarge[1] = 5
+small[2] = 10.
+xlarge[2] = 75.
+small[3] = 20.
+xlarge[3] = 200.
+small[4] = 2.
+xlarge[4] = 100
+small[5] = 500.
+xlarge[5] = 3000.
+
+iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
 
 # INPUT
-index = 2   # 1 is for shchlumberger and 2 is for Wenner
 arrayType = 'schlumberger'
 e = 3   #number of layers
 n = 2*e-1
@@ -94,24 +111,6 @@ while fctr > 1.:
     ep = ep / 2.0
     fctr = ep + 1.
 
-# this is where the range in parameters should be input from a GUI
-# I'm hard coding this in for now
-
-#enter thickenss range for each layer and then resistivity range.
-#for 3 layers small[1] and small[2] are low end of thickness range
-# small[3], small[4] and small[5] are the low end of resistivities
-small[1] = 1.
-xlarge[1] = 5
-small[2] = 10.
-xlarge[2] = 75.
-small[3] = 20.
-xlarge[3] = 200.
-small[4] = 2.
-xlarge[4] = 100
-small[5] = 500.
-xlarge[5] = 3000.
-
-iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
 
 def readData():
     #normally this is where the data would be read from the csv file

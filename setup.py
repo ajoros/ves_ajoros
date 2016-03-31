@@ -16,8 +16,7 @@ if sys.platform == "win32":
 setup(name = "Water4 VES Inverse Analysis",
       version = "0.1",
       description = (
-          'Softare application to determine depth to water using vertical ' +
-          'electical sounding.'),
+          'Software application to determine depth to water using vertical electicral sounding.'),
       packages=find_packages(),
       # options = {"build_exe": build_exe_options},
       executables = [Executable(

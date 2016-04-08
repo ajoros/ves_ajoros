@@ -10,12 +10,13 @@ vesvenv/
 # Mac OS X specific
 .DS_Store
 
-# Word/Excel/PDF files
+# Word/Excel/PDF/XML files
 *.docx
 *.doc
 *.xlsx
 *.xls
 *.pdf
+*.xml
 
 # Ignore documents directory containing papers and such
 documents/

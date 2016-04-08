@@ -37,12 +37,24 @@ cd ..
 # Download configure, and compile Qt and PyQt
 wget http://downloads.sourceforge.net/project/pyqt/PyQt5/PyQt-5.5.1/PyQt-gpl-5.5.1.tar.gz
 
+# ERROR POSSIBLE in "python configure.py" BELOW --> PyQt5 requires Qt v5.0 or later. PyQt5 only support Python 3.x
+# 1a. Install PyQT5 via conda using conda install -c https://conda.anaconda.org/mmcauliffe pyqt5
+# 1b. If the above install doesnt successfully execute "python configure.py",
+#      then try installing qt5 using "sudo apt-get install qt5-default"
+# 2.After this, then "python configure.py -q /usr/bin/qmake" should work
+
+
 tar -xvzf PyQt-gpl-5.5.1.tar.gz
 cd ./PyQt-gpl-5.5.1
 
-python configure.py
+python configure.py ((OR)) python configure.py -q /usr/bin/qmake (if 1a above doesnt work, and after executing 1b)
 sudo make && make install
 
+# If you see pyqt and qt both with version in conda list 4.X.X then remove them (assuming you want to work in Qt v5):
+# conda remove qt
+# conda remove pyqt
+# Plot depend on matplotlib so make sure to force install with no dependencies:
+#     conda install matplotlib -f
 
 # To run the software after install of the dependecies:
 cd ../..

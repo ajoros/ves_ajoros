@@ -59,3 +59,10 @@ sudo make && make install
 # To run the software after install of the dependecies:
 cd ../..
 python ./ves/main.py
+
+
+YOU CAN INSTALL USING CONDA AS WELL:
+conda create -n pyqt5 python=3.5
+source activate pyqt5
+conda install -c https://conda.anaconda.org/spyder-ide pyqt5
+THIS ANACONDA.ORG BUILD ONLY WORKS WITH LINUX64 AND OSX64

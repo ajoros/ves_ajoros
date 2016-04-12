@@ -65,4 +65,8 @@ YOU CAN INSTALL USING CONDA AS WELL:
 conda create -n pyqt5 python=3.5
 source activate pyqt5
 conda install -c https://conda.anaconda.org/spyder-ide pyqt5
+
+conda install matplotlib
+conda remove pyqt qt --force
+conda install scipy
 THIS ANACONDA.ORG BUILD ONLY WORKS WITH LINUX64 AND OSX64

@@ -526,7 +526,7 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon('hand_drill.png'))
-    app.setStyle("fusion") #Changing the style
+    app.setStyle("fusion") #Changed the style to prevent "PyQt5: Gtk-CRITICAL error"
 
     splashPix = QPixmap('splash.png')
     splashScreen = QSplashScreen(splashPix, Qt.WindowStaysOnTopHint)

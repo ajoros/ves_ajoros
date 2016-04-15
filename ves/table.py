@@ -10,7 +10,7 @@ from templates.tempData import (
 
 class PalettedTableModel(QAbstractTableModel):
     """Class object representing the QtTable model upon which
-    the GUI is built. Must intereact with a QtTableView object
+    the GUI is built. Must interact with a QtTableView object
 
     """
 

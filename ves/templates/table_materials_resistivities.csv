@@ -1,0 +1,14 @@
+Earth Material, Resistivity Range Min (ohm-meters), Resistivity Range Max (ohm-meters)
+Igneous, 100, 1000000
+Limestone, 100, 10000
+Sandstone, 100, 10000
+Wet and Dry Sand, 1, 10000
+Gravel, 100, 10000
+Wet and Dry Clay, 1, 100
+Alluvium, 1, 1000
+Soil, 0.1, 1
+Drilling_Mud_hydraul_EZ, 4.5, 4.5
+Fresh_Water, 10, 100
+Salt_Water,0.1, 1
+Native_Copper,0.0000002, 0.0000002
+Shale, 5.0, 50

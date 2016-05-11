@@ -18,7 +18,8 @@ with open(csv_filepath, 'r') as f:
 colors_temp = [
     '#348ABD', '#A60628', '#7A68A6', '#467821',
     '#D55E00', '#CC79A7', '#0E2F44', '#009E73',
-    '#F0E442', '#0072B2', '#00B41E', '#56B4E9']
+    '#F0E442', '#0072B2', '#00B41E', '#56B4E9'
+    '#BD6734', '#06A684']
 colors = [color for color in colors_temp for _ in range(4)]
 
 # Set up data for software, which includes some one-time subsetting to

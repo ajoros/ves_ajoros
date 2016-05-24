@@ -170,7 +170,7 @@ class InteractiveCanvas(FigureCanvas):
             self.ax.add_patch(rect)
 
 
-    def addPointsAndLine(self, xdata, ydata, color='#003366', draw=True):
+    def addPointsAndLine(self, xdata, ydata, color='#348ABD', draw=True):
         """Adds the points and a line to the figure
 
         Parameters
@@ -256,7 +256,8 @@ class ReportCanvas(FigureCanvas):
                  xlabel='Electrode Spacing (m)',
                  ylabel='Apparent Resitivity (ohm-m)',
                  linestyle='--', marker='o',
-                 dpi=150, hold=False, colors=colors[0:5:4]):
+                 dpi=150, hold=False, colors=colors[0:5:4][::-1]):
+        # Note: "colors" list is reversed in previous line.
         plt.clf()
 
         # Save figure input parameters as class properties

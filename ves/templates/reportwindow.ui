@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>725</width>
-    <height>475</height>
+    <width>1228</width>
+    <height>649</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -95,7 +95,7 @@
          <string>Use a negative sign (-) for coordinates that are South or West</string>
         </property>
         <property name="text">
-         <string>Coordinates in DD (use negative values for S. and W.):</string>
+         <string>Coordinates in Decimal Degrees (use negative values for S. and W.):</string>
         </property>
        </widget>
       </item>
@@ -169,96 +169,7 @@
     </item>
     <item row="1" column="1">
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>rhoB</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" colspan="2">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>rhoM</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>rhoA</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="rhoALineEdit">
-        <property name="toolTip">
-         <string>Adjust rhoA value</string>
-        </property>
-        <property name="inputMask">
-         <string>000.00</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLineEdit" name="rhoMLineEdit">
-        <property name="toolTip">
-         <string>Adjust rhoM value</string>
-        </property>
-        <property name="inputMask">
-         <string>000.00</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="rhoBLineEdit">
-        <property name="toolTip">
-         <string>Adjust rhoB value</string>
-        </property>
-        <property name="inputMask">
-         <string>000.00</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2" colspan="2">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>dA</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLineEdit" name="dALineEdit">
-        <property name="toolTip">
-         <string>Adjust dA value</string>
-        </property>
-        <property name="inputMask">
-         <string>000.00</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="5">
-       <widget class="QPushButton" name="pushButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>If satisfied with the preliminary results, click for an estimate of drilling feasibility</string>
-        </property>
-        <property name="text">
-         <string>Drill or no drill?</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="5">
        <widget class="QPushButton" name="pushButton_2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -270,7 +181,7 @@
          <string>Rerun the analysis after fine tuning some parameters</string>
         </property>
         <property name="text">
-         <string>Rerun VES Inverse Analysis with New Parameters</string>
+         <string>Re-run using Monte Carlo simulation</string>
         </property>
        </widget>
       </item>
@@ -283,8 +194,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>725</width>
-     <height>22</height>
+     <width>1228</width>
+     <height>25</height>
     </rect>
    </property>
    <property name="sizePolicy">

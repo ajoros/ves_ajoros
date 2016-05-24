@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>725</width>
-    <height>475</height>
+    <width>1099</width>
+    <height>638</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -81,38 +81,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="QRadioButton" name="wennerRadioButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>Use the Wenner Spacing in calculating depth to water</string>
-        </property>
-        <property name="text">
-         <string>Wenner Array</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QRadioButton" name="schlumbergerRadioButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>Use the Schlumberger Spacing in calculating depth to water</string>
-        </property>
-        <property name="text">
-         <string>Schlumberger Array</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="0">
        <widget class="QPushButton" name="addRowButton">
         <property name="sizePolicy">
@@ -152,6 +120,22 @@
         </property>
         <property name="checked">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="3" alignment="Qt::AlignHCenter">
+       <widget class="QRadioButton" name="wennerRadioButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Use the Wenner Spacing in calculating depth to water</string>
+        </property>
+        <property name="text">
+         <string>Wenner Array</string>
         </property>
        </widget>
       </item>
@@ -222,22 +206,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="newRectangleButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>Freeze the current rectangle. Must be clicked prior to launching the analysis after drawing the last rectangle.</string>
-            </property>
-            <property name="text">
-             <string>Add Rectangle</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QPushButton" name="resetPlotButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -289,8 +257,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>725</width>
-     <height>22</height>
+     <width>1099</width>
+     <height>25</height>
     </rect>
    </property>
    <property name="sizePolicy">

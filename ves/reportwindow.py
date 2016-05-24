@@ -48,12 +48,6 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
 
         self.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
 
-        # Set default Earth parameters
-        self.rhoALineEdit.setText('  1.00')
-        self.rhoBLineEdit.setText(' 10.00')
-        self.rhoMLineEdit.setText('100.00')
-        self.dALineEdit.setText(' 10.00')
-
         # Set default lat/long values
         self.longitudeLineEdit.setText('Please enter logitude (E/W)')
         self.latitudeLineEdit.setText('Please enter latitude (N/S)')

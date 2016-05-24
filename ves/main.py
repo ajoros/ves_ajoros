@@ -125,11 +125,11 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         # Connect to spacing radio buttons
         self.wennerRadioButton.toggled.connect(self.wenner)
-        self.schlumbergerRadioButton.toggled.connect(self.schlumberger)
+        # self.schlumbergerRadioButton.toggled.connect(self.schlumberger)
 
         # Connect to plot buttons
         self.plotDataButton.clicked.connect(self.compute)
-        self.newRectangleButton.clicked.connect(self.newRectangle)
+        # self.newRectangleButton.clicked.connect(self.newRectangle)
         self.resetPlotButton.clicked.connect(self.resetPlot)
 
         # Connect to the decimal separator check box
@@ -150,10 +150,10 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
                 self.voltageSpacing, self.apparentResistivity,
                 self.voltageSpacingExtrapolated, self.newResistivity)
 
-            self.close()
+            # self.close()
 
             self.ReportWindow = ReportWindow(self.ReportCanvas)
-            self.ReportWindow.show
+            self.ReportWindow.show()
 
         except AttributeError:
             return

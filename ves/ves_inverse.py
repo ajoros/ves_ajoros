@@ -76,23 +76,27 @@ errmin = 1.e10
 # I'm hard coding this in for now
 
 #enter thickenss range for each layer and then resistivity range.
-#for 3 layers small[1] and small[2] are low end of thickness range
-# small[3], small[4] and small[5] are the low end of resistivities
+#for 3 layers small[1] and small[2] are low end [MINIMUM] of thickness range
+# small[3], small[4] and small[5] are the low end [MINIMUM] of resistivities
 small[1] = 1.
 xlarge[1] = 5
+
 small[2] = 10.
 xlarge[2] = 75.
+
 small[3] = 20.
 xlarge[3] = 200.
+
 small[4] = 2.
 xlarge[4] = 100
+
 small[5] = 500.
 xlarge[5] = 3000.
 
 iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
 
 # INPUT
-arrayType = 'schlumberger'
+arrayType = 'wenner'
 e = 3   #number of layers
 n = 2*e-1
 

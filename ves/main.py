@@ -316,7 +316,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
             self.initPlot(draw=False)
 
             self.canvas.addPointsAndLine(
-                self.voltageSpacing, self.apparentResistivity, draw=False)
+                self.voltageSpacing, self.apparentResistivity, draw=True)
 
             if self.canvas.mplRectangles:
                 self.canvas.drawRectangles()
@@ -366,13 +366,16 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
                 self.voltageSpacing * 2 == self.voltageSpacing[0] * 2):
                 self.wennerMessageBox(suppress)
 
+            #Calculate apparent Resistivity
             self.apparentResistivity = wennerResistivity(
                 self.voltageSpacing, self.meanVoltage, self.meanCurrent)
+
             self.canvas.addPointsAndLine(
                 self.voltageSpacing, self.apparentResistivity)
 
             voltageSpacingExtrapolated, newResistivity = interpolateFieldData(
                 self.voltageSpacing, self.apparentResistivity, 'wenner')
+
             self.voltageSpacingExtrapolated = voltageSpacingExtrapolated
             self.newResistivity = newResistivity
 

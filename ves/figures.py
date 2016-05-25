@@ -138,7 +138,7 @@ class InteractiveCanvas(FigureCanvas):
         # Set up an empty rectangle for drawing and plot the x/y data
         self.rect = Rectangle(
             (0, 0), 0, 0, alpha=self.alpha, color='grey')
-        self.addPointsAndLine(xdata, ydata, draw=False)
+        self.addPointsAndLine(xdata, ydata, draw=True)
 
         # Create an mpl axis and set the labels, add the rectangle
         self.ax = plt.gca()
@@ -197,13 +197,21 @@ class InteractiveCanvas(FigureCanvas):
         # log/log plot of x and y data
         plt.loglog(
             xdata, ydata, linestyle=self.linestyle,
-            marker=self.marker, color=color)
-
+            marker=self.marker, color=color, label = "Observed")
         # Draw the updates
         if draw:
             self.fig.tight_layout()
             self.ax.figure.canvas.draw()
+            self.legend = self.ax.legend()
 
+            try:
+                self.legend.remove()
+                plt.legend()
+                # lgd = plt.legend()
+                print('REMOVED OLD and PLOTTED NEW LEGEND')
+            except:
+                plt.legend()
+                print('PLOTTED NEW LEGEND')
 
     def onPress(self, event):
         """Handle mouse press events on the matplotlib figure cavas
@@ -312,11 +320,15 @@ class ReportCanvas(FigureCanvas):
                    self.filteredResistivity,
                    marker=self.marker,
                    linestyle=self.linestyle,
-                   color=self.colors[0])
+                   color=self.colors[0],
+                   label="Filtered")
         plt.loglog(self.voltageSpacing, self.apparentResistivity,
                    marker=self.marker,
                    linestyle=self.linestyle,
-                   color=self.colors[1])
+                   color=self.colors[1],
+                   label="Observed")
+        plt.legend()
+
 
         # Create an mpl axis and set the labels, add the rectangle
         self.ax = plt.gca()

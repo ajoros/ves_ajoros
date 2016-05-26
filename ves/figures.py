@@ -203,7 +203,8 @@ class InteractiveCanvas(FigureCanvas):
             self.fig.tight_layout()
             self.ax.figure.canvas.draw()
             self.legend = self.ax.legend()
-
+            if self.legend:
+                self.ax.legend_ = None
             try:
                 self.legend.remove()
                 plt.legend()

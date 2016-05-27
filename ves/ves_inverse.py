@@ -67,15 +67,17 @@ new_y = [0] * 1000
 ndat = 13
 #hard coded data input - spacing and apparent resistivities measured
 #in the field
-adat = [0., 0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
-rdat = [0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
+adat = [0, 3., 4.5, 6., 9. ,13.5, 21., 30., 45., 60., 90., 135., 210., 300.]
+# adat = [0., 0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
+rdat = [0, 9295., 4475., 2068., 1494., 764., 375., 294., 245., 235., 156., 118., 83., 104.]
+# rdat = [0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
 one30 = 1.e30
 rms = one30
 errmin = 1.e10
 # this is where the range in parameters should be input from a GUI
 # I'm hard coding this in for now
 
-#enter thickenss range for each layer and then resistivity range.
+#enter thickness range for each layer and then resistivity range.
 #for 3 layers small[1] and small[2] are low end [MINIMUM] of thickness range
 # small[3], small[4] and small[5] are the low end [MINIMUM] of resistivities
 small[1] = 1.
@@ -90,14 +92,28 @@ xlarge[3] = 200.
 small[4] = 2.
 xlarge[4] = 100
 
-small[5] = 500.
-xlarge[5] = 3000.
+small[5] = 50.
+xlarge[5] = 300.
+
+small[6] = 100.
+xlarge[6] = 600.
+
+small[7] = 200.
+xlarge[7] = 1200.
+
+small[8] = 300.
+xlarge[8] = 1800.
+
+small[9] = 500.
+xlarge[9] = 3000.
+
+
 
 iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
 
 # INPUT
 arrayType = 'wenner'
-e = 3   #number of layers
+e = 5   #number of layers
 n = 2*e-1
 
 
@@ -261,55 +277,60 @@ def splint(n, x ,xa=[], ya=[], y2a=[]):
     return y
 
 
+#main here
+if __name__ == '__main__':
+    readData()
+    print(adat[1:ndat],rdat[1:ndat])
+    print('log stufffff')
 
-readData()
-print(adat[1:ndat],rdat[1:ndat])
-print('log stufffff')
+    print(adatl[1:ndat],rdatl[1:ndat])
+    print('small')
+    print(small)
+    print('xlarge')
+    print(xlarge)
+    for iloop in range(1, iter_ + 1):
+        #print( '  iloop is ', iloop)
+        for i in range(1, n + 1):
+            randNumber = random.random()
+            #print(randNumber, '  random')
+            p[i] = (xlarge[i] - small[i]) * randNumber + small[i]
 
-print(adatl[1:ndat],rdatl[1:ndat])
-for iloop in range(1, iter_ + 1):
-    #print( '  iloop is ', iloop)
-    for i in range(1, n + 1):
-        randNumber = random.random()
-        #print(randNumber, '  random')
-        p[i] = (xlarge[i] - small[i]) * randNumber + small[i]
+        rms = rmsfit()
 
-    rms = rmsfit()
+        if rms < errmin:
+            print('rms  ', rms, '   errmin ', errmin)
+            for i in range(1,n+1,1):
+                pkeep[i] = p[i]
+            for i in range(1, m+1, 1):
+                rkeep[i] = r[i]
+                rkeepl[i] = rl[i]
+            for i in range(1,ndat+1,1):
+                pltanswerkeepl[i] = pltanswerl[i]
+                pltanswerkeep[i] = pltanswer[i]
+            errmin = rms
 
-    if rms < errmin:
-        print('rms  ', rms, '   errmin ', errmin)
-        for i in range(1,n+1,1):
-            pkeep[i] = p[i]
-        for i in range(1, m+1, 1):
-            rkeep[i] = r[i]
-            rkeepl[i] = rl[i]
-        for i in range(1,ndat+1,1):
-            pltanswerkeepl[i] = pltanswerl[i]
-            pltanswerkeep[i] = pltanswer[i]
-        errmin = rms
+    #output the best fitting earth model
+    print('\nLayer ', ' Thickness  ', '   Res_ohm-m  ')
+    for i in range(1,e,1):
+        print('{:d}       {:9.6f}       {:9.6f}'.format(i, pkeep[i], pkeep[e+i-1]))
 
-#output the best fitting earth model
-print(' Layer ', '     Thickness  ', '   Res_ohm-m  ')
-for i in range(1,e,1):
-    print(i, pkeep[i], pkeep[e+i-1])
+    print( e, '      Infinite     ', pkeep[n])
+    for i in range(1,m+1, 1):
+        asavl[i] = np.log10(asav[i])
 
-print( e, '  Infinite ', pkeep[n])
-for i in range(1,m+1, 1):
-    asavl[i] = np.log10(asav[i])
+    #output the error of fit
+    print( ' \n RMS error:', errmin, '\n')
+    print( '  Spacing', '  Res_pred  ', ' Log10_spacing  ', ' Log10_Res_pred ')
+    for i in range(1,m+1,1):
+        #print(asav[i], rkeep[i], asavl[i], rkeepl[i])
+        print("%7.2f   %9.3f  %9.3f  %9.3f" % ( asav[i], rkeep[i],
+              asavl[i], rkeepl[i]))
 
-#output the error of fit
-print( ' RMS error   ', errmin)
-print( '  Spacing', '  Res_pred  ', ' Log10_spacing  ', ' Log10_Res_pred ')
-for i in range(1,m+1,1):
-    #print(asav[i], rkeep[i], asavl[i], rkeepl[i])
-    print("%7.2f   %9.3f  %9.3f  %9.3f" % ( asav[i], rkeep[i],
-          asavl[i], rkeepl[i]))
-
-plt.loglog(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
-plt.loglog(adat[1:ndat], pltanswerkeep[1:ndat], 'ro') # predicted data red dots
-s=7
-plt.loglog(adat[1:ndat], rdat[1:ndat], 'bo', markersize=s)#originaldatabluedots
-plt.show()
-plt.grid(True)
-sys.exit(0)
+    plt.loglog(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
+    plt.loglog(adat[1:ndat], pltanswerkeep[1:ndat], 'ro') # predicted data red dots
+    s=7
+    plt.loglog(adat[1:ndat], rdat[1:ndat], 'bo', markersize=s)#originaldatabluedots
+    plt.show()
+    plt.grid(True)
+    sys.exit(0)
 

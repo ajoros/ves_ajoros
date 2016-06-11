@@ -1,3 +1,11 @@
+Layer, Minimum Thickness (m), Maximum Thickness (m), Minimum Resistivity (ohm-m), Maximum Resistivity (ohm-m)
+1,1,5,200,1200
+2,5,10,1000,6000
+3,10,20,5000,30000
+4,20,30,20000,120000
+5,,,100000,1000000
+
+thicknesses vary from 1-30 meters, and let the resistivity of each layer vary from 0.1-1,000,000 ohm-meters.
 Voltage Sep. (m),Voltage Position (m),Current Position (m),Voltage (mV),Current (mA)
 0.6,0.3,0.9,0.1,0.8
 ,,,0.1,0.6

@@ -11,5 +11,5 @@ conda install -c mmcauliffe pyqt5=5.5.1
 conda install -f backports cycler decorator get_terminal_size jpeg libpng libtiff matplotlib mkl numpy pandas patsy pyparsing python-dateutil pytz scipy setuptools six statsmodels tk zlibi
 
 #### How to run program
-After installing all previous requirements just type execute main.py in /ves folder:
+After installing all previous requirements just execute main.py in /ves folder:
 python main.py

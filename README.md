@@ -8,6 +8,7 @@ conda create -n pyqt5_env python=3.5
 source activate pyqt5_env (do this on osx/linux)
 
 OR
+
 activate pyqt5_env (do this on win64)
 #### Install pyqt5 from anaconda repo cloud (works for osx, linux, win64)
 conda install -c mmcauliffe pyqt5=5.5.1 

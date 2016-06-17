@@ -209,10 +209,10 @@ class InteractiveCanvas(FigureCanvas):
                 self.legend.remove()
                 plt.legend()
                 # lgd = plt.legend()
-                print('REMOVED OLD and PLOTTED NEW LEGEND')
+                # print('REMOVED OLD and PLOTTED NEW LEGEND')
             except:
                 plt.legend()
-                print('PLOTTED NEW LEGEND')
+                # print('PLOTTED NEW LEGEND')
 
     def onPress(self, event):
         """Handle mouse press events on the matplotlib figure cavas

@@ -54,9 +54,30 @@
        </widget>
       </item>
       <item>
-       <widget class="QTextBrowser" name="resultsTextBox">
-        <property name="toolTip">
-         <string>Display of preliminary results from the VES analysis</string>
+       <widget class="QTableView" name="LayersTableView">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <property name="showGrid">
+         <bool>true</bool>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
         </property>
        </widget>
       </item>

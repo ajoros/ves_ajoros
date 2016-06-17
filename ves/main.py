@@ -3,7 +3,8 @@
 import os
 import sys
 import time
-
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -35,7 +36,10 @@ from reportwindow import ReportWindow
 from table import PalettedTableModel
 from templates.tempData import (
     coefficients, columns, colors, headers,
-    rowCount, tableData, old_coefficients)
+    rowCount, tableData, old_coefficients,
+    columns_reportWindow, headers_reportWindow,
+    rowCount_reportWindow, tableData_reportWindow
+)
 
 
 # No need to change directory, as the change from loading
@@ -89,12 +93,15 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
             self.wennerCoefficients) = coefficients
 
         # Set up the model and tableView
+        pp.pprint('tabledata: {}'.format(tableData))
+        pp.pprint('headers: {}'.format(headers))
+        pp.pprint('colors: {}'.format(colors))
         self.model = PalettedTableModel(tableData, headers, colors)
 
         self.initTableView(self.model)
 
         self.tableViewWidget.resizeColumnsToContents()
-        self.tableViewWidget.show()
+        # self.tableViewWidget.show()
 
         self.aggregateTableForPlot()
 
@@ -137,14 +144,16 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         # self.initUi()
 
         # Connect to analysis button
+        print('Before self.launchAnalysisButton.clicked.connect(self.launchReportWindow)')
         self.launchAnalysisButton.clicked.connect(self.launchReportWindow)
-
+        print('After self.launchAnalysisButton.clicked.connect(self.launchReportWindow)')
         self.initUi()
 
 
     def launchReportWindow(self):
         """Launches the ReportWindow class on launch of VES Inverse Analysis"""
         try:
+            print('INSIDE def launchReportWindow(self)')
             self.ReportCanvas = ReportCanvas(
                 self.samplePoints, self.filteredResistivity,
                 self.voltageSpacing, self.apparentResistivity,
@@ -152,10 +161,12 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
             # self.close()
 
-            self.ReportWindow = ReportWindow(self.ReportCanvas)
+            self.ReportWindow = ReportWindow(self.ReportCanvas,tableData_reportWindow, headers_reportWindow)
             self.ReportWindow.show()
 
         except AttributeError:
+            print('------THERE WAS AN ERROR')
+            print(AttributeError())
             return
 
 

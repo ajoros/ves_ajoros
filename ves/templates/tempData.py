@@ -13,6 +13,14 @@ with open(csv_filepath, 'r') as f:
     for row in reader:
         tableData.append(row)
 
+tableData_reportWindow = []
+csv_filepath = os.path.join(
+    os.path.dirname(__file__), 'template_reportwindowtable.csv')
+with open(csv_filepath, 'r') as f:
+    reader = csv.reader(f, delimiter=',')
+    for row in reader:
+        tableData_reportWindow.append(row)
+
 # Set up a list of colors. Accounts for missing row headers in CSV by creating
 #  a repeated list of each color 4 times
 colors_temp = [
@@ -27,13 +35,23 @@ colors = [color for color in colors_temp for _ in range(4)]
 rowCount = len(tableData) - 1
 columnCount = len(tableData[0])
 
+rowCount_reportWindow = len(tableData_reportWindow) - 1
+columnCount_reportWindow = len(tableData_reportWindow[0])
 # colors = colors[:rowCount]
 headers = tableData[0]
 tableData = tableData[1:]
 
+headers_reportWindow = tableData_reportWindow[0]
+
+tableData_reportWindow = tableData_reportWindow[1:]
+
 columns = list(range(columnCount))
 for value in range(3, 5):
     columns.remove(value)
+
+columns_reportWindow = list(range(columnCount_reportWindow))
+# for value in range(3, 5):
+#     columns_reportWindow.remove(value)
 
 # Digitial filter coefficients for Schlumberger and Wenner array spacing,
 #  respectively. Coefficients are from personal communication with

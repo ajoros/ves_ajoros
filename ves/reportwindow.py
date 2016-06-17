@@ -1,5 +1,7 @@
 import os
 import sys
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 
 from matplotlib.backends.backend_qt5agg import (
@@ -13,6 +15,11 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.uic import loadUiType
 
+from table_reportWindow import PalettedTableModel_reportWindow
+from templates.tempData import (
+    columns_reportWindow, headers_reportWindow,
+    rowCount_reportWindow, tableData_reportWindow)
+
 
 os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))
 UI_ReportWindow, QReportWindow = loadUiType('reportwindow.ui')
@@ -20,7 +27,7 @@ UI_ReportWindow, QReportWindow = loadUiType('reportwindow.ui')
 
 class ReportWindow(UI_ReportWindow, QReportWindow):
 
-    def __init__(self, canvas):
+    def __init__(self, canvas, tableData_reportWindow, headers_reportWindow):
 
         super(QReportWindow, self).__init__()
 
@@ -48,17 +55,28 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
 
         self.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
 
+        # Set up the model and tableView
+        pp.pprint('tableData_reportWindow: {}'.format(tableData_reportWindow))
+        pp.pprint('headers_reportWindow: {}'.format(headers_reportWindow))
+        self.model_reportWindow = PalettedTableModel_reportWindow(tableData_reportWindow, headers_reportWindow)
+        self.initTableView_reportWindow(self.model_reportWindow)
+
         # Set default lat/long values
         self.longitudeLineEdit.setText('Please enter logitude (E/W)')
         self.latitudeLineEdit.setText('Please enter latitude (N/S)')
 
-        self.resultsTextBox.append('This is a test:\n  {}'.format('drill'))
+        self.LayersTableView.resizeColumnsToContents()
+        print('About to SHOW LayersTableView')
+        self.LayersTableView.showFullScreen()
+        print('SHOWed LayersTableView')
 
         # Add a plot and matplotlib toolbar to the report window
         self.mplvl.addWidget(self.canvas)
         self.mplvl.addWidget(NavigationToolbar(
             self.canvas, self.canvas, coordinates=True))
 
+    # def launchReportOutput(self):
+    #     """ Launches the ReportOutput class on execution of Monte Carlo Simulation """
 
     def layersFromRectangles(self):
 
@@ -95,3 +113,32 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
             self.layerWidths = None
             self.maxResistivities = None
             self.minResistivities = None
+
+    def initTableView_reportWindow(self, model):
+        """Set up the LayersTableView with the proper data and row spacing
+
+        Parameters
+        ----------
+        model: `PalettedTableModel`
+            An instantiated an active PalettedTableModel instance
+
+        Notes
+        -----
+        Run once on instantiation of the class to space the rows
+
+        """
+        print('Inside initTableView_reportWindow def')
+        nRows = len(self.model_reportWindow.table_reportWindow)
+        print('nRows is {}'.format(nRows))
+        print('There are {} columns'.format(len(columns_reportWindow)))
+        self.LayersTableView.setModel(model)
+        print('self.LayersTableView.setModel(model)')
+        # Set the table to span 4 rows in the spacing columns
+        for row in range(0, nRows, 4):
+            for col in columns_reportWindow:
+                self.LayersTableView.setSpan(row, col, 4, 1)
+
+        self.LayersTableView.resizeColumnsToContents()
+        print('self.LayersTableView.resizeColumnsToContents()')
+        self.LayersTableView.show()
+        print('Inside initTableView_reportWindow def and showed LayersTableView')

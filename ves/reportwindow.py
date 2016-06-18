@@ -134,9 +134,9 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.LayersTableView.setModel(model)
         print('self.LayersTableView.setModel(model)')
         # Set the table to span 4 rows in the spacing columns
-        for row in range(0, nRows, 4):
+        for row in range(0, nRows):
             for col in columns_reportWindow:
-                self.LayersTableView.setSpan(row, col, 4, 1)
+                self.LayersTableView.setSpan(row, col, 1, 1)
 
         self.LayersTableView.resizeColumnsToContents()
         print('self.LayersTableView.resizeColumnsToContents()')

@@ -54,7 +54,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         self.headers_reportWindow = headers_reportWindow
 
 
-    def rowCount_reportWindow(self, parent):
+    def rowCount(self, parent):
         """Define the row count of the table
 
         Parameters
@@ -73,7 +73,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         return len(self.table_reportWindow)
 
 
-    def columnCount_reportWindow(self, parent):
+    def columnCount(self, parent):
         """Define the row count of the table
 
         Parameters
@@ -93,7 +93,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         return len(self.table_reportWindow[0])
 
 
-    def flags_reportWindow(self, index):
+    def flags(self, index):
         """Sets the Qt flags
 
         Parameters
@@ -110,7 +110,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         return Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable
 
 
-    def update_reportWindow(self, table):
+    def update(self, table):
         """Define the method which updates the table with new data
 
         Parameters
@@ -128,7 +128,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         self.table_reportWindow = table
 
 
-    def data_reportWindow(self, index, role):
+    def data(self, index, role):
         """Define the alignment and actions of the table on edit,
         hover, display
 
@@ -171,7 +171,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
             return Qt.AlignHCenter | Qt.AlignVCenter
 
 
-    def setData_reportWindow(self, index, value, role=Qt.EditRole):
+    def setData(self, index, value, role=Qt.EditRole):
         """This method sets the data to the appropriate value when appprops
 
         Parameters
@@ -248,14 +248,14 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
             if orientation == Qt.Horizontal:
                 return self.headers_reportWindow[section]
 
-            if orientation == Qt.Vertical:
-
-                # Use QPixmap objects to create colored boxes in row headers
-                value = self.colors[section]
-                pixmap = QPixmap(25, 25)
-                pixmap.fill(QColor(value))
-
-                return pixmap
+            # if orientation == Qt.Vertical:
+            #
+            #     # Use QPixmap objects to create colored boxes in row headers
+            #     value = self.colors[section]
+            #     pixmap = QPixmap(25, 25)
+            #     pixmap.fill(QColor(value))
+            #
+            #     return pixmap
 
 
     def insertRows_reportWindow(self, position, rows, parent=QModelIndex()):
@@ -321,16 +321,21 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle("fusion") #Changed the style to prevent "PyQt5: Gtk-CRITICAL error"
+    print(tableData_reportWindow)
+    print('\n')
+    print(headers_reportWindow)
+    print('\n')
     model_reportWindow = PalettedTableModel_reportWindow(tableData_reportWindow, headers_reportWindow)
 
     tableView = QTableView()
     tableView.setModel(model_reportWindow)
 
     tableView.show()
-
-    for row in range(0, rowCount_reportWindow, 4):
+    print(rowCount_reportWindow)
+    print(columns_reportWindow)
+    for row in range(0, rowCount_reportWindow):
         for col in columns_reportWindow:
-            tableView.setSpan(row, col, 4, 1)
+            tableView.setSpan(row, col, 1, 1)
     input()
     model_reportWindow.insertRows(rowCount_reportWindow, 4)
 

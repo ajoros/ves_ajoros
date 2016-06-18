@@ -327,7 +327,8 @@ if __name__ == '__main__':
     tableView.setModel(model)
 
     tableView.show()
-
+    print('headers: {}'.format(headers))
+    print('rowcount: {}'.format(rowCount))
     for row in range(0, rowCount, 4):
         for col in columns:
             tableView.setSpan(row, col, 4, 1)

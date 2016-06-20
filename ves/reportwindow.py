@@ -56,8 +56,8 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
 
         # Set up the model and tableView
-        pp.pprint('tableData_reportWindow: {}'.format(tableData_reportWindow))
-        pp.pprint('headers_reportWindow: {}'.format(headers_reportWindow))
+        pp.pprint('*** tableData_reportWindow: {}'.format(tableData_reportWindow))
+        pp.pprint('*** headers_reportWindow: {}'.format(headers_reportWindow))
         self.model_reportWindow = PalettedTableModel_reportWindow(tableData_reportWindow, headers_reportWindow)
         self.initTableView_reportWindow(self.model_reportWindow)
 
@@ -128,7 +128,7 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
 
         """
         print('Inside initTableView_reportWindow def')
-        nRows = len(self.model_reportWindow.table_reportWindow)
+        nRows = len(self.model_reportWindow.table)
         print('nRows is {}'.format(nRows))
         print('There are {} columns'.format(len(columns_reportWindow)))
         self.LayersTableView.setModel(model)

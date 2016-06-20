@@ -4,6 +4,9 @@ from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PyQt5.QtGui import QColor, QIcon, QPixmap
 from PyQt5.QtWidgets import QApplication, QTableView
 
+# from templates.tempData import (
+#     columnCount, columns, colors, headers, rowCount, tableData)
+
 from templates.tempData import (
     columns_reportWindow, headers_reportWindow, columnCount_reportWindow,
     rowCount_reportWindow, tableData_reportWindow)
@@ -15,7 +18,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
 
     """
 
-    def __init__(self, table_reportWindow=[[]], headers_reportWindow=[], parent=None):
+    def __init__(self, table=[[]], headers=[], colors=[], parent=None):
         """Initialization method for the PalettedTableModel. This portion
         of the code will execute every time a PalettedTableModel object
         is instantiated
@@ -50,8 +53,9 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         QAbstractTableModel.__init__(self, parent)
 
         # Set up the table, table headers, and colors properties
-        self.table_reportWindow = table_reportWindow
-        self.headers_reportWindow = headers_reportWindow
+        self.table = table
+        self.headers = headers
+        # self.colors = colors
 
 
     def rowCount(self, parent):
@@ -70,7 +74,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
             An integer representing the number of rows currently in the table
 
         """
-        return len(self.table_reportWindow)
+        return len(self.table)
 
 
     def columnCount(self, parent):
@@ -90,7 +94,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
             in the table
 
         """
-        return len(self.table_reportWindow[0])
+        return len(self.table[0])
 
 
     def flags(self, index):
@@ -125,7 +129,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
                 Simply updates a table
 
         """
-        self.table_reportWindow = table
+        self.table = table
 
 
     def data(self, index, role):
@@ -155,16 +159,16 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         #  http://pyqt.sourceforge.net/Docs/PyQt4/qt.html#ItemDataRole-enum
         if role == Qt.EditRole:
 
-            return self.table_reportWindow[row][column]
+            return self.table[row][column]
 
         if role == Qt.ToolTipRole:
 
             return 'Cell value: {}'.format(
-                self.table_reportWindow[row][column])
+                self.table[row][column])
 
         if role == Qt.DisplayRole:
 
-            return self.table_reportWindow[row][column]
+            return self.table[row][column]
 
         if role == Qt.TextAlignmentRole:
 
@@ -196,7 +200,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
 
             if isinstance(value, str):
 
-                self.table_reportWindow[row][column] = value
+                self.table[row][column] = value
                 self.dataChanged.emit(index, index)
 
                 return True
@@ -204,20 +208,20 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         return False
 
 
-    def stripCommas_reportWindow(self):
+    def stripCommas(self):
 
-        for row in range(len(self.table_reportWindow)):
+        for row in range(len(self.table)):
 
-            for column in  range(len(self.table_reportWindow[0])):
+            for column in  range(len(self.table[0])):
 
-                value = self.table_reportWindow[row][column]
-                print(self.table_reportWindow)
-                self.table_reportWindow[row][column] = value.replace('.', ',')
-                print(self.table_reportWindow)
+                value = self.table[row][column]
+                print(self.table)
+                self.table[row][column] = value.replace('.', ',')
+                print(self.table)
                 del value
 
 
-    def headerData_reportWindow(self, section, orientation, role):
+    def headerData(self, section, orientation, role):
         """Sets the headers for both the rows and columns of the tableView
 
         Parameters
@@ -241,12 +245,12 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         if role == Qt.DisplayRole:
 
             if orientation == Qt.Horizontal:
-                return self.headers_reportWindow[section]
+                return self.headers[section]
 
         if role == Qt.DecorationRole:
 
             if orientation == Qt.Horizontal:
-                return self.headers_reportWindow[section]
+                return self.headers[section]
 
             # if orientation == Qt.Vertical:
             #
@@ -258,7 +262,7 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
             #     return pixmap
 
 
-    def insertRows_reportWindow(self, position, rows, parent=QModelIndex()):
+    def insertRows(self, position, rows, parent=QModelIndex()):
         """Insert a new row in the table
 
         Parameters
@@ -282,14 +286,14 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         for i in range(rows):
 
             defaultValues = [
-                '' for i in range(self.columnCount_reportWindow(None))]
+                '' for i in range(self.columnCount(None))]
 
-            self.table_reportWindow.insert(position, defaultValues)
+            self.table.insert(position, defaultValues)
 
         self.endInsertRows()
 
 
-    def removeRows_reportWindow(self, position, rows, parent=QModelIndex()):
+    def removeRows(self, position, rows, parent=QModelIndex()):
         """Remove rows from the table
 
         Parameters
@@ -307,11 +311,11 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
         None
 
         """
-        nRows = len(self.table_reportWindow) - rows
+        nRows = len(self.table) - rows
 
         self.beginRemoveRows(parent, position, position + rows - 1)
 
-        self.table_reportWindow = self.table_reportWindow[:nRows]
+        self.table = self.table[:nRows]
 
         self.endRemoveRows()
 
@@ -321,22 +325,20 @@ class PalettedTableModel_reportWindow(QAbstractTableModel):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle("fusion") #Changed the style to prevent "PyQt5: Gtk-CRITICAL error"
-    print(tableData_reportWindow)
-    print('\n')
-    print(headers_reportWindow)
-    print('\n')
-    model_reportWindow = PalettedTableModel_reportWindow(tableData_reportWindow, headers_reportWindow)
+    model = PalettedTableModel(tableData_reportWindow, headers_reportWindow)
 
     tableView = QTableView()
-    tableView.setModel(model_reportWindow)
+    tableView.setModel(model)
 
     tableView.show()
-    print(rowCount_reportWindow)
-    print(columns_reportWindow)
+    print('headers: {}'.format(headers_reportWindow))
+    print('rowcount: {}'.format(rowCount_reportWindow))
+    # for row in range(0, rowCount_reportWindow, 4):
     for row in range(0, rowCount_reportWindow):
         for col in columns_reportWindow:
+            # tableView.setSpan(row, col, 4, 1)
             tableView.setSpan(row, col, 1, 1)
     input()
-    model_reportWindow.insertRows(rowCount_reportWindow, 4)
+    model.insertRows(rowCount_reportWindow, 4)
 
     sys.exit(app.exec_())

@@ -12,100 +12,7 @@ print(os.getcwd())
 print(os.listdir())
 from templates.tempData import coefficients
 
-schlumbergerFilterCoefficients, wennerFilterCoefficients = coefficients
 
-# Schlumberger filter
-# fltr1 = [0., .00046256, -.0010907, .0017122, -.0020687,
-#          .0043048, -.0021236, .015995, .017065, .098105, .21918, .64722,
-#          1.1415, .47819, -3.515, 2.7743, -1.201, .4544, -.19427, .097364,
-#          -.054099, .031729, -.019109, .011656, -.0071544, .0044042,
-#          -.002715, .0016749, -.0010335, .00040124]
-
-# #Wenner Filter
-# fltr2 = [0., .000238935, .00011557, .00017034, .00024935,
-#          .00036665, .00053753, .0007896, .0011584, .0017008, .0024959,
-#          .003664, .0053773, .007893, .011583, .016998, .024934, .036558,
-#          .053507, .078121, .11319, .16192, .22363, .28821, .30276, .15523,
-#          -.32026, -.53557, .51787, -.196, .054394, -.015747, .0053941,
-#          -.0021446, .000665125]
-
-
-#I know there must be a better method to assign lists. And probably numpy
-#arrays would be best. But my Python wasn't up to it. If the last letter
-#is an 'l' that means it is a log10 of the value
-
-# 65 is completely arbitrary - > Nearing retirement?
-p = [0] * 20
-r = [0] * 65
-rl = [0] * 65
-t = [0] * 50
-b = [0] * 65
-asav = [0] * 65
-asavl = [0] * 65
-adatl = [0] * 65
-rdatl = [0] * 65
-adat = [0] * 65
-rdat = [0] * 65
-pkeep = [0] * 65
-rkeep = [0] * 65
-rkeepl = [0] * 65
-pltanswer = [0] * 65
-pltanswerl = [0] * 65
-pltanswerkeep = [0] * 65
-pltanswerkeepl = [0] * 65
-
-rl = [0] * 65
-small = [0] * 65
-xlarge = [0] * 65
-
-x=[0] * 100
-y = [0] * 100
-y2 = [0] * 100
-u = [0] * 5000
-new_x = [0] * 1000
-new_y = [0] * 1000
-ndat = 13
-#hard coded data input - spacing and apparent resistivities measured
-#in the field
-adat = [0, 3., 4.5, 6., 9. ,13.5, 21., 30., 45., 60., 90., 135., 210., 300.]
-# adat = [0., 0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
-rdat = [0, 9295., 4475., 2068., 1494., 764., 375., 294., 245., 235., 156., 118., 83., 104.]
-# rdat = [0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
-one30 = 1.e30
-rms = one30
-errmin = 1.e10
-# this is where the range in parameters should be input from a GUI
-# I'm hard coding this in for now
-
-#enter thickness range for each layer and then resistivity range.
-#for 3 layers small[1] and small[2] are low end [MINIMUM] of thickness range
-# small[3], small[4] and small[5] are the low end [MINIMUM] of resistivities
-small[1] = 1.
-xlarge[1] = 5
-
-small[2] = 10.
-xlarge[2] = 75.
-
-small[3] = 20.
-xlarge[3] = 200.
-
-small[4] = 2.
-xlarge[4] = 100
-
-small[5] = 50.
-xlarge[5] = 300.
-
-small[6] = 100.
-xlarge[6] = 600.
-
-small[7] = 200.
-xlarge[7] = 1200.
-
-small[8] = 300.
-xlarge[8] = 1800.
-
-small[9] = 500.
-xlarge[9] = 3000.
 
 
 
@@ -130,6 +37,88 @@ fctr = ep + 1.
 while fctr > 1.:
     ep = ep / 2.0
     fctr = ep + 1.
+
+
+def montecarlo_sim(num_of_iterations, num_of_layers, errmin):
+    """
+
+    Args:
+        num_of_iter, num_of_layers,
+
+    Return:
+
+    """
+    arrayType = 'wenner' # used in rmsfit()
+    # num_of_layers = 5  # number of layers
+    n = 2 * num_of_layers - 1
+
+    spac = 0.2  # smallest electrode spacing
+    m = 20  # number of points where resistivity is calculated
+
+    spac = np.log(spac)
+    delx = np.log(10.0) / 6.
+
+    # these lines apparently find the computer precision ep
+    ep = 1.0
+    ep = ep / 2.0
+    fctr = ep + 1.
+    while fctr > 1.:
+        ep = ep / 2.0
+        fctr = ep + 1.
+
+    readData()
+
+    print(adat[1:ndat], rdat[1:ndat])
+    print('log stufffff')
+    print(adatl[1:ndat], rdatl[1:ndat])
+    print('small')
+    print(small)
+    print('xlarge')
+    print(xlarge)
+
+    for iloop in range(1, num_of_iterations + 1):
+        # print( '  iloop is ', iloop)
+        for i in range(1, n + 1):
+            randNumber = random.random()
+            # print(randNumber, '  random')
+            p[i] = (xlarge[i] - small[i]) * randNumber + small[i]
+
+        rms = rmsfit()
+
+        if rms < errmin:
+            print('rms  ', rms, '   errmin ', errmin)
+            for i in range(1, n + 1, 1):
+                pkeep[i] = p[i]
+            for i in range(1, m + 1, 1):
+                rkeep[i] = r[i]
+                rkeepl[i] = rl[i]
+            for i in range(1, ndat + 1, 1):
+                pltanswerkeepl[i] = pltanswerl[i]
+                pltanswerkeep[i] = pltanswer[i]
+            errmin = rms
+
+    #output the best fitting earth model
+    print('\nLayer ', ' Thickness  ', '   Res_ohm-m  ')
+    for i in range(1,e,1):
+        print('{:d}       {:9.6f}       {:9.6f}'.format(i, pkeep[i], pkeep[e+i-1]))
+
+    print( e, '      Infinite     ', pkeep[n])
+    for i in range(1,m+1, 1):
+        asavl[i] = np.log10(asav[i])
+
+    #output the error of fit
+    print( ' \n RMS error:', errmin, '\n')
+    print( '  Spacing', '  Res_pred  ', ' Log10_spacing  ', ' Log10_Res_pred ')
+    for i in range(1,m+1,1):
+        #print(asav[i], rkeep[i], asavl[i], rkeepl[i])
+        print("%7.2f   %9.3f  %9.3f  %9.3f" % ( asav[i], rkeep[i],
+              asavl[i], rkeepl[i]))
+
+    plt.loglog(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
+    plt.loglog(adat[1:ndat], pltanswerkeep[1:ndat], 'ro') # predicted data red dots
+    plt.loglog(adat[1:ndat], rdat[1:ndat], 'bo', markersize=7)# original datablue dots
+    plt.show()
+    plt.grid(True)
 
 
 def readData():
@@ -276,61 +265,93 @@ def splint(n, x ,xa=[], ya=[], y2a=[]):
 
     return y
 
+    
+
 
 #main here
 if __name__ == '__main__':
-    readData()
-    print(adat[1:ndat],rdat[1:ndat])
-    print('log stufffff')
 
-    print(adatl[1:ndat],rdatl[1:ndat])
-    print('small')
-    print(small)
-    print('xlarge')
-    print(xlarge)
-    for iloop in range(1, iter_ + 1):
-        #print( '  iloop is ', iloop)
-        for i in range(1, n + 1):
-            randNumber = random.random()
-            #print(randNumber, '  random')
-            p[i] = (xlarge[i] - small[i]) * randNumber + small[i]
 
-        rms = rmsfit()
+    schlumbergerFilterCoefficients, wennerFilterCoefficients = coefficients
 
-        if rms < errmin:
-            print('rms  ', rms, '   errmin ', errmin)
-            for i in range(1,n+1,1):
-                pkeep[i] = p[i]
-            for i in range(1, m+1, 1):
-                rkeep[i] = r[i]
-                rkeepl[i] = rl[i]
-            for i in range(1,ndat+1,1):
-                pltanswerkeepl[i] = pltanswerl[i]
-                pltanswerkeep[i] = pltanswer[i]
-            errmin = rms
+    # I know there must be a better method to assign lists. And probably numpy
+    # arrays would be best. But my Python wasn't up to it. If the last letter
+    # is an 'l' that means it is a log10 of the value
 
-    #output the best fitting earth model
-    print('\nLayer ', ' Thickness  ', '   Res_ohm-m  ')
-    for i in range(1,e,1):
-        print('{:d}       {:9.6f}       {:9.6f}'.format(i, pkeep[i], pkeep[e+i-1]))
+    # 65 is completely arbitrary - > Nearing retirement?
+    p = [0] * 20
+    r = [0] * 65
+    rl = [0] * 65
+    t = [0] * 50
+    b = [0] * 65
+    asav = [0] * 65
+    asavl = [0] * 65
+    adatl = [0] * 65
+    rdatl = [0] * 65
+    adat = [0] * 65
+    rdat = [0] * 65
+    pkeep = [0] * 65
+    rkeep = [0] * 65
+    rkeepl = [0] * 65
+    pltanswer = [0] * 65
+    pltanswerl = [0] * 65
+    pltanswerkeep = [0] * 65
+    pltanswerkeepl = [0] * 65
 
-    print( e, '      Infinite     ', pkeep[n])
-    for i in range(1,m+1, 1):
-        asavl[i] = np.log10(asav[i])
+    rl = [0] * 65
+    small = [0] * 65
+    xlarge = [0] * 65
 
-    #output the error of fit
-    print( ' \n RMS error:', errmin, '\n')
-    print( '  Spacing', '  Res_pred  ', ' Log10_spacing  ', ' Log10_Res_pred ')
-    for i in range(1,m+1,1):
-        #print(asav[i], rkeep[i], asavl[i], rkeepl[i])
-        print("%7.2f   %9.3f  %9.3f  %9.3f" % ( asav[i], rkeep[i],
-              asavl[i], rkeepl[i]))
+    x = [0] * 100
+    y = [0] * 100
+    y2 = [0] * 100
+    u = [0] * 5000
+    new_x = [0] * 1000
+    new_y = [0] * 1000
+    ndat = 13
+    # hard coded data input - spacing and apparent resistivities measured
+    # in the field
+    adat = [0, 3., 4.5, 6., 9., 13.5, 21., 30., 45., 60., 90., 135., 210., 300.]
+    # adat = [0., 0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
+    rdat = [0, 9295., 4475., 2068., 1494., 764., 375., 294., 245., 235., 156., 118., 83., 104.]
+    # rdat = [0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
+    one30 = 1.e30
+    rms = one30
+    errmin = 1.e10
+    # this is where the range in parameters should be input from a GUI
+    # I'm hard coding this in for now
 
-    plt.loglog(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
-    plt.loglog(adat[1:ndat], pltanswerkeep[1:ndat], 'ro') # predicted data red dots
-    s=7
-    plt.loglog(adat[1:ndat], rdat[1:ndat], 'bo', markersize=s)#originaldatabluedots
-    plt.show()
-    plt.grid(True)
+    # enter thickness range for each layer and then resistivity range.
+    # for 3 layers small[1] and small[2] are low end [MINIMUM] of thickness range
+    # small[3], small[4] and small[5] are the low end [MINIMUM] of resistivities
+    small[1] = 1.
+    xlarge[1] = 5
+
+    small[2] = 10.
+    xlarge[2] = 75.
+
+    small[3] = 20.
+    xlarge[3] = 200.
+
+    small[4] = 2.
+    xlarge[4] = 100
+
+    small[5] = 50.
+    xlarge[5] = 300.
+
+    small[6] = 100.
+    xlarge[6] = 600.
+
+    small[7] = 200.
+    xlarge[7] = 1200.
+
+    small[8] = 300.
+    xlarge[8] = 1800.
+
+    small[9] = 500.
+    xlarge[9] = 3000.
+
+    montecarlo_sim(10000,5,1.e10)
+
     sys.exit(0)
 

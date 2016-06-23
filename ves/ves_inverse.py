@@ -1,30 +1,30 @@
 import os
+import random  # not for prod
 import sys
-import random # not for prod
+from io import BytesIO
 
-import numpy as np
 import matplotlib
+import numpy as np
+
 matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
 
-os.chdir('./templates') # not for prod
+os.chdir('./templates')  # not for prod
 print(os.getcwd())
 print(os.listdir())
 from templates.tempData import coefficients
 
-
-
-
-
-iter_ = 10000  #number of iterations for the Monte Carlo guesses. to be input on GUI
+iter_ = 10000  # number of iterations for the Monte Carlo guesses. to be input on GUI
 
 # INPUT
 arrayType = 'wenner'
-e = 5   #number of layers
-n = 2*e-1
+e = 5  # number of layers
+n = 2 * e - 1
 
-
-spac = 0.2 # smallest electrode spacing
+spac = 0.2  # smallest electrode spacing
 m = 20  # number of points where resistivity is calculated
 
 spac = np.log(spac)
@@ -114,36 +114,100 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin):
         print("%7.2f   %9.3f  %9.3f  %9.3f" % ( asav[i], rkeep[i],
               asavl[i], rkeepl[i]))
 
+    fig = plt.figure(figsize=(6, 3))
     plt.loglog(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
     plt.loglog(adat[1:ndat], pltanswerkeep[1:ndat], 'ro') # predicted data red dots
     plt.loglog(adat[1:ndat], rdat[1:ndat], 'bo', markersize=7)# original datablue dots
-    plt.show()
-    plt.grid(True)
 
+    imgdata = BytesIO()
+    fig.savefig(imgdata, format='png')
+    imgdata.seek(0)  # rewind the data
+
+    Image = ImageReader(imgdata)
+
+    c = canvas.Canvas('figuretest.pdf', pagesize=letter)
+    c.setLineWidth(.3)
+    c.setFont('Courier', 10)
+
+    c.drawString(50, 725, 'Date/Time:')
+    c.drawString(50, 700, 'Drill: [ ]   No Drill: [ ]')
+
+    c.drawString(260, 725, 'Lat/Long Coordinates:')
+    c.drawString(260, 700, 'Bearing (Compass Direction Degrees):')
+    c.drawString(50, 660, 'Root Mean Square Error: ')
+
+    c.drawString(477, 310, 'Monte Carlo Sim')
+    c.drawString(25, 300,
+                 'Layer#  Min_Thickness  Max_Thickness  Min_Resistivity  Max_Resistivity  Thickness  Resistivity')
+
+    c.drawImage(Image, 15, 350, height=275, preserveAspectRatio=True)
+    c.save()
+    # createPlot()
+    # plt.show()
+    # plt.grid(True)
+
+
+def createPlot():
+    plt.loglog(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
+    plt.loglog(adat[1:ndat], pltanswerkeep[1:ndat], 'ro')  # predicted data red dots
+    plt.loglog(adat[1:ndat], rdat[1:ndat], 'bo', markersize=7)  # original datablue dots
+    print('plt is type: {}'.format(type(plt)))
+    createPDF()
+    # plt.show()
+    # plt.grid(True)
+
+def createPDF():
+    fig = plt.figure(figsize=(6, 3))
+
+    imgdata = BytesIO()
+    fig.savefig(imgdata, format='png')
+    imgdata.seek(0)  # rewind the data
+
+    Image = ImageReader(imgdata)
+
+    c = canvas.Canvas('figuretest.pdf', pagesize=letter)
+    c.setLineWidth(.3)
+    c.setFont('Courier', 10)
+
+    c.drawString(50, 725, 'Date/Time:')
+    c.drawString(50, 700, 'Drill: [ ]   No Drill: [ ]')
+
+    c.drawString(260, 725, 'Lat/Long Coordinates:')
+    c.drawString(260, 700, 'Bearing (Compass Direction Degrees):')
+    c.drawString(50, 660, 'Root Mean Square Error: ')
+
+    c.drawString(477, 310, 'Monte Carlo Sim')
+    c.drawString(25, 300,
+                 'Layer#  Min_Thickness  Max_Thickness  Min_Resistivity  Max_Resistivity  Thickness  Resistivity')
+
+    c.drawImage(Image, 15, 350, height=275, preserveAspectRatio=True)
+    c.save()
 
 def readData():
-    #normally this is where the data would be read from the csv file
+    # normally this is where the data would be read from the csv file
     # but now I'm just hard coding it in as global lists
 
-    for i in range(1,ndat,1):
+    for i in range(1, ndat, 1):
         adatl[i] = np.log10(adat[i])
         rdatl[i] = np.log10(rdat[i])
 
     return adatl
 
+
 def error():
     sumerror = 0.
-    #pltanswer = [0]*64
+    # pltanswer = [0]*64
     spline(m, one30, one30, asavl, rl, y2)
-    for i in range(1,ndat, 1):
+    for i in range(1, ndat, 1):
         ans = splint(m, adatl[i], asavl, rl, y2)
         sumerror = sumerror + (rdatl[i] - ans) * (rdatl[i] - ans)
-        #print(i,sum1,rdat[i],rdatl[i],ans)
+        # print(i,sum1,rdat[i],rdatl[i],ans)
         pltanswerl[i] = ans
         pltanswer[i] = np.power(10, ans)
     rms = np.sqrt(sumerror / (ndat - 1))
 
     return rms
+
 
 def transf(y, i):
     u = 1. / np.exp(y)
@@ -160,6 +224,7 @@ def transf(y, i):
     r[i] = t[e]
     return
 
+
 def filters(b, k):
     for i in range(1, m + 1, 1):
         re = 0.
@@ -167,6 +232,7 @@ def filters(b, k):
             re = re + b[j] * r[i + k - j]
         r[i] = re
     return
+
 
 def rmsfit():
     if arrayType.lower() == 'schlumberger':
@@ -193,7 +259,7 @@ def rmsfit():
         sys.exit()
 
     x = spac
-    for i in range(1, m+1, 1):
+    for i in range(1, m + 1, 1):
         a = np.exp(x)
         asav[i] = a
         asavl[i] = np.log10(a)
@@ -204,15 +270,16 @@ def rmsfit():
 
     return rms
 
+
 # my code to do a spline fit to predicted data at the nice spacing of Ghosh
 # use splint to determine the spline interpolated prediction at the
 # spacing where the measured resistivity was taken - to compare observation
 # to prediction
-def spline(n, yp1, ypn, x=[] ,y=[] ,y2=[]):
+def spline(n, yp1, ypn, x=[], y=[], y2=[]):
     u = [0] * 1000
     one29 = 0.99e30
-    #print(x,y)
-    if  yp1 > one29:
+    # print(x,y)
+    if yp1 > one29:
         y2[0] = 0.
         u[0] = 0.
     else:
@@ -220,13 +287,13 @@ def spline(n, yp1, ypn, x=[] ,y=[] ,y2=[]):
         u[0] = (3. / (x[1] - x[0])) * ((y[1] - y[0]) / (x[1] - x[0]) - yp1)
 
     for i in range(1, n):
-        #print(i,x[i])
-        sig = (x[i] - x[i-1]) / (x[i+1] - x[i-1])
-        p=sig * y2[i - 1] + 2.
-        y2[i] = (sig-1.) / p
+        # print(i,x[i])
+        sig = (x[i] - x[i - 1]) / (x[i + 1] - x[i - 1])
+        p = sig * y2[i - 1] + 2.
+        y2[i] = (sig - 1.) / p
         u[i] = (
-            ((6. * ((y[i + 1] - y[i]) / (x[i + 1] - x[i]) - (y[i] - y[i-1]) /
-              x[i] - x[i-1])) / ( x[i + 1] - x[i - 1]) - sig * u[i - 1]) / p )
+            ((6. * ((y[i + 1] - y[i]) / (x[i + 1] - x[i]) - (y[i] - y[i - 1]) /
+                    x[i] - x[i - 1])) / (x[i + 1] - x[i - 1]) - sig * u[i - 1]) / p)
 
     if ypn > one29:
         qn = 0.
@@ -236,16 +303,17 @@ def spline(n, yp1, ypn, x=[] ,y=[] ,y2=[]):
         un = (
             (3. / (x[n] - x[n - 1])) *
             (ypn - (y[n] - y[n - 1]) /
-            (x[n] - x[n - 1]))
-            )
+             (x[n] - x[n - 1]))
+        )
 
     y2[n] = (un - qn * u[n - 1]) / (qn * y2[n - 1] + 1.)
-    for k in range(n-1, -1, -1):
+    for k in range(n - 1, -1, -1):
         y2[k] = y2[k] * y2[k + 1] + u[k]
 
     return
 
-def splint(n, x ,xa=[], ya=[], y2a=[]):
+
+def splint(n, x, xa=[], ya=[], y2a=[]):
     klo = 0
     khi = n
     while khi - klo > 1:
@@ -261,17 +329,13 @@ def splint(n, x ,xa=[], ya=[], y2a=[]):
     a = (xa[khi] - x) / h
     b = (x - xa[klo]) / h
     y = (a * ya[klo] + b * ya[khi] + ((a * a * a - a) * y2a[klo] +
-        (b * b * b - b) * y2a[khi]) * (h * h) /6.)
+                                      (b * b * b - b) * y2a[khi]) * (h * h) / 6.)
 
     return y
 
-    
 
-
-#main here
+# main here
 if __name__ == '__main__':
-
-
     schlumbergerFilterCoefficients, wennerFilterCoefficients = coefficients
 
     # I know there must be a better method to assign lists. And probably numpy
@@ -353,5 +417,5 @@ if __name__ == '__main__':
 
     montecarlo_sim(10000,5,1.e10)
 
-    sys.exit(0)
 
+    sys.exit(0)

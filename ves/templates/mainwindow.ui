@@ -41,7 +41,7 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="0" colspan="3">
+      <item row="0" column="0" colspan="3">
        <widget class="QTableView" name="tableViewWidget">
         <property name="enabled">
          <bool>true</bool>
@@ -81,7 +81,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="1" column="0">
        <widget class="QPushButton" name="addRowButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -97,7 +97,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1" colspan="2">
+      <item row="1" column="1" colspan="2">
        <widget class="QPushButton" name="removeRowButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -110,32 +110,6 @@
         </property>
         <property name="text">
          <string>Remove Row</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="3">
-       <widget class="QCheckBox" name="decimalCheckBox">
-        <property name="text">
-         <string>Period Decimal Separator (USA?)</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="3" alignment="Qt::AlignHCenter">
-       <widget class="QRadioButton" name="wennerRadioButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>Use the Wenner Spacing in calculating depth to water</string>
-        </property>
-        <property name="text">
-         <string>Wenner Array</string>
         </property>
        </widget>
       </item>
@@ -258,7 +232,7 @@
      <x>0</x>
      <y>0</y>
      <width>1099</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="sizePolicy">

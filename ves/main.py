@@ -93,9 +93,9 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
             self.wennerCoefficients) = coefficients
 
         # Set up the model and tableView
-        pp.pprint('tabledata: {}'.format(tableData))
-        pp.pprint('headers: {}'.format(headers))
-        pp.pprint('colors: {}'.format(colors))
+        # pp.pprint('tabledata: {}'.format(tableData))
+        # pp.pprint('headers: {}'.format(headers))
+        # pp.pprint('colors: {}'.format(colors))
         self.model = PalettedTableModel(tableData, headers, colors)
 
         self.initTableView(self.model)
@@ -126,24 +126,24 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         self.canvas.mpl_connect(
             'button_release_event', self.canvas.onRelease)
 
-        # Connect to table buttons
+        #### Connect to table buttons
         self.addRowButton.clicked.connect(self.addRow)
         self.removeRowButton.clicked.connect(self.removeRow)
 
-        # Connect to spacing radio buttons
-        self.wennerRadioButton.toggled.connect(self.wenner)
+        #### Connect to spacing radio buttons
+        # self.wennerRadioButton.toggled.connect(self.wenner)
         # self.schlumbergerRadioButton.toggled.connect(self.schlumberger)
 
-        # Connect to plot buttons
+        #### Connect to plot buttons
         self.plotDataButton.clicked.connect(self.compute)
         # self.newRectangleButton.clicked.connect(self.newRectangle)
         self.resetPlotButton.clicked.connect(self.resetPlot)
 
-        # Connect to the decimal separator check box
-        self.decimalCheckBox.clicked.connect(self.model.stripCommas)
+        #### Connect to the decimal separator check box
+        # self.decimalCheckBox.clicked.connect(self.model.stripCommas)
         # self.initUi()
 
-        # Connect to analysis button
+        #### Connect to analysis button
         print('Before self.launchAnalysisButton.clicked.connect(self.launchReportWindow)')
         self.launchAnalysisButton.clicked.connect(self.launchReportWindow)
         print('After self.launchAnalysisButton.clicked.connect(self.launchReportWindow)')
@@ -368,14 +368,14 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         self.apparentResistivity = None
         self.aggregateTableForPlot()
-
+        self.wennerLayout = True
         # Calculate apparent resistivity using the Wenner array
         if self.wennerLayout == True:
 
-            # Test and let user know spacing does not indicate Wenner Array
-            if not np.all(
-                self.voltageSpacing * 2 == self.voltageSpacing[0] * 2):
-                self.wennerMessageBox(suppress)
+            #### Test and let user know spacing does not indicate Wenner Array
+            # if not np.all(
+            #     self.voltageSpacing * 2 == self.voltageSpacing[0] * 2):
+                # self.wennerMessageBox(suppress)
 
             #Calculate apparent Resistivity
             self.apparentResistivity = wennerResistivity(
@@ -403,9 +403,9 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         # Calculate apparent resistivity using the Schlumberger array
         elif self.schlumbergerLayout == True:
 
-            # Test and let user know spacing does not indicate Schlum. array
-            if np.any(self.voltageSpacing[1:] == self.voltageSpacing[0]):
-                self.schlumbergerMessageBox(suppress)
+            #### Test and let user know spacing does not indicate Schlum. array
+            # if np.any(self.voltageSpacing[1:] == self.voltageSpacing[0]):
+                # self.schlumbergerMessageBox(suppress)
 
             self.apparentResistivity = schlumbergerResistivityModified(
                 self.voltageSpacing, self.meanVoltage, self.meanCurrent)
@@ -429,7 +429,7 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
         # Provide a message box if neither Wenner nor Schlumberger are selected
         else:
-            self.noSpacingMessageBox(suppress)
+            # self.noSpacingMessageBox(suppress)
             return
 
         return self.apparentResistivity

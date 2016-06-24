@@ -66,9 +66,7 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.latitudeLineEdit.setText('Please enter latitude (N/S)')
 
         self.LayersTableView.resizeColumnsToContents()
-        print('About to SHOW LayersTableView')
         self.LayersTableView.showFullScreen()
-        print('SHOWed LayersTableView')
 
         # Add a plot and matplotlib toolbar to the report window
         self.mplvl.addWidget(self.canvas)

@@ -1,10 +1,48 @@
 import copy
 
 import numpy as np
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
+def aggregateTable_ReportWindow(tableData, returnZero=False):
+    pp.pprint('TABLEDATA_ReportWindow IS:')
+    pp.pprint(tableData)
+    rowCount = len(tableData)
+    temporaryTableData = copy.deepcopy(tableData)
+    # Convert values from Qt model strings to floats or np.nan
+    for i in range(rowCount):
+        row = temporaryTableData[i]
+        for j in range(len(row)):
+            value = row[j]
+            try:
+                value = float(value)
+            except ValueError:
+                value = np.nan
+            row[j] = value
+            temporaryTableData[i] = row
+
+    # Extract the raw layer,min/max thickness and min/max resistivity, pass on Index/Value error
+    layer, minthick, maxthick, minres, maxres = [], [], [], [], []
+    for row in temporaryTableData[:rowCount]:
+        try:
+            layer.append(row.pop(0))
+            minthick.append(row.pop(0))
+            maxthick.append(row.pop(0))
+            minres.append(row.pop(0))
+            maxres.append(row.pop(0))
+            if int(row[0]) == rowCount:
+                minthick[rowCount] = 'Inf'
+                maxthick[rowCount] = 'Inf'
+
+        except (IndexError, ValueError):
+            print('There was error in aggregateTable_ReportWindow')
+            pass
+
+
+    return (layer, minthick, maxthick, minres, maxres)
 
 def aggregateTable(tableData, returnZero=False):
-    """Aggreate the PalletedTableModel class input data for analysis
+    """Aggregate the PalletedTableModel class input data for analysis
 
     Parameters
     ----------
@@ -26,6 +64,8 @@ def aggregateTable(tableData, returnZero=False):
         the 0, 1, 2 indices
 
     """
+    pp.pprint('TABLEDATA IS:')
+    pp.pprint(tableData)
     rowCount = len(tableData)
     temporaryTableData = copy.deepcopy(tableData)
     # Convert values from Qt model strings to floats or np.nan

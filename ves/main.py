@@ -144,24 +144,23 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         # self.initUi()
 
         #### Connect to analysis button
-        print('Before self.launchAnalysisButton.clicked.connect(self.launchReportWindow)')
         self.launchAnalysisButton.clicked.connect(self.launchReportWindow)
-        print('After self.launchAnalysisButton.clicked.connect(self.launchReportWindow)')
         self.initUi()
 
 
     def launchReportWindow(self):
         """Launches the ReportWindow class on launch of VES Inverse Analysis"""
         # try:
-        print('INSIDE def launchReportWindow(self)')
         self.ReportCanvas = ReportCanvas(
             self.samplePoints, self.filteredResistivity,
             self.voltageSpacing, self.apparentResistivity,
             self.voltageSpacingExtrapolated, self.newResistivity)
 
         # self.close()
-
-        self.ReportWindow = ReportWindow(self.ReportCanvas,tableData_reportWindow, headers_reportWindow)
+        pp.pprint('tableDATA REPORT WINDOW:')
+        pp.pprint(tableData_reportWindow)
+        self.ReportWindow = ReportWindow(self.ReportCanvas,tableData_reportWindow, headers_reportWindow,
+                                         self.apparentResistivity, self.voltageSpacing)
         self.ReportWindow.show()
 
         # except AttributeError:

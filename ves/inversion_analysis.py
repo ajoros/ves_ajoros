@@ -38,8 +38,7 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
               'Must be schlumberger or wenner')
         sys.exit()
 
-    print('\nthickParam\n{}'.format(thickParam))
-    print('resParam\n{}'.format(resParam))
+
 
     # these lines apparently find the computer precision ep
     # fctr = ep + 1.
@@ -57,6 +56,8 @@ def inversionAnalysis(apparentResistivity, voltageSpacing,
             smallestSpacing, sampleInterval,
             nOuputPoints, arraySpacing)
         print(rmsError)
+        print('\nthickParam\n{}'.format(thickParam))
+        print('resParam\n{}'.format(resParam))
 
 
 def transform(y, ep):

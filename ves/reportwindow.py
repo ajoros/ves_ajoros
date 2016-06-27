@@ -1,5 +1,7 @@
 import os
 import sys
+import random
+from io import BytesIO
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -7,18 +9,29 @@ pp = pprint.PrettyPrinter(indent=4)
 from matplotlib.backends.backend_qt5agg import (
     NavigationToolbar2QT as NavigationToolbar)
 
+import matplotlib
 import numpy as np
 np.seterr(over='ignore')
+matplotlib.use('Qt5Agg')
+import matplotlib.pyplot as plt
 
 from PyQt5.QtCore import QDateTime
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.uic import loadUiType
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
 
 from table_reportWindow import PalettedTableModel_reportWindow
 from templates.tempData import (
-    columns_reportWindow, headers_reportWindow,
+    coefficients, columns_reportWindow, headers_reportWindow,
     rowCount_reportWindow, tableData_reportWindow)
+from ves_inverse import (
+    montecarlo_sim, createPlot, createPDF, readData, error, transf, filters, rmsfit, spline, splint,
+    p, r, rl, t, b, asav, asavl, adatl, rdatl, adat, rdat, pkeep, rkeep, rkeepl, pltanswer, pltanswerl,
+    pltanswerkeep, pltanswerkeepl, small, xlarge, x, y, y2, u, new_x, new_y)
+
 
 
 os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))
@@ -27,7 +40,7 @@ UI_ReportWindow, QReportWindow = loadUiType('reportwindow.ui')
 
 class ReportWindow(UI_ReportWindow, QReportWindow):
 
-    def __init__(self, canvas, tableData_reportWindow, headers_reportWindow):
+    def __init__(self, canvas, tableData_reportWindow, headers_reportWindow, apparentResistivity, voltageSpacing):
 
         super(QReportWindow, self).__init__()
 
@@ -41,6 +54,9 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.setWindowIcon(QIcon('hand_drill.png'))
 
         self.canvas = canvas
+        self.ar = apparentResistivity
+        self.vs = voltageSpacing
+
 
         # rectCoordinates = canvas.rectCoordinates
 
@@ -62,7 +78,7 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.initTableView_reportWindow(self.model_reportWindow)
 
         # Set default lat/long values
-        self.longitudeLineEdit.setText('Please enter logitude (E/W)')
+        self.longitudeLineEdit.setText('Please enter longitude (E/W)')
         self.latitudeLineEdit.setText('Please enter latitude (N/S)')
 
         self.LayersTableView.resizeColumnsToContents()
@@ -73,8 +89,135 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.mplvl.addWidget(NavigationToolbar(
             self.canvas, self.canvas, coordinates=True))
 
-    # def launchReportOutput(self):
-    #     """ Launches the ReportOutput class on execution of Monte Carlo Simulation """
+        self.rerunMontecarlo.clicked.connect(self.computeMonteCarlo)
+
+
+    def computeMonteCarlo(self):
+        """ Launches execution of Monte Carlo Simulation """
+        iter_ = 10000  # number of iterations for the Monte Carlo guesses. to be input on GUI
+
+        # INPUT
+        arrayType = 'wenner'
+        e = 5  # number of layers
+        n = 2 * e - 1
+
+        spac = 0.2  # smallest electrode spacing
+        m = 20  # number of points where resistivity is calculated
+
+        spac = np.log(spac)
+        delx = np.log(10.0) / 6.
+
+        # these lines apparently find the computer precision ep
+        ep = 1.0
+        ep = ep / 2.0
+        fctr = ep + 1.
+        while fctr > 1.:
+            ep = ep / 2.0
+            fctr = ep + 1.
+
+        schlumbergerFilterCoefficients, wennerFilterCoefficients = coefficients
+
+        # I know there must be a better method to assign lists. And probably numpy
+        # arrays would be best. But my Python wasn't up to it. If the last letter
+        # is an 'l' that means it is a log10 of the value
+
+        # 65 is completely arbitrary - > Nearing retirement?
+        # p = [0] * 20
+        # r = [0] * 65
+        # rl = [0] * 65
+        # t = [0] * 50
+        # b = [0] * 65
+        # asav = [0] * 65
+        # asavl = [0] * 65
+        # adatl = [0] * 65
+        # rdatl = [0] * 65
+        # adat = [0] * 65
+        # rdat = [0] * 65
+        # pkeep = [0] * 65
+        # rkeep = [0] * 65
+        # rkeepl = [0] * 65
+        # pltanswer = [0] * 65
+        # pltanswerl = [0] * 65
+        # pltanswerkeep = [0] * 65
+        # pltanswerkeepl = [0] * 65
+        #
+        # rl = [0] * 65
+        # small = [0] * 65
+        # xlarge = [0] * 65
+        #
+        # x = [0] * 100
+        # y = [0] * 100
+        # y2 = [0] * 100
+        # u = [0] * 5000
+        # new_x = [0] * 1000
+        # new_y = [0] * 1000
+        ndat = 13
+        # hard coded data input - spacing and apparent resistivities measured
+        # in the field
+        adat = [0, 3., 4.5, 6., 9., 13.5, 21., 30., 45., 60., 90., 135., 210., 300.]
+        print('adat is: {}'.format(adat))
+        print('vs is: {}'.format(self.vs.tolist()))
+        print('vs type is: {}'.format(type(self.vs.tolist())))
+        vs_list = [0] + self.vs.tolist()
+
+        # adat = [0., 0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
+        rdat = [0, 9295., 4475., 2068., 1494., 764., 375., 294., 245., 235., 156., 118., 83., 104.]
+        print('rdat is: {}'.format(rdat))
+        print('ar is: {}'.format(self.ar.tolist()))
+        print('ar type is: {}'.format(type(self.ar.tolist())))
+        ar_list = [0] + self.ar.tolist()
+        # rdat = [0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
+
+        one30 = 1.e30
+        rms = one30
+        errmin = 1.e10
+        ndat = len(self.vs.tolist())
+        # this is where the range in parameters should be input from a GUI
+        # I'm hard coding this in for now
+
+        # enter thickness range for each layer and then resistivity range.
+        # for 3 layers small[1] and small[2] are low end [MINIMUM] of thickness range
+        # small[3], small[4] and small[5] are the low end [MINIMUM] of resistivities
+        small[1] = 1.
+        xlarge[1] = 30.
+
+        small[2] = 1.
+        xlarge[2] = 30.
+
+        small[3] = 1.
+        xlarge[3] = 30.
+
+        small[4] = 1.
+        xlarge[4] = 30.
+
+        small[5] = 1.
+        xlarge[5] = 1000000.
+
+        small[6] = 1.
+        xlarge[6] = 1000000.
+
+        small[7] = 1.
+        xlarge[7] = 1000000.
+
+        small[8] = 1.
+        xlarge[8] = 1000000.
+
+        small[9] = 1.
+        xlarge[9] = 1000000.
+        print('ndat is: {}'.format(ndat))
+        montecarlo_sim(iter_, e, errmin, ndat, vs_list, ar_list)
+
+    def aggregateTableForMonteCarlo(self):
+        """Apply the aggregation function and assign the outputs to the class for Monte Carlo simulation"""
+
+        self.layer = layer
+        self.minthick = minthick
+        self.maxthick = maxthick
+        self.minres = minres
+        self.maxres = maxres
+        self.apparent_resistivity = apparentResistivity
+        self.voltageSpacing = voltageSpacing
+
 
     def layersFromRectangles(self):
 
@@ -125,18 +268,12 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         Run once on instantiation of the class to space the rows
 
         """
-        print('Inside initTableView_reportWindow def')
         nRows = len(self.model_reportWindow.table)
-        print('nRows is {}'.format(nRows))
-        print('There are {} columns'.format(len(columns_reportWindow)))
         self.LayersTableView.setModel(model)
-        print('self.LayersTableView.setModel(model)')
         # Set the table to span 4 rows in the spacing columns
         for row in range(0, nRows):
             for col in columns_reportWindow:
                 self.LayersTableView.setSpan(row, col, 1, 1)
 
         self.LayersTableView.resizeColumnsToContents()
-        print('self.LayersTableView.resizeColumnsToContents()')
         self.LayersTableView.show()
-        print('Inside initTableView_reportWindow def and showed LayersTableView')

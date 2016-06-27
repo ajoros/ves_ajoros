@@ -53,7 +53,6 @@ class PalettedTableModel(QAbstractTableModel):
         self.headers = headers
         self.colors = colors
 
-
     def rowCount(self, parent):
         """Define the row count of the table
 
@@ -71,7 +70,6 @@ class PalettedTableModel(QAbstractTableModel):
 
         """
         return len(self.table)
-
 
     def columnCount(self, parent):
         """Define the row count of the table
@@ -92,7 +90,6 @@ class PalettedTableModel(QAbstractTableModel):
         """
         return len(self.table[0])
 
-
     def flags(self, index):
         """Sets the Qt flags
 
@@ -108,7 +105,6 @@ class PalettedTableModel(QAbstractTableModel):
 
         """
         return Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable
-
 
     def update(self, table):
         """Define the method which updates the table with new data
@@ -126,7 +122,6 @@ class PalettedTableModel(QAbstractTableModel):
 
         """
         self.table = table
-
 
     def data(self, index, role):
         """Define the alignment and actions of the table on edit,
@@ -154,22 +149,17 @@ class PalettedTableModel(QAbstractTableModel):
         # For each cell, define an action for Qt roles
         #  http://pyqt.sourceforge.net/Docs/PyQt4/qt.html#ItemDataRole-enum
         if role == Qt.EditRole:
-
             return self.table[row][column]
 
         if role == Qt.ToolTipRole:
-
             return 'Cell value: {}'.format(
                 self.table[row][column])
 
         if role == Qt.DisplayRole:
-
             return self.table[row][column]
 
         if role == Qt.TextAlignmentRole:
-
             return Qt.AlignHCenter | Qt.AlignVCenter
-
 
     def setData(self, index, value, role=Qt.EditRole):
         """This method sets the data to the appropriate value when appprops
@@ -195,7 +185,6 @@ class PalettedTableModel(QAbstractTableModel):
             column = index.column()
 
             if isinstance(value, str):
-
                 self.table[row][column] = value
                 self.dataChanged.emit(index, index)
 
@@ -203,19 +192,16 @@ class PalettedTableModel(QAbstractTableModel):
 
         return False
 
-
     def stripCommas(self):
 
         for row in range(len(self.table)):
 
-            for column in  range(len(self.table[0])):
-
+            for column in range(len(self.table[0])):
                 value = self.table[row][column]
                 print(self.table)
                 self.table[row][column] = value.replace('.', ',')
                 print(self.table)
                 del value
-
 
     def headerData(self, section, orientation, role):
         """Sets the headers for both the rows and columns of the tableView
@@ -249,14 +235,12 @@ class PalettedTableModel(QAbstractTableModel):
                 return self.headers[section]
 
             if orientation == Qt.Vertical:
-
                 # Use QPixmap objects to create colored boxes in row headers
                 value = self.colors[section]
                 pixmap = QPixmap(25, 25)
                 pixmap.fill(QColor(value))
 
                 return pixmap
-
 
     def insertRows(self, position, rows, parent=QModelIndex()):
         """Insert a new row in the table
@@ -280,14 +264,12 @@ class PalettedTableModel(QAbstractTableModel):
 
         # Default to empty cells
         for i in range(rows):
-
             defaultValues = [
                 '' for i in range(self.columnCount(None))]
 
             self.table.insert(position, defaultValues)
 
         self.endInsertRows()
-
 
     def removeRows(self, position, rows, parent=QModelIndex()):
         """Remove rows from the table
@@ -316,11 +298,9 @@ class PalettedTableModel(QAbstractTableModel):
         self.endRemoveRows()
 
 
-
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setStyle("fusion") #Changed the style to prevent "PyQt5: Gtk-CRITICAL error"
+    app.setStyle("fusion")  # Changed the style to prevent "PyQt5: Gtk-CRITICAL error"
     model = PalettedTableModel(tableData, headers, colors)
 
     tableView = QTableView()

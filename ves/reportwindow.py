@@ -3,26 +3,29 @@ import sys
 import random
 from io import BytesIO
 import pprint
-pp = pprint.PrettyPrinter(indent=4)
 
+pp = pprint.PrettyPrinter(indent=4)
 
 from matplotlib.backends.backend_qt5agg import (
     NavigationToolbar2QT as NavigationToolbar)
 
 import matplotlib
 import numpy as np
+
 np.seterr(over='ignore')
 matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
 
+from PyQt5 import QtGui
 from PyQt5.QtCore import QDateTime
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMessageBox, QProgressBar
 from PyQt5.uic import loadUiType
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
+from aggregate import aggregateTable_ReportWindow
 from table_reportWindow import PalettedTableModel_reportWindow
 from templates.tempData import (
     coefficients, columns_reportWindow, headers_reportWindow,
@@ -32,14 +35,11 @@ from ves_inverse import (
     p, r, rl, t, b, asav, asavl, adatl, rdatl, adat, rdat, pkeep, rkeep, rkeepl, pltanswer, pltanswerl,
     pltanswerkeep, pltanswerkeepl, small, xlarge, x, y, y2, u, new_x, new_y)
 
-
-
 os.chdir(os.path.join(os.path.dirname(__file__), 'templates'))
 UI_ReportWindow, QReportWindow = loadUiType('reportwindow.ui')
 
 
 class ReportWindow(UI_ReportWindow, QReportWindow):
-
     def __init__(self, canvas, tableData_reportWindow, headers_reportWindow, apparentResistivity, voltageSpacing):
 
         super(QReportWindow, self).__init__()
@@ -56,7 +56,6 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.canvas = canvas
         self.ar = apparentResistivity
         self.vs = voltageSpacing
-
 
         # rectCoordinates = canvas.rectCoordinates
 
@@ -89,10 +88,30 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.mplvl.addWidget(NavigationToolbar(
             self.canvas, self.canvas, coordinates=True))
 
+        self.aggregateTableForMonteCarlo()
         self.rerunMontecarlo.clicked.connect(self.computeMonteCarlo)
 
+    def aggregateTableForMonteCarlo(self):
+        """Apply the aggregation function and assign the outputs to the class for Monte Carlo simulation"""
+
+        # print('SELF model_reportWindow TABLE IS: {}'.format(self.model_reportWindow.table))
+
+        layer, minthick, maxthick, minres, maxres = aggregateTable_ReportWindow(
+            self.model_reportWindow.table)
+        self.layer = layer
+        self.minthick = minthick
+        self.maxthick = maxthick
+        self.minres = minres
+        self.maxres = maxres
 
     def computeMonteCarlo(self):
+        longtext = self.longitudeLineEdit.text()
+        print('LONGTEXT IS {}'.format(longtext))
+        lattext = self.latitudeLineEdit.text()
+        print('LATTEXT IS {}'.format(lattext))
+        datetimetext = self.dateTimeEdit.text()
+        print('DATETIMETEXT IS {}'.format(datetimetext))
+
         """ Launches execution of Monte Carlo Simulation """
         iter_ = 10000  # number of iterations for the Monte Carlo guesses. to be input on GUI
 
@@ -151,21 +170,28 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         # u = [0] * 5000
         # new_x = [0] * 1000
         # new_y = [0] * 1000
-        ndat = 13
+        # ndat = 13
         # hard coded data input - spacing and apparent resistivities measured
         # in the field
+        self.aggregateTableForMonteCarlo()
+        print('self.layer is {}'.format(self.layer))
+        print('self.minthick is {}'.format(self.minthick))
+        print('self.maxthick is {}'.format(self.maxthick))
+        print('self.minres is {}'.format(self.minres))
+        print('self.maxres is {}'.format(self.maxres))
+
         adat = [0, 3., 4.5, 6., 9., 13.5, 21., 30., 45., 60., 90., 135., 210., 300.]
         print('adat is: {}'.format(adat))
-        print('vs is: {}'.format(self.vs.tolist()))
-        print('vs type is: {}'.format(type(self.vs.tolist())))
-        vs_list = [0] + self.vs.tolist()
+        print('VOLTAGE SPACING from mainwindow (VS) is: {}'.format(self.vs.tolist()))
+        print('VOLTAGE SPACING (VS) from mainwindow type is: {}'.format(type(self.vs.tolist())))
+        vs_list = [0] + self.vs.tolist() + 40*[0]
 
         # adat = [0., 0.55, 0.95, 1.5, 2.5, 3., 4.5, 5.5, 9., 12., 20., 30.,  70.]
         rdat = [0, 9295., 4475., 2068., 1494., 764., 375., 294., 245., 235., 156., 118., 83., 104.]
         print('rdat is: {}'.format(rdat))
-        print('ar is: {}'.format(self.ar.tolist()))
-        print('ar type is: {}'.format(type(self.ar.tolist())))
-        ar_list = [0] + self.ar.tolist()
+        print('APPARENT RESISTIVITY from mainwindow (AR) is: {}'.format(self.ar.tolist()))
+        print('APPARENT RESISTIVITY (AR) from mainwindow type is: {}'.format(type(self.ar.tolist())))
+        ar_list = [0] + self.ar.tolist() + 40*[0]
         # rdat = [0., 125., 110., 95., 40., 24., 15., 10.5, 8., 6., 6.5, 11., 25.]
 
         one30 = 1.e30
@@ -178,46 +204,15 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         # enter thickness range for each layer and then resistivity range.
         # for 3 layers small[1] and small[2] are low end [MINIMUM] of thickness range
         # small[3], small[4] and small[5] are the low end [MINIMUM] of resistivities
-        small[1] = 1.
-        xlarge[1] = 30.
 
-        small[2] = 1.
-        xlarge[2] = 30.
-
-        small[3] = 1.
-        xlarge[3] = 30.
-
-        small[4] = 1.
-        xlarge[4] = 30.
-
-        small[5] = 1.
-        xlarge[5] = 1000000.
-
-        small[6] = 1.
-        xlarge[6] = 1000000.
-
-        small[7] = 1.
-        xlarge[7] = 1000000.
-
-        small[8] = 1.
-        xlarge[8] = 1000000.
-
-        small[9] = 1.
-        xlarge[9] = 1000000.
+        xlarge = [0] + self.maxthick[:len(self.maxthick)-1] + self.maxres + 40*[0]
+        small = [0] + self.minthick[:len(self.minthick)-1] + self.minres + 40*[0]
+        print('xlarge is: {}'.format(xlarge))
+        print('small is: {}'.format(small))
         print('ndat is: {}'.format(ndat))
-        montecarlo_sim(iter_, e, errmin, ndat, vs_list, ar_list)
-
-    def aggregateTableForMonteCarlo(self):
-        """Apply the aggregation function and assign the outputs to the class for Monte Carlo simulation"""
-
-        self.layer = layer
-        self.minthick = minthick
-        self.maxthick = maxthick
-        self.minres = minres
-        self.maxres = maxres
-        self.apparent_resistivity = apparentResistivity
-        self.voltageSpacing = voltageSpacing
-
+        montecarlo_sim(iter_, e, errmin, ndat, vs_list, ar_list, small, xlarge, lattext, longtext, datetimetext)
+        # ****SAVE WHATEVER IS IN REPORTWINDOW TABLE TO****
+        # ****THE SMALL and XLARGE VARIABLES ABOVE****
 
     def layersFromRectangles(self):
 
@@ -236,14 +231,13 @@ class ReportWindow(UI_ReportWindow, QReportWindow):
         self.maxResistivities = maxResistivities
         self.minResistivities = minResistivities
 
-
     def emptyRectangles(self, event):
 
         msgBox = QMessageBox(self)
         reply = msgBox.question(
             self, 'Warning',
             ('There were no rectangles drawn to define Earth layers. ' +
-             'Slect "yes" to exit the program or "no" continue to '+
+             'Slect "yes" to exit the program or "no" continue to ' +
              'record latitude and longitude.'),
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 

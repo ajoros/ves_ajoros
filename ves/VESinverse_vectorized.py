@@ -374,10 +374,10 @@ if __name__ == '__main__':
               asavl[i], rkeepl[i]))
 
     print('plot a lot')
-    plt.loglog(asav[1:m],rkeep[1:m],'-')  # resistivity prediction curve
-    plt.loglog(adat[1:ndat],pltanswerkeep[1:ndat], 'ro')  # predicted data red dots
+    plt.semilogy(asav[1:m],rkeep[1:m],'-')  # resistivity prediction curve
+    plt.semilogy(adat[1:ndat],pltanswerkeep[1:ndat], 'ro')  # predicted data red dots
     s=7
-    plt.loglog(adat[1:ndat],rdat[1:ndat],'bo',markersize=s) #original data blue dots
+    plt.semilogy(adat[1:ndat],rdat[1:ndat],'bo',markersize=s) #original data blue dots
     plt.show()
     plt.grid(True)
     sys.exit(0)

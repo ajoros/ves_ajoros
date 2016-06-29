@@ -225,6 +225,8 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         meanCurrent properties are up to date with the table
 
         """
+        pp.pprint('SELF model TABLE IS: ')
+        pp.pprint(self.model.table)
         voltageSpacing, meanVoltage, meanCurrent = aggregateTable(
             self.model.table)
 
@@ -268,8 +270,12 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
         if hasattr(self, 'apparentResistivity'):
             voltageSpacing = self.voltageSpacing
 
+            # computes new resistivity for new voltageSpacing
+            self.compute()
+
             # if self.schlumberger:
             #     voltageSpacing = self.voltageSpacing[:-1]
+            # print('VOLTAGE SPACING IN MAIN IS {}'.format(voltageSpacing))prinistivity))
 
             self.canvas.initFigure(voltageSpacing, self.apparentResistivity)
 
@@ -281,16 +287,16 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
     def resetPlot(self):
         """Clear the plot of data and rectangles to redraw the layers"""
         # Catch ValueError that occurs if reset is clicked prior to plotting
-        try:
-            self.canvas.mplRectangles = []
-            self.canvas.rectCoordinates = []
+        # try:
+        #     self.canvas.mplRectangles = []
+        #     self.canvas.rectCoordinates = []
 
-            plt.clf()
-            self.aggregateTableForPlot()
-            self.initPlot()
+        plt.clf()
+        self.aggregateTableForPlot()
+        self.initPlot()
 
-        except ValueError:
-            pass
+        # except ValueError:
+        #     pass
 
 
     def stripCommas(self, table):
@@ -306,38 +312,6 @@ class StartupWindow(QStartupWindow, UI_StartupWindow):
 
     #             self.table[row][column] = value
     #             del value
-
-
-    def newRectangle(self):
-        """Add a new rectangle to the figure canvas
-
-        Notes
-        -----
-        Adds the rectangles coordinates to the mplRectangles list and locks
-        the latest rectangle into the plot. This button MUST be pressed prior
-        to launching the analysis to include all defined layers.
-
-        """
-        try:
-            if self.canvas.rectxy:
-                self.canvas.mplRectangles.append(self.rect)
-                self.canvas.rectCoordinates.append(self.canvas.rectxy)
-
-            self.initPlot(draw=False)
-
-            self.canvas.addPointsAndLine(
-                self.voltageSpacing, self.apparentResistivity, draw=True)
-
-            if self.canvas.mplRectangles:
-                self.canvas.drawRectangles()
-
-            plt.tight_layout()
-            self.canvas.ax.figure.canvas.draw()
-
-            return
-
-        except AttributeError:
-            pass
 
 
     def compute(self, suppress=False):

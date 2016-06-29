@@ -4,10 +4,11 @@ import numpy as np
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-def aggregateTable_ReportWindow(tableData, returnZero=False):
+def aggregateTable_ReportWindow(tableData):
     pp.pprint('TABLEDATA_ReportWindow IS:')
     pp.pprint(tableData)
     rowCount = len(tableData)
+    print(rowCount)
     temporaryTableData = copy.deepcopy(tableData)
     # Convert values from Qt model strings to floats or np.nan
     for i in range(rowCount):
@@ -24,19 +25,19 @@ def aggregateTable_ReportWindow(tableData, returnZero=False):
     # Extract the raw layer,min/max thickness and min/max resistivity, pass on Index/Value error
     layer, minthick, maxthick, minres, maxres = [], [], [], [], []
     for row in temporaryTableData[:rowCount]:
-        try:
-            layer.append(row.pop(0))
-            minthick.append(row.pop(0))
-            maxthick.append(row.pop(0))
-            minres.append(row.pop(0))
-            maxres.append(row.pop(0))
-            if int(row[0]) == rowCount:
-                minthick[rowCount] = 'Inf'
-                maxthick[rowCount] = 'Inf'
+        # try:
+        layer.append(row[0])
+        minthick.append(row.pop(1))
+        maxthick.append(row.pop(1))
+        minres.append(row.pop(1))
+        maxres.append(row.pop(1))
+        if int(row[0]) == rowCount:
+            minthick[rowCount-1] = 'Inf'
+            maxthick[rowCount-1] = 'Inf'
 
-        except (IndexError, ValueError):
-            print('There was error in aggregateTable_ReportWindow')
-            pass
+        # except (IndexError, ValueError):
+        #     print('There was error in aggregateTable_ReportWindow')
+        #     pass
 
 
     return (layer, minthick, maxthick, minres, maxres)

@@ -175,7 +175,7 @@
              <string>Plot the input table</string>
             </property>
             <property name="text">
-             <string>Plot Data</string>
+             <string>Compute and Plot Resistivities</string>
             </property>
            </widget>
           </item>

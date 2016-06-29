@@ -195,7 +195,7 @@ class InteractiveCanvas(FigureCanvas):
                 ydata = ydata[:len(xdata)]
 
         # log/log plot of x and y data
-        plt.loglog(
+        plt.semilogy(
             xdata, ydata, linestyle=self.linestyle,
             marker=self.marker, color=color, label = "Observed")
         # Draw the updates
@@ -317,13 +317,13 @@ class ReportCanvas(FigureCanvas):
 
     def initFigure(self):
         # Plot out the results
-        plt.loglog(self.voltageSpacingExtrapolated,
+        plt.semilogy(self.voltageSpacingExtrapolated,
                    self.filteredResistivity,
                    marker=self.marker,
                    linestyle=self.linestyle,
                    color=self.colors[0],
                    label="Filtered")
-        plt.loglog(self.voltageSpacing, self.apparentResistivity,
+        plt.semilogy(self.voltageSpacing, self.apparentResistivity,
                    marker=self.marker,
                    linestyle=self.linestyle,
                    color=self.colors[1],
@@ -335,6 +335,8 @@ class ReportCanvas(FigureCanvas):
         self.ax = plt.gca()
         self.ax.set_xlabel(self.xlabel)
         self.ax.set_ylabel(self.ylabel)
+        print('CHANGING self.ax.set_xscale')
+        self.ax.set_xscale('linear')
         # self.ax.add_patch(self.rect)
         self.ax.figure.canvas.draw()
 

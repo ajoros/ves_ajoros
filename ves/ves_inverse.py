@@ -1,6 +1,9 @@
 import random  # not for prod
 import sys
 from io import BytesIO
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
 
 import matplotlib
 import numpy as np
@@ -10,6 +13,8 @@ import matplotlib.pyplot as plt
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+
+from PyQt5.QtWidgets import QApplication
 
 # os.chdir('./templates')  # not for prod
 # print(os.getcwd())
@@ -89,35 +94,38 @@ errmin = 1.e10
 # enter thickness range for each layer and then resistivity range.
 # for 3 layers small[1] and small[2] are low end [MINIMUM] of thickness range
 # small[3], small[4] and small[5] are the low end [MINIMUM] of resistivities
-small[1] = 1.
-xlarge[1] = 30.
+# small[1] = 1.
+# xlarge[1] = 30.
+#
+# small[2] = 1.
+# xlarge[2] = 30.
+#
+# small[3] = 1.
+# xlarge[3] = 30.
+#
+# small[4] = 1.
+# xlarge[4] = 30.
+#
+# small[5] = 1.
+# xlarge[5] = 1000000.
+#
+# small[6] = 1.
+# xlarge[6] = 1000000.
+#
+# small[7] = 1.
+# xlarge[7] = 1000000.
+#
+# small[8] = 1.
+# xlarge[8] = 1000000.
+#
+# small[9] = 1.
+# xlarge[9] = 1000000.
+print('SMALL VEC IS: {}'.format(small))
+print('xlarge VEC IS: {}'.format(xlarge))
 
-small[2] = 1.
-xlarge[2] = 30.
 
-small[3] = 1.
-xlarge[3] = 30.
-
-small[4] = 1.
-xlarge[4] = 30.
-
-small[5] = 1.
-xlarge[5] = 1000000.
-
-small[6] = 1.
-xlarge[6] = 1000000.
-
-small[7] = 1.
-xlarge[7] = 1000000.
-
-small[8] = 1.
-xlarge[8] = 1000000.
-
-small[9] = 1.
-xlarge[9] = 1000000.
-
-
-def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat, rdat):
+def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat,
+                   rdat, small, xlarge, lattext, longtext, datetimetext):
     """
 
     Args:
@@ -154,6 +162,7 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat, rdat):
     print('xlarge')
     print(xlarge)
 
+    QApplication.processEvents()
     for iloop in range(1, num_of_iterations + 1):
         # print( '  iloop is ', iloop)
         for i in range(1, n + 1):
@@ -176,16 +185,24 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat, rdat):
             errmin = rms
 
     # output the best fitting earth model
+    lyr_thick_res = []
     print('\nLayer ', ' Thickness  ', '   Res_ohm-m  ')
     for i in range(1, e, 1):
         print('{:d}       {:9.6f}       {:9.6f}'.format(i, pkeep[i], pkeep[e + i - 1]))
-
+        lyr_thick_res.append([i, pkeep[i], pkeep[e + i - 1]])
     print(e, '      Infinite     ', pkeep[n])
+    lyr_thick_res.append([e, '   Infinite   ', pkeep[n]])
+    print('\nLYR_THICK_RES LIST OF LIST')
+    pp.pprint(lyr_thick_res)
+    print('SMALL VECTOR')
+    print(small)
+    print('XLARGE VECTOR')
+    print(xlarge)
     for i in range(1, m + 1, 1):
         asavl[i] = np.log10(asav[i])
 
     # output the error of fit
-    print(' \n RMS error:', errmin, '\n')
+    print(' \n RMS error: ', errmin, '\n')
     print('  Spacing', '  Res_pred  ', ' Log10_spacing  ', ' Log10_Res_pred ')
     for i in range(1, m + 1, 1):
         # print(asav[i], rkeep[i], asavl[i], rkeepl[i])
@@ -193,9 +210,14 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat, rdat):
                                                asavl[i], rkeepl[i]))
 
     fig = plt.figure(figsize=(6, 3))
-    plt.loglog(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
-    plt.loglog(adat[1:ndat], pltanswerkeep[1:ndat], 'ro')  # predicted data red dots
-    plt.loglog(adat[1:ndat], rdat[1:ndat], 'bo', markersize=7)  # original datablue dots
+    print('ADAT IS {}'.format(adat))
+    print('pltanswerkeep IS {}'.format(pltanswerkeep))
+    print('RDAT IS {}'.format(rdat))
+    print('asav IS {}'.format(asav))
+    print('rkeep IS {}'.format(rkeep))
+    plt.semilogy(asav[1:m+1], rkeep[1:m+1], '-')  # resistivity prediction curve
+    plt.semilogy(adat[1:ndat+1], pltanswerkeep[1:ndat+1], 'ro')  # predicted data red dots
+    plt.semilogy(adat[1:ndat+1], rdat[1:ndat+1], 'bo', markersize=7)  # original data blue dots
 
     imgdata = BytesIO()
     fig.savefig(imgdata, format='png')
@@ -207,16 +229,44 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat, rdat):
     c.setLineWidth(.3)
     c.setFont('Courier', 10)
 
-    c.drawString(50, 725, 'Date/Time:')
+    c.drawString(50, 725, 'Date/Time: {}'.format(datetimetext))
     c.drawString(50, 700, 'Drill: [ ]   No Drill: [ ]')
 
-    c.drawString(260, 725, 'Lat/Long Coordinates:')
+    c.drawString(260, 725, 'Lat/Long Coordinates: {}, {}'.format(lattext, longtext))
     c.drawString(260, 700, 'Bearing (Compass Direction Degrees):')
-    c.drawString(50, 660, 'Root Mean Square Error: ')
+    c.drawString(50, 660, 'Root Mean Square Error: {}'.format(round(errmin, 3)))
 
     c.drawString(477, 310, 'Monte Carlo Sim')
     c.drawString(25, 300,
                  'Layer#  Min_Thickness  Max_Thickness  Min_Resistivity  Max_Resistivity  Thickness  Resistivity')
+    row_space_gap = 0
+    min_th = small[1:len(lyr_thick_res)]
+    max_th = xlarge[1:len(lyr_thick_res)]
+    min_res = small[len(lyr_thick_res):]
+    max_res = xlarge[len(lyr_thick_res):]
+    first_row_height = 275
+    for i in lyr_thick_res:
+        c.drawString(25, first_row_height - row_space_gap, str(round(i[0], 2)))
+
+        if isinstance(i[1], float):
+            c.drawString(457, first_row_height - row_space_gap, str(round(i[1], 2))) #MONTE CARLO THICKNESS
+            print(i); print(type(i))
+            c.drawString(73, first_row_height - row_space_gap, str(round(min_th[i[0] - 1], 2))) #USER MIN THICKNESS
+            c.drawString(73 + 90, first_row_height - row_space_gap, str(round(max_th[i[0] -1], 2))) #USER MAX THICKNESS
+            c.drawString(73 + 180, first_row_height - row_space_gap, str(round(min_res[i[0] - 1], 2))) #USER MIN RESISTIVITY
+            c.drawString(73 + 282, first_row_height - row_space_gap, str(round(max_res[i[0] - 1], 2))) #USER MAX RESISTIVITY
+        else:
+            c.drawString(73, first_row_height - row_space_gap, 'Infinite') #USER MIN THICKNESS
+            c.drawString(73 + 90, first_row_height - row_space_gap, 'Infinite') #USER MAX THICKNESS
+            c.drawString(73 + 180, first_row_height - row_space_gap, str(round(min_res[i[0] - 1], 2))) #USER MIN RESISTIVITY
+            c.drawString(73 + 282, first_row_height - row_space_gap, str(round(max_res[i[0] - 1], 2))) #USER MAX RESISTIVITY
+            c.drawString(457, first_row_height - row_space_gap, 'Infinite') #MONTECARLO THICKNESS
+
+        if isinstance(i[2], float):
+            c.drawString(460 + 64, first_row_height - row_space_gap, str(round(i[2], 2))) #MONTE CARLO RESISTIVITY
+        else:
+            c.drawString(460 + 64, first_row_height - row_space_gap, 'Infinite') #MONTE CARLO RESISTIVITY
+        row_space_gap = row_space_gap + 20
 
     c.drawImage(Image, 15, 350, height=275, preserveAspectRatio=True)
     c.save()
@@ -226,9 +276,9 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat, rdat):
 
 
 def createPlot():
-    plt.loglog(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
-    plt.loglog(adat[1:ndat], pltanswerkeep[1:ndat], 'ro')  # predicted data red dots
-    plt.loglog(adat[1:ndat], rdat[1:ndat], 'bo', markersize=7)  # original datablue dots
+    plt.semilogy(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
+    plt.semilogy(adat[1:ndat], pltanswerkeep[1:ndat], 'bo')  # predicted data blue dots
+    plt.semilogy(adat[1:ndat], rdat[1:ndat], 'ro', markersize=7)  # original data red dots
     print('plt is type: {}'.format(type(plt)))
     createPDF()
     # plt.show()
@@ -248,10 +298,10 @@ def createPDF():
     c.setLineWidth(.3)
     c.setFont('Courier', 10)
 
-    c.drawString(50, 725, 'Date/Time:')
+    c.drawString(50, 725, 'Date/Time: {}'.format(datetimetext))
     c.drawString(50, 700, 'Drill: [ ]   No Drill: [ ]')
 
-    c.drawString(260, 725, 'Lat/Long Coordinates:')
+    c.drawString(260, 725, 'Lat/Long Coordinates: {}, {}'.format(lattext, longtext))
     c.drawString(260, 700, 'Bearing (Compass Direction Degrees):')
     c.drawString(50, 660, 'Root Mean Square Error: ')
 
@@ -416,7 +466,6 @@ def splint(n, x, xa=[], ya=[], y2a=[]):
 
 # main here
 if __name__ == '__main__':
-
     montecarlo_sim(10000, 5, 1.e10)
 
     sys.exit(0)

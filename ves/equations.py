@@ -308,9 +308,9 @@ if __name__ == '__main__':
     # Plot out the results
     print(len(samplePoints))
     print(len(filteredResistivity))
-    plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
+    plt.semilogy(samplePoints[:len(filteredResistivity)], filteredResistivity,
                marker='o', linestyle='--', color='#348ABD')
-    plt.loglog(voltageSpacing, apparentResistivity,
+    plt.semilogy(voltageSpacing, apparentResistivity,
                marker='o', linestyle='-', color='#A60628')
     plt.xlabel('Electrode Spacing (m)')
     plt.ylabel('Apparent Resitivity (ohm-m)')
@@ -377,9 +377,9 @@ if __name__ == '__main__':
     print(' Wenner. short:\n  {}'.format(wennerFilterCoefficients))
 
     # Plot out the results
-    plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
+    plt.semilogy(samplePoints[:len(filteredResistivity)], filteredResistivity,
                marker='o', linestyle='--', color='#348ABD')
-    plt.loglog(voltageSpacing, apparentResistivity,
+    plt.semilogy(voltageSpacing, apparentResistivity,
                marker='o', linestyle='-', color='#A60628')
     plt.xlabel('Electrode Spacing (m)')
     plt.ylabel('Apparent Resitivity (ohm-m)')
@@ -448,9 +448,9 @@ if __name__ == '__main__':
 
     # print(samplePoints[:len(filteredResistivity)])
     # Plot out the results
-    plt.loglog(samplePoints[:len(filteredResistivity)], filteredResistivity,
+    plt.semilogy(samplePoints[:len(filteredResistivity)], filteredResistivity,
                marker='o', linestyle='--', color='#348ABD')
-    plt.loglog(voltageSpacing, apparentResistivity,
+    plt.semilogy(voltageSpacing, apparentResistivity,
                marker='o', linestyle='-', color='#A60628')
     plt.xlabel('Electrode Spacing (m)')
     plt.ylabel('Apparent Resitivity (ohm-m)')

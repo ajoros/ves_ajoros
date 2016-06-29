@@ -123,7 +123,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Lat</string>
+         <string>Longitude</string>
         </property>
        </widget>
       </item>
@@ -202,7 +202,7 @@
          <string>Rerun the analysis after fine tuning some parameters</string>
         </property>
         <property name="text">
-         <string>Re-run using Monte Carlo simulation</string>
+         <string>Re-run using Monte Carlo simulation (Takes some time, may hang)</string>
         </property>
        </widget>
       </item>
@@ -216,7 +216,7 @@
      <x>0</x>
      <y>0</y>
      <width>1228</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="sizePolicy">

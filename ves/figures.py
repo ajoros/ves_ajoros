@@ -1,17 +1,15 @@
 import matplotlib
+
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvasQTAgg as FigureCanvas)
 from matplotlib.figure import Figure
-import matplotlib.lines as mlines
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
+
 plt.style.use('bmh')
 
 from PyQt5.QtWidgets import QSizePolicy
-
-import numpy as np
-
 
 from templates.tempData import colors
 
@@ -21,6 +19,7 @@ class InteractiveCanvas(FigureCanvas):
     on a log-log axis with interactive matplotlib.patches.Rectangle drawing
 
     """
+
     def __init__(self, xdata, ydata, parent=None,
                  xlabel='x label', ylabel='y label',
                  linestyle='--', marker='o',
@@ -83,6 +82,7 @@ class InteractiveCanvas(FigureCanvas):
         self.ax = plt.gca()
         self.ax.set_xlabel(xlabel)
         self.ax.set_ylabel(ylabel)
+        self.ax.margins(0.1)
         self.axes = self.fig.add_subplot(111)
         self.axes.hold(self.hold)
 
@@ -105,7 +105,6 @@ class InteractiveCanvas(FigureCanvas):
 
         # Super from the class for Qt
         super(InteractiveCanvas, self).__init__(self.fig)
-
 
     def initFigure(self, xdata, ydata):
         """Initialize the figure
@@ -146,6 +145,7 @@ class InteractiveCanvas(FigureCanvas):
         self.ax.set_ylabel(self.ylabel)
         self.ax.add_patch(self.rect)
         self.ax.figure.canvas.draw()
+        self.ax.margins(0.1)
 
         # Draw extant rectangles if applicable
         if self.mplRectangles:
@@ -160,7 +160,6 @@ class InteractiveCanvas(FigureCanvas):
         """Adds rectangles to the plot if they are currently stored"""
         # Iterate through the mpl Rectangles to draw them with the proper color
         for i, rectangle in enumerate(self.rectCoordinates):
-
             color = self.colors[i * 4]
             xy, width, height = rectangle
 
@@ -168,7 +167,6 @@ class InteractiveCanvas(FigureCanvas):
                 xy, width, height, alpha=self.alpha, color=color)
 
             self.ax.add_patch(rect)
-
 
     def addPointsAndLine(self, xdata, ydata, color='#348ABD', draw=True):
         """Adds the points and a line to the figure
@@ -197,11 +195,14 @@ class InteractiveCanvas(FigureCanvas):
         # log/log plot of x and y data
         plt.semilogy(
             xdata, ydata, linestyle=self.linestyle,
-            marker=self.marker, color=color, label = "Observed")
+            marker=self.marker, color=color, label="Observed")
+        # plt.margins(x=.5, y=.5)
+
         # Draw the updates
         if draw:
             self.fig.tight_layout()
             self.ax.figure.canvas.draw()
+            self.ax.margins(0.1)
             self.legend = self.ax.legend()
             if self.legend:
                 self.ax.legend_ = None
@@ -225,7 +226,6 @@ class InteractiveCanvas(FigureCanvas):
         """
         self.x0 = event.xdata
         self.y0 = event.ydata
-
 
     def onRelease(self, event):
         """Handles release of mouse button events on the matplotlib canvas
@@ -259,6 +259,7 @@ class InteractiveCanvas(FigureCanvas):
 
 class ReportCanvas(FigureCanvas):
     """pass"""
+
     def __init__(self, samplePoints, filteredResistivity,
                  voltageSpacing, apparentResistivity,
                  voltageSpacingExtrapolated, newResistivity,
@@ -301,6 +302,7 @@ class ReportCanvas(FigureCanvas):
         self.ax = plt.gca()
         self.ax.set_xlabel(xlabel)
         self.ax.set_ylabel(ylabel)
+        self.ax.margins(0.1)
         self.axes = self.fig.add_subplot(111)
         self.axes.hold(hold)
 
@@ -314,29 +316,27 @@ class ReportCanvas(FigureCanvas):
         # Super from the class for Qt
         super(ReportCanvas, self).__init__(self.fig)
 
-
     def initFigure(self):
         # Plot out the results
         plt.semilogy(self.voltageSpacingExtrapolated,
-                   self.filteredResistivity,
-                   marker=self.marker,
-                   linestyle=self.linestyle,
-                   color=self.colors[0],
-                   label="Filtered")
+                     self.filteredResistivity,
+                     marker=self.marker,
+                     linestyle=self.linestyle,
+                     color=self.colors[0],
+                     label="Filtered")
         plt.semilogy(self.voltageSpacing, self.apparentResistivity,
-                   marker=self.marker,
-                   linestyle=self.linestyle,
-                   color=self.colors[1],
-                   label="Observed")
+                     marker=self.marker,
+                     linestyle=self.linestyle,
+                     color=self.colors[1],
+                     label="Observed")
         plt.legend()
-
 
         # Create an mpl axis and set the labels, add the rectangle
         self.ax = plt.gca()
         self.ax.set_xlabel(self.xlabel)
         self.ax.set_ylabel(self.ylabel)
-        print('CHANGING self.ax.set_xscale')
-        self.ax.set_xscale('linear')
+        self.ax.margins(0.5)
+
         # self.ax.add_patch(self.rect)
         self.ax.figure.canvas.draw()
 
@@ -344,4 +344,3 @@ class ReportCanvas(FigureCanvas):
         self.fig = plt.gcf()
 
         self.fig.tight_layout()
-

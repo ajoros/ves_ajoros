@@ -1,7 +1,9 @@
+import pprint
 import random  # not for prod
 import sys
+import os
+import time
 from io import BytesIO
-import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -209,15 +211,17 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat,
         print("%7.2f   %9.3f  %9.3f  %9.3f" % (asav[i], rkeep[i],
                                                asavl[i], rkeepl[i]))
 
-    fig = plt.figure(figsize=(6, 3))
+    fig = plt.figure(figsize=(6, 5))
     print('ADAT IS {}'.format(adat))
     print('pltanswerkeep IS {}'.format(pltanswerkeep))
     print('RDAT IS {}'.format(rdat))
     print('asav IS {}'.format(asav))
     print('rkeep IS {}'.format(rkeep))
-    plt.semilogy(asav[1:m+1], rkeep[1:m+1], '-')  # resistivity prediction curve
-    plt.semilogy(adat[1:ndat+1], pltanswerkeep[1:ndat+1], 'ro')  # predicted data red dots
-    plt.semilogy(adat[1:ndat+1], rdat[1:ndat+1], 'bo', markersize=7)  # original data blue dots
+    plt.semilogy(asav[1:m + 1], rkeep[1:m + 1], '-')  # resistivity prediction curve
+    plt.semilogy(adat[1:ndat + 1], pltanswerkeep[1:ndat + 1], 'ro')  # predicted data red dots
+    plt.semilogy(adat[1:ndat + 1], rdat[1:ndat + 1], 'bo', markersize=7)  # original data blue dots
+    plt.xlabel('Electrode Spacing (m)')
+    plt.ylabel('Apparent Resitivity (ohm-m)')
 
     imgdata = BytesIO()
     fig.savefig(imgdata, format='png')
@@ -225,7 +229,10 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat,
 
     Image = ImageReader(imgdata)
 
-    c = canvas.Canvas('figuretest.pdf', pagesize=letter)
+    os.chdir('../report_pdfs')  # not for prod
+    timestr = time.strftime("%Y_%m_%d_%Hh%Mm%Ss")
+    pdf_filename = 'Report_MonteCarlo_' + timestr + '.pdf'
+    c = canvas.Canvas(pdf_filename, pagesize=letter)
     c.setLineWidth(.3)
     c.setFont('Courier', 10)
 
@@ -249,26 +256,32 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat,
         c.drawString(25, first_row_height - row_space_gap, str(round(i[0], 2)))
 
         if isinstance(i[1], float):
-            c.drawString(457, first_row_height - row_space_gap, str(round(i[1], 2))) #MONTE CARLO THICKNESS
-            print(i); print(type(i))
-            c.drawString(73, first_row_height - row_space_gap, str(round(min_th[i[0] - 1], 2))) #USER MIN THICKNESS
-            c.drawString(73 + 90, first_row_height - row_space_gap, str(round(max_th[i[0] -1], 2))) #USER MAX THICKNESS
-            c.drawString(73 + 180, first_row_height - row_space_gap, str(round(min_res[i[0] - 1], 2))) #USER MIN RESISTIVITY
-            c.drawString(73 + 282, first_row_height - row_space_gap, str(round(max_res[i[0] - 1], 2))) #USER MAX RESISTIVITY
+            c.drawString(457, first_row_height - row_space_gap, str(round(i[1], 2)))  # MONTE CARLO THICKNESS
+            print(i);
+            print(type(i))
+            c.drawString(73, first_row_height - row_space_gap, str(round(min_th[i[0] - 1], 2)))  # USER MIN THICKNESS
+            c.drawString(73 + 90, first_row_height - row_space_gap,
+                         str(round(max_th[i[0] - 1], 2)))  # USER MAX THICKNESS
+            c.drawString(73 + 180, first_row_height - row_space_gap,
+                         str(round(min_res[i[0] - 1], 2)))  # USER MIN RESISTIVITY
+            c.drawString(73 + 282, first_row_height - row_space_gap,
+                         str(round(max_res[i[0] - 1], 2)))  # USER MAX RESISTIVITY
         else:
-            c.drawString(73, first_row_height - row_space_gap, 'Infinite') #USER MIN THICKNESS
-            c.drawString(73 + 90, first_row_height - row_space_gap, 'Infinite') #USER MAX THICKNESS
-            c.drawString(73 + 180, first_row_height - row_space_gap, str(round(min_res[i[0] - 1], 2))) #USER MIN RESISTIVITY
-            c.drawString(73 + 282, first_row_height - row_space_gap, str(round(max_res[i[0] - 1], 2))) #USER MAX RESISTIVITY
-            c.drawString(457, first_row_height - row_space_gap, 'Infinite') #MONTECARLO THICKNESS
+            c.drawString(73, first_row_height - row_space_gap, 'Infinite')  # USER MIN THICKNESS
+            c.drawString(73 + 90, first_row_height - row_space_gap, 'Infinite')  # USER MAX THICKNESS
+            c.drawString(73 + 180, first_row_height - row_space_gap,
+                         str(round(min_res[i[0] - 1], 2)))  # USER MIN RESISTIVITY
+            c.drawString(73 + 282, first_row_height - row_space_gap,
+                         str(round(max_res[i[0] - 1], 2)))  # USER MAX RESISTIVITY
+            c.drawString(457, first_row_height - row_space_gap, 'Infinite')  # MONTECARLO THICKNESS
 
         if isinstance(i[2], float):
-            c.drawString(460 + 64, first_row_height - row_space_gap, str(round(i[2], 2))) #MONTE CARLO RESISTIVITY
+            c.drawString(460 + 64, first_row_height - row_space_gap, str(round(i[2], 2)))  # MONTE CARLO RESISTIVITY
         else:
-            c.drawString(460 + 64, first_row_height - row_space_gap, 'Infinite') #MONTE CARLO RESISTIVITY
+            c.drawString(460 + 64, first_row_height - row_space_gap, 'Infinite')  # MONTE CARLO RESISTIVITY
         row_space_gap = row_space_gap + 20
 
-    c.drawImage(Image, 15, 350, height=275, preserveAspectRatio=True)
+    c.drawImage(Image, 15, 335, height=325, preserveAspectRatio=True)
     c.save()
     # createPlot()
     # plt.show()
@@ -279,6 +292,8 @@ def createPlot():
     plt.semilogy(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
     plt.semilogy(adat[1:ndat], pltanswerkeep[1:ndat], 'bo')  # predicted data blue dots
     plt.semilogy(adat[1:ndat], rdat[1:ndat], 'ro', markersize=7)  # original data red dots
+    plt.xlabel('Electrode Spacing (m)')
+    plt.ylabel('Apparent Resitivity (ohm-m)')
     print('plt is type: {}'.format(type(plt)))
     createPDF()
     # plt.show()

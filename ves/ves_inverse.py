@@ -211,15 +211,31 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat,
         print("%7.2f   %9.3f  %9.3f  %9.3f" % (asav[i], rkeep[i],
                                                asavl[i], rkeepl[i]))
 
-    fig = plt.figure(figsize=(6, 5))
+    fig = plt.figure(figsize=(9, 5))
+    print('NDAT IS {}'.format(ndat))
     print('ADAT IS {}'.format(adat))
-    print('pltanswerkeep IS {}'.format(pltanswerkeep))
+    print('Length of ADAT IS {}'.format(len(adat)))
+    print('PLTANSWERKEEP IS {}'.format(pltanswerkeep))
+    print('Length of PLTANSWERKEEP IS {}'.format(len(pltanswerkeep)))
     print('RDAT IS {}'.format(rdat))
-    print('asav IS {}'.format(asav))
-    print('rkeep IS {}'.format(rkeep))
-    plt.semilogy(asav[1:m + 1], rkeep[1:m + 1], '-')  # resistivity prediction curve
-    plt.semilogy(adat[1:ndat + 1], pltanswerkeep[1:ndat + 1], 'ro')  # predicted data red dots
-    plt.semilogy(adat[1:ndat + 1], rdat[1:ndat + 1], 'bo', markersize=7)  # original data blue dots
+    print('Length of RDAT IS {}\n\n'.format(len(rdat)))
+    print('ASAV IS {}'.format(asav))
+    print('ASAV LENGTH IS {}'.format(len(asav)))
+    print('RKEEP IS {}'.format(rkeep))
+    print('RKEEP LENGTH IS {}'.format(len(rkeep)))
+    respred_hndl, = plt.semilogy(asav[1:m + 1], rkeep[1:m + 1],
+                                 '-x',
+                                 color='purple',
+                                 label='Monte Carlo Sim Curve',
+                                 markersize=10)  # resistivity prediction curve
+    preddat_hndl, = plt.semilogy(adat[1:ndat + 1], pltanswerkeep[1:ndat + 1],
+                                 'ro',
+                                 label='Predicted Data Points')  # predicted data red dots
+    obsdat_hndl, = plt.semilogy(adat[1:ndat + 1], rdat[1:ndat + 1],
+                                'bo',
+                                markersize=7,
+                                label='Observed Data Points')  # original data blue dots
+    plt.legend(handles=[respred_hndl, preddat_hndl, obsdat_hndl], loc='best', fontsize=12)
     plt.xlabel('Electrode Spacing (m)')
     plt.ylabel('Apparent Resitivity (ohm-m)')
 
@@ -281,51 +297,11 @@ def montecarlo_sim(num_of_iterations, num_of_layers, errmin, ndat, adat,
             c.drawString(460 + 64, first_row_height - row_space_gap, 'Infinite')  # MONTE CARLO RESISTIVITY
         row_space_gap = row_space_gap + 20
 
-    c.drawImage(Image, 15, 335, height=325, preserveAspectRatio=True)
+    c.drawImage(Image, -130, 335, height=325, preserveAspectRatio=True)
     c.save()
     # createPlot()
     # plt.show()
     # plt.grid(True)
-
-
-def createPlot():
-    plt.semilogy(asav[1:m], rkeep[1:m], '-')  # resistivity prediction curve
-    plt.semilogy(adat[1:ndat], pltanswerkeep[1:ndat], 'bo')  # predicted data blue dots
-    plt.semilogy(adat[1:ndat], rdat[1:ndat], 'ro', markersize=7)  # original data red dots
-    plt.xlabel('Electrode Spacing (m)')
-    plt.ylabel('Apparent Resitivity (ohm-m)')
-    print('plt is type: {}'.format(type(plt)))
-    createPDF()
-    # plt.show()
-    # plt.grid(True)
-
-
-def createPDF():
-    fig = plt.figure(figsize=(6, 3))
-
-    imgdata = BytesIO()
-    fig.savefig(imgdata, format='png')
-    imgdata.seek(0)  # rewind the data
-
-    Image = ImageReader(imgdata)
-
-    c = canvas.Canvas('figuretest.pdf', pagesize=letter)
-    c.setLineWidth(.3)
-    c.setFont('Courier', 10)
-
-    c.drawString(50, 725, 'Date/Time: {}'.format(datetimetext))
-    c.drawString(50, 700, 'Drill: [ ]   No Drill: [ ]')
-
-    c.drawString(260, 725, 'Lat/Long Coordinates: {}, {}'.format(lattext, longtext))
-    c.drawString(260, 700, 'Bearing (Compass Direction Degrees):')
-    c.drawString(50, 660, 'Root Mean Square Error: ')
-
-    c.drawString(477, 310, 'Monte Carlo Sim')
-    c.drawString(25, 300,
-                 'Layer#  Min_Thickness  Max_Thickness  Min_Resistivity  Max_Resistivity  Thickness  Resistivity')
-
-    c.drawImage(Image, 15, 350, height=275, preserveAspectRatio=True)
-    c.save()
 
 
 def readData(ndat, adat, rdat):

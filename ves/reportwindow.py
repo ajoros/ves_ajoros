@@ -31,7 +31,7 @@ from templates.tempData import (
     coefficients, columns_reportWindow, headers_reportWindow,
     rowCount_reportWindow, tableData_reportWindow)
 from ves_inverse import (
-    montecarlo_sim, createPlot, createPDF, readData, error, transf, filters, rmsfit, spline, splint,
+    montecarlo_sim, readData, error, transf, filters, rmsfit, spline, splint,
     p, r, rl, t, b, asav, asavl, adatl, rdatl, adat, rdat, pkeep, rkeep, rkeepl, pltanswer, pltanswerl,
     pltanswerkeep, pltanswerkeepl, small, xlarge, x, y, y2, u, new_x, new_y)
 

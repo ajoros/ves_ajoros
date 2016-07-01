@@ -1,41 +1,24 @@
-# VES
-Water4 Project
-# Requirements to run
-### NOTE: Please install Anaconda Python 3.5 from https://www.continuum.io/downloads
-#### Create seperate environment
-conda create -n pyqt5_env python=3.5
+# VES - Vertical Electrical Sounding software
+### Water4 Project
+#### Used for geophysics for groundwater, well siting, well drilling
 
-source activate pyqt5_env (do this on osx/linux)
+#### Filesize requirements: ~740mb free space.
 
-OR
+## Windows 64-bit Installation Instructions
+1. **Download VES zip file** from https://dl.dropboxusercontent.com/u/561373/ves_ajoros.zip to C:/ drive
+  * NOTE: If you run into permission (admin priviledge) error during download process just download to C:/Users/<username>. After this, drag and drop (or extract) the .zip file from C:/Users/<username> to C:/
+  * *NOTE: If you have any issues, make sure to right-click and run as administrator*
+2. **Unzip to C:/ drive.** Once successfully unzipped you should see the main.py in the folder path *C:/ves_ajoros/ves/main.py*
+3. **Download Win64 miniconda installer**: https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe
+4. **Right click .exe > Run as Administrator (IMPORTANT STEP)** and follow the instructions on the screen. Simply accept the defaults as they all can be changed later.
+5. **Run run_ves_install.bat from C:/ves_ajoros**. This installs the dependencies that run_ves_field.bat uses.
+6. After observed data is collected, **double click run_ves_field.bat**.
 
-activate pyqt5_env (do this on win64)
-#### Install pyqt5 from anaconda repo cloud (works for osx, linux, win64)
-conda install -c mmcauliffe pyqt5=5.5.1 
-#### Install all required packages for ves
-conda install -f backports cycler decorator get_terminal_size jpeg libpng libtiff matplotlib mkl numpy pandas patsy pyparsing python-dateutil pytz scipy setuptools six statsmodels tk zlib
-conda install reportlab
+## Once inside VES software
 
-#### How to run program
-After installing all previous requirements just execute main.py in /ves folder:
-python main.py
-
-#### NOTES FOR USING PYINSTALLER
-MAKE SURE SETUPTOOLS IS VERSION 19.2 BEFORE USING PYINSTALLER
-Make sure setuptools is version 19.2 before using PyInstaller
-
-#### If you get "AttributeError: 'FrozenImporter' object has no attribute '_files'",
-then try:
-
-Decided to go look at where exactly the AttributeError was being thrown from so I inspected the reportlab/rl_config.py and reportlab/lib/utils.py files and found that it was checking objects recursively looking for directories (as insinuated by rl_isdir). Some how the FrozenImporter got stuck being checked with a list of other objects
-so I replaced the line:
-return len(list(filter(lambda x,pn=pn: x.startswith(pn),list(__loader__._files.keys()))))>0
-with:
-
-try:
-    return len(list(filter(lambda x,pn=pn: x.startswith(pn),list(__loader__._files.keys()))))>0
-except AttributeError:
-    return False
-
-#### IF YOU GET MKL_AVX AND MKL_DEF ERROR, try this:
-I think I solved the problem. My NumPy 'site.cfg' file simply had the line "mkl_libs = mkl_rt", but when I explicitly added mkl_avx and mkl_def and recompiled, it worked fine. I guess there was some issue in libmkl_rt.so. I only have the 64-bit MKL installed, so that's not an issue.
+1. **Insert observed/survey data into table**, and press **"Computer and Plot Resistivities"** to generate graph plot.
+2. Press **"Launch VES Inverse Analysis"**
+3. **Enter appropriate table data, longitude, latitude, and date/time information**
+4. To launch Monte Carlo Simulation press **"Re-Run Using Monte Carlo Simultation"**
+  * *NOTE: Please be patient while Monte Carlo simulations runs. Takes ~5-20 seconds. Program may hang but this is normal.*
+5. PDF output will then be available at **C:/ves_ajoros/ves/report_pdfs**
